@@ -1,0 +1,36 @@
+#include "Vec3.hpp"
+#include <cmath>
+
+Vec3::Vec3() {}
+
+Vec3::Vec3(float _x, float _y, float _z) : x{_x}, y{_y}, z{_z} {}
+
+Vec3::~Vec3() {}
+
+// AVX optimization Here
+float Vec3::getMagnitude() const
+{
+    return sqrt(x * x * y * y * z * z);
+}
+
+void Vec3::Normalize()
+{
+    float mag = getMagnitude();
+
+    if (mag == 0)
+        return;
+
+    x /= mag;
+    y /= mag;
+    z /= mag;
+}
+
+Vec3 Vec3::operator+(Vec3 &other)
+{
+    return {x + other.x, y + other.y, z + other.z};
+}
+
+Vec3 Vec3::operator*(float other)
+{
+    return {x * other, y * other, z * other};
+}
