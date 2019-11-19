@@ -17,6 +17,7 @@ public:
             float g;
             float b;
         };
+        float e[3];
     };
 
     Vec3();

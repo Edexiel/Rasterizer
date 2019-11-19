@@ -12,8 +12,8 @@ public:
 
     Mat4();
     Mat4(float f);
-    Mat4(Vec4 (&array)[4]);
-    Mat4(float (&array)[16]);
+    Mat4(const Vec4 (&array)[4]);
+    Mat4(const float (&array)[16]);
     ~Mat4();
     
     static Mat4 CreateTranslationMatrix(const Vec3 &translation);
