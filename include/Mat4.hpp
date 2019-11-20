@@ -28,5 +28,5 @@ public:
     static Mat4 CreateTransformMatrix(const Vec3 &rotation, const Vec3 &position, const Vec3 &scale);
 
     Mat4 operator*(Mat4 &other);
-    Vec4 Mat4::operator*(Vec4 &v);
+    Vec4 operator*(Vec4 &v);
 };
