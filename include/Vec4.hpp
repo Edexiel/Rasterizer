@@ -7,17 +7,12 @@ public:
     union {
         struct
         {
-            float x;
-            float y;
-            float z;
-            float w;
+            float x,y,z,w;
         };
+
         struct
         {
-            float r;
-            float g;
-            float b;
-            float a;
+            float r,g,b,a;
         };
         float e[4];
     };
@@ -33,3 +28,5 @@ public:
     Vec4 operator+(Vec4 &other);
     Vec4 operator*(float float_other);
 };
+
+typedef Vec4 Color4;
