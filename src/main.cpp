@@ -17,7 +17,7 @@ void matrix_test()
     {
         std::cout << "{";
         for (int j = 0; j < 4; j++)
-            std::cout << m2._mat[i][j] << ", ";
+            std::cout << m2.aa[i][j] << ", ";
         std::cout << "}" << std::endl;
     }
     std::cout << "vector: "<< std::endl;
