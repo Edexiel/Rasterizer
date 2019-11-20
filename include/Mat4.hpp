@@ -9,12 +9,14 @@ public:
     union {
         Vec4 v_mat[4];
         float mat[16];
+        float _mat[4][4];
     };
 
     Mat4();
     Mat4(float f);
-    Mat4(const Vec4 (&array)[4]);
+    // Mat4(const Vec4 (&array)[4]);
     Mat4(const float (&array)[16]);
+    Mat4(const Vec4& v1,const Vec4& v2,const Vec4& v3,const Vec4& v4);
     ~Mat4();
     
     static Mat4 CreateTranslationMatrix(const Vec3 &translation);
