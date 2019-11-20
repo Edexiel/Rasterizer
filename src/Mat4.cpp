@@ -72,7 +72,9 @@ Mat4 Mat4::operator*(Mat4 &other)
 
 Vec4 Mat4::operator*(Vec4 &v)
 {
-    for (size_t i = 0; i < 4; i++)
-        for (size_t j = 0; j < 4; j++)
-    //
+    Vec4 res {0, 0, 0, 0};
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            
+            
 }
