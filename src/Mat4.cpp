@@ -4,7 +4,7 @@
 Mat4::Mat4() : mat{0} {}
 Mat4::Mat4(float f) : mat{f} {}
 
-Mat4::Mat4(const Vec4 (&array)[4]) : v_mat{*array}
+Mat4::Mat4(const Vec4  (&array)[4]) : v_mat{*array}
 {
 }
 
