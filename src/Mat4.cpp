@@ -84,7 +84,7 @@ Vec4 Mat4::operator*(const Vec4 &_v)
     Vec4 res{0, 0, 0, 0};
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            res.e[i] += v[i].e[j] * _v.e[i];
+            res.e[i] += v[i].e[j] * _v.e[j];
 
     return res;
 }
