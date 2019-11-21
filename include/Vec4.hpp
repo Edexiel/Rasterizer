@@ -29,4 +29,4 @@ public:
     Vec4 operator*(float float_other);
 };
 
-typedef Vec4 Color4;
+typedef Vec4 Color;
