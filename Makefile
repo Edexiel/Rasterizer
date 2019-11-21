@@ -12,7 +12,7 @@ LDFLAGS=-Llibs/mingw
 LDLIBS=-lglfw -lgdi32 -lglu32 -
 else
 # LDFLAGS=-Llibs/linux
-LDLIBS=-lm
+LDLIBS=-lglfw -lGL -lGLU -ldl
 endif
 
 SRCSC = $(wildcard src/*.c)

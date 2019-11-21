@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Vec3.hpp"
+#include "Color.hpp"
 
 struct Vertex
 {
     Vec3 position;
-    Vec3 color;
+    Color color;
 };
