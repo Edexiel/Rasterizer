@@ -44,7 +44,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 void clearBuffer(Color *buffer, unsigned int screen_width, unsigned int screen_height)
 {
-    memset(buffer, 127, screen_width * screen_height * sizeof())
+    memset(buffer, 127, screen_width * screen_height * sizeof(Color));
 }
 
 int main(int argc, char *argv[])
