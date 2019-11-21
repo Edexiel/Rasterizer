@@ -1,9 +1,17 @@
 #include "Mesh.hpp"
 
-Mesh::Mesh(/* args */)
+Mesh::Mesh()
 {
 }
 
 Mesh::~Mesh()
+{
+}
+
+Mesh *Mesh::CreateCube()
+{
+}
+
+Mesh *Mesh::CreateSphere(int latitudeCount, int longitudeCount)
 {
 }
