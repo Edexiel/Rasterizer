@@ -1,10 +1,21 @@
 #include <iostream>
+#include <cstdio>
+#include "Mat4.hpp"
+#include "Vec3.hpp"
+#include "Vec4.hpp"
+#include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
+<<<<<<< HEAD
 #include "Texture.hpp"
 #include "Scene.hpp"
+=======
+#include <string.h>
+#include "Color.hpp"
+
+>>>>>>> 5a2052e43d533be9aec46a038a7e0f54acdb55c4
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -94,7 +105,10 @@ int main(int argc, char *argv[])
             time = glfwGetTime();
         }
 
+<<<<<<< HEAD
         std::cout << "FPS: " << 1 / deltaTime << std::endl;
+=======
+>>>>>>> 5a2052e43d533be9aec46a038a7e0f54acdb55c4
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
 
