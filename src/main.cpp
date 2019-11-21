@@ -1,4 +1,9 @@
 #include <iostream>
+#include <cstdio>
+#include "Mat4.hpp"
+#include "Vec3.hpp"
+#include "Vec4.hpp"
+#include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
@@ -6,35 +11,6 @@
 #include <string.h>
 #include "Color.hpp"
 
-// #include <cstdio>
-// #include "Mat4.hpp"
-// #include "Vec3.hpp"
-// #include "Vec4.hpp"
-
-// void matrix_test()
-// {
-//     Mat4 m({1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16});
-//     Mat4 m2(m);
-//     Vec4 vec {10, 100, 1000, 1};
-//     Vec4 vecRes = m * vec;
-
-//     std::cout << "matrix: "<< std::endl;
-//     for (int i = 0; i < 4; i++)
-//     {
-//         std::cout << "{";
-//         for (int j = 0; j < 4; j++)
-//             std::cout << m2.aa[i][j] << ", ";
-//         std::cout << "}" << std::endl;
-//     }
-//     std::cout << "vector: "<< std::endl;
-//     for (int i = 0; i < 4; i++)
-//         std::cout << vec.e[i] << std::endl;
-
-//     std::cout << "matrix * vector: " << std::endl;
-//     for (int i = 0; i < 4; i++)
-//         std::cout << vecRes.e[i] << std::endl;
-
-// }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -105,6 +81,7 @@ int main(int argc, char *argv[])
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
         }
+
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
 
