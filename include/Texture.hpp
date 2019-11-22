@@ -8,17 +8,21 @@
 class Texture
 {
 private:
-    unsigned int width;
-    unsigned int height;
-    Color* pixels;
-public:
+    uint width;
+    uint height;
+    
+    Color* pixels; //maybe do a vector -> auto screen scale
     GLuint texture_name;
-    Texture(unsigned int _width,unsigned int _height);
-    Texture(unsigned int _width,unsigned int _height,const Color& c);
+public:
+    Texture(uint _width,uint _height);
     ~Texture();
-    void SetPixelColor(unsigned int x,unsigned int y,const Color &c);
-    void clearBuffer();
-    void applyTexture();
-    Color* getPixels();
 
+    void SetPixelColor(uint x,uint y,const Color &c);
+    void clearBuffer();
+    void uploadTexture() const;
+
+    uint getWidth() const;
+    uint getHeight() const;
+
+    GLuint getTextureName() const;
 };
