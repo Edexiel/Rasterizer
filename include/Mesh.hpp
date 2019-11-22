@@ -14,5 +14,4 @@ public:
     static Mesh* CreateTriangle();
     static Mesh* CreateCube();
     static Mesh* CreateSphere(int latitudeCount, int longitudeCount);
-
 };
