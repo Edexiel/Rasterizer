@@ -8,14 +8,8 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
-<<<<<<< HEAD
 #include "Texture.hpp"
 #include "Scene.hpp"
-=======
-#include <string.h>
-#include "Color.hpp"
-
->>>>>>> 5a2052e43d533be9aec46a038a7e0f54acdb55c4
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -25,13 +19,13 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 int main(int argc, char *argv[])
 {
-    int screenWidth = 800;
-    int screenHeight = 600;
+    unsigned int screenWidth = 800;
+    unsigned int screenHeight = 600;
 
     float modres = 1;
 
-    int resWidth = screenWidth / modres;
-    int resHeight = screenHeight / modres;
+    unsigned int resWidth = screenWidth / modres;
+    unsigned int resHeight = screenHeight / modres;
 
     // Init GLFW
     if (!glfwInit())
@@ -74,18 +68,19 @@ int main(int argc, char *argv[])
     double time;
     double deltaTime;
 
+    Texture target{resWidth, resHeight, {255, 255, 255}};
+    target.clearBuffer();
+
     GLuint buffer;
     glGenTextures(1, &buffer);
-
     glBindTexture(GL_TEXTURE_2D, buffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, &buff);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, target.getPixels());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     //Serious stuff
 
-    Texture target{resWidth,resHeight};
     // Scene scene{};
 
     // Mesh mesh_triangle{}
@@ -105,10 +100,7 @@ int main(int argc, char *argv[])
             time = glfwGetTime();
         }
 
-<<<<<<< HEAD
         std::cout << "FPS: " << 1 / deltaTime << std::endl;
-=======
->>>>>>> 5a2052e43d533be9aec46a038a7e0f54acdb55c4
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
 
@@ -122,6 +114,7 @@ int main(int argc, char *argv[])
 
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, buffer);
+        target.clearBuffer();
 
         glBegin(GL_QUADS);
 
