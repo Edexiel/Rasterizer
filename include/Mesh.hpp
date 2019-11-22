@@ -5,10 +5,9 @@
 
 class Mesh
 {
-private:
+public:
     std::vector<Vertex> vertices;
     std::vector<int> indices;
-public:
     Mesh();
     ~Mesh();
     static Mesh* CreateTriangle();
