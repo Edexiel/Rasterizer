@@ -53,8 +53,8 @@ void Rasterizer::render_triangle(Vertex& v1, Vertex& v2, Vertex& v3, Texture *pT
             float w3 = 1.f - w1 - w2;
             if (w1 + w2 + w3 == 1)
             {
-                // float Px = w1 * v1.position.x + w2 * v2.position.x + w3 * v3.position.x;
-                // float Py = w1 * v1.position.y + w2 * v2.position.y + w3 * v3.position.y;
+                // you can optimize color
+                pTarget->SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
             }
         }
     }
@@ -62,5 +62,5 @@ void Rasterizer::render_triangle(Vertex& v1, Vertex& v2, Vertex& v3, Texture *pT
 
 void Rasterizer::render_point(Vertex& v1, Texture *pTarget)
 {
-    
+
 }
