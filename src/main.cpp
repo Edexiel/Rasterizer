@@ -7,6 +7,7 @@
 #include <ctime>
 #include "Texture.hpp"
 #include "Scene.hpp"
+#include "Rasterizer.hpp"
 #include "Screen.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -82,6 +83,9 @@ int main(int argc, char *argv[])
     // scene.entities.push_back()
 
     // Main loop
+    Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
+    Vertex v2 {{800, 50, 0}, {0, 255, 0}};
+    Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -99,6 +103,8 @@ int main(int argc, char *argv[])
         // glClearColor(0.5, 0.5, 0.5, 1);
 
         // Present buffer
+        Rasterizer::render_triangle(v1, v2, v3, &screen.render_target);
+        screen.render_target.applyTexture();
         screen.display();
 
         glfwSwapBuffers(window);
