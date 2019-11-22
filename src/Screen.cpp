@@ -26,3 +26,13 @@ void Screen::display()
 
     glEnd();
 }
+
+
+unsigned int Screen::getHeight()
+{
+    return m_height;
+}
+unsigned int Screen::getWidth()
+{
+    return m_width;
+}
