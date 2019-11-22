@@ -7,9 +7,8 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    for (Entity& e: entities)
+    for (Entity &e : entities)
     {
         delete e.mesh;
     }
-    
 }
