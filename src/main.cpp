@@ -8,9 +8,8 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
-#include <string.h>
-#include "Color.hpp"
-
+#include "Texture.hpp"
+#include "Scene.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -18,17 +17,15 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-void clearBuffer(Color *buffer, unsigned int screen_width, unsigned int screen_height)
-{
-    memset(buffer, 127, screen_width * screen_height * sizeof(Color));
-}
-
 int main(int argc, char *argv[])
 {
-    int screenWidth = 800;
-    int screenHeight = 600;
+    unsigned int screenWidth = 800;
+    unsigned int screenHeight = 600;
 
-    glfwGetTime();
+    float modres = 1;
+
+    unsigned int resWidth = screenWidth / modres;
+    unsigned int resHeight = screenHeight / modres;
 
     // Init GLFW
     if (!glfwInit())
@@ -42,7 +39,7 @@ int main(int argc, char *argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    // glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create window
     GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "Rasterizer", NULL, NULL);
@@ -53,7 +50,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    glfwSwapInterval(1); // Enable v-sync
+    // glfwSwapInterval(1); // Enable v-sync
 
     // We make the OpenGL context current on this calling thread for the window
     // It's mandatory before any OpenGL call
@@ -66,11 +63,32 @@ int main(int argc, char *argv[])
         glfwTerminate();
         return -1;
     }
-
-    std::srand(std::time(nullptr));
+    glfwSetKeyCallback(window, key_callback);
 
     double time;
     double deltaTime;
+
+    Texture target{resWidth, resHeight, {255, 255, 255}};
+    target.clearBuffer();
+
+    GLuint buffer;
+    glGenTextures(1, &buffer);
+    glBindTexture(GL_TEXTURE_2D, buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, target.getPixels());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    //Serious stuff
+
+    // Scene scene{};
+
+    // Mesh mesh_triangle{}
+
+    // Entity e_triangle{};
+    // e_triangle.mesh =
+    // scene.entities.push_back()
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -82,6 +100,7 @@ int main(int argc, char *argv[])
             time = glfwGetTime();
         }
 
+        std::cout << "FPS: " << 1 / deltaTime << std::endl;
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
 
@@ -89,8 +108,29 @@ int main(int argc, char *argv[])
         // glClearColor(0.5, 0.5, 0.5, 1);
 
         // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // clearBuffer(&buff[0], resWidth, resHeight, rose);
 
         // Present buffer
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, buffer);
+        target.clearBuffer();
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(0, 0);
+        glVertex2f(-1, 1);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(1, 1);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(1, -1);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-1, -1);
+
+        glEnd();
         glfwSwapBuffers(window);
     }
     glfwTerminate();
