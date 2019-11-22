@@ -10,6 +10,7 @@
 #include <ctime>
 #include "Texture.hpp"
 #include "Scene.hpp"
+#include "Rasterizer.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -74,7 +75,6 @@ int main(int argc, char *argv[])
     GLuint buffer;
     glGenTextures(1, &buffer);
     glBindTexture(GL_TEXTURE_2D, buffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, target.getPixels());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -90,6 +90,9 @@ int main(int argc, char *argv[])
     // scene.entities.push_back()
 
     // Main loop
+    Vertex v1 {{250, 50, 0}, {255, 0, 0}};
+    Vertex v2 {{500, 50, 0}, {0, 255, 0}};
+    Vertex v3 {{375, 300, 0}, {0, 0, 255}};
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -111,26 +114,30 @@ int main(int argc, char *argv[])
         // clearBuffer(&buff[0], resWidth, resHeight, rose);
 
         // Present buffer
-
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, buffer);
         target.clearBuffer();
 
+        Rasterizer::render_triangle(v1, v2, v3, &target);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, target.getPixels());
+
+
         glBegin(GL_QUADS);
 
-        glTexCoord2f(0, 0);
+        glTexCoord2f(0, 1);
         glVertex2f(-1, 1);
 
-        glTexCoord2f(1, 0);
+        glTexCoord2f(1, 1);
         glVertex2f(1, 1);
 
-        glTexCoord2f(1, 1);
+        glTexCoord2f(1, 0);
         glVertex2f(1, -1);
 
-        glTexCoord2f(0, 1);
+        glTexCoord2f(0, 0);
         glVertex2f(-1, -1);
 
         glEnd();
+
         glfwSwapBuffers(window);
     }
     glfwTerminate();
