@@ -1,8 +1,5 @@
 #include <iostream>
 #include <cstdio>
-#include "Mat4.hpp"
-#include "Vec3.hpp"
-#include "Vec4.hpp"
 #include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
@@ -10,6 +7,7 @@
 #include <ctime>
 #include "Texture.hpp"
 #include "Scene.hpp"
+#include "Screen.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -50,7 +48,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // glfwSwapInterval(1); // Enable v-sync
+    glfwSwapInterval(1); // Enable v-sync
 
     // We make the OpenGL context current on this calling thread for the window
     // It's mandatory before any OpenGL call
@@ -68,20 +66,14 @@ int main(int argc, char *argv[])
     double time;
     double deltaTime;
 
-    Texture target{resWidth, resHeight, {255, 255, 255}};
-    target.clearBuffer();
+    // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
 
-    GLuint buffer;
-    glGenTextures(1, &buffer);
-    glBindTexture(GL_TEXTURE_2D, buffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, resWidth, resHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, target.getPixels());
+    Screen screen{resWidth,resHeight};
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     //Serious stuff
 
-    // Scene scene{};
+    Scene scene{};
 
     // Mesh mesh_triangle{}
 
@@ -93,44 +85,22 @@ int main(int argc, char *argv[])
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
-        // DeltaTime
-        {
+        
+        {   // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
+            std::cout << "FPS: " << 1 / deltaTime << std::endl;
         }
 
-        std::cout << "FPS: " << 1 / deltaTime << std::endl;
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
 
         // glViewport(0, 0, screenWidth, screenHeight);
         // glClearColor(0.5, 0.5, 0.5, 1);
 
-        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // clearBuffer(&buff[0], resWidth, resHeight, rose);
-
         // Present buffer
+        screen.display();
 
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, buffer);
-        target.clearBuffer();
-
-        glBegin(GL_QUADS);
-
-        glTexCoord2f(0, 0);
-        glVertex2f(-1, 1);
-
-        glTexCoord2f(1, 0);
-        glVertex2f(1, 1);
-
-        glTexCoord2f(1, 1);
-        glVertex2f(1, -1);
-
-        glTexCoord2f(0, 1);
-        glVertex2f(-1, -1);
-
-        glEnd();
         glfwSwapBuffers(window);
     }
     glfwTerminate();
