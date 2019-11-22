@@ -1,29 +1,31 @@
-#pragma once 
+#pragma once
 
 #include "Texture.hpp"
 #include "Scene.hpp"
-
 
 enum
 {
     POINT,
     TRIANGLE,
-
     FORM
 };
 
 class Rasterizer
 {
+private:
+    uint *m_width;
+    uint *m_height;
+
+    Texture render_target;
+    static void draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTarget, uint width, uint height);
+    static void draw_point(Vertex &v1, Texture &pTarget);
+
 public:
-    Rasterizer();
+    Rasterizer(uint *width, uint *height);
     ~Rasterizer();
-    void render_scene(Scene* pScene, Texture* pTarget);
-    static void render_triangle(Vertex& v1, Vertex& v2, Vertex& v3, Texture *pTarget);
-    static void render_point(Vertex& v1, Texture *pTarget);
-    static float find_x_max_triangle(Vertex& v1, Vertex& v2, Vertex& v3);
-    static float find_x_min_triangle(Vertex& v1, Vertex& v2, Vertex& v3);
-    static float find_y_max_triangle(Vertex& v1, Vertex& v2, Vertex& v3);
-    static float find_y_min_triangle(Vertex& v1, Vertex& v2, Vertex& v3);
+
+    void render_scene(Scene *pScene);
+
+    void draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3);
+    void draw_point(Vertex &v1);
 };
-
-

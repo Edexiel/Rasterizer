@@ -8,7 +8,6 @@
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
-#include "Screen.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -18,13 +17,13 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 int main(int argc, char *argv[])
 {
-    unsigned int screenWidth = 800;
-    unsigned int screenHeight = 600;
+    uint screenWidth = 800;
+    uint screenHeight = 600;
 
     float modres = 1;
 
-    unsigned int resWidth = screenWidth / modres;
-    unsigned int resHeight = screenHeight / modres;
+    uint resWidth = screenWidth / modres;
+    uint resHeight = screenHeight / modres;
 
     // Init GLFW
     if (!glfwInit())
@@ -69,7 +68,7 @@ int main(int argc, char *argv[])
 
     // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
 
-    Screen screen{resWidth,resHeight};
+    Rasterizer renderer{&resWidth,&resHeight};
 
 
     //Serious stuff
@@ -86,6 +85,10 @@ int main(int argc, char *argv[])
     Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
     Vertex v2 {{800, 50, 0}, {0, 255, 0}};
     Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
+
+    float sample = 1.f; // moyenne d'une seconde
+    uint frames;
+    double time_acc;
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -93,7 +96,16 @@ int main(int argc, char *argv[])
         {   // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
-            std::cout << "FPS: " << 1 / deltaTime << std::endl;
+
+            time_acc += deltaTime;
+            frames++;
+
+            if(time_acc >= sample)
+            {
+                std::cout << "FPS: " << 1 / (time_acc/frames) << std::endl;
+                frames = 0;
+                time_acc = 0.f;
+            }
         }
 
         // Resize viewport
@@ -103,9 +115,9 @@ int main(int argc, char *argv[])
         // glClearColor(0.5, 0.5, 0.5, 1);
 
         // Present buffer
-        Rasterizer::render_triangle(v1, v2, v3, &screen.render_target);
-        screen.render_target.applyTexture();
-        screen.display();
+        // renderer.draw_triangle(v1, v2, v3);
+        renderer.render_scene();
+        
 
         glfwSwapBuffers(window);
     }
