@@ -47,10 +47,22 @@ void Rasterizer::render_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture *pT
     float yMin = find_y_min_triangle(v1, v2, v3);
     float yMax = find_y_max_triangle(v1, v2, v3);
 
+
+    // TO DO : change the width and the height
+    if (xMin < 0)
+        xMin = 0;
+    if(xMax > 800)
+        xMax = 0;
+    if (yMin < 0)
+        yMin = 0;
+    if(yMax > 600)
+        yMax = 0;
+
     for (float y = yMin; y < yMax; y++)
     {
         for (float x = xMin; x < xMax; x++)
         {
+            //AVX
             float w1 = (((v2.position.y - v3.position.y) * (x - v3.position.x)) + ((v3.position.x - v2.position.x) * (y - v3.position.y))) /
                        (((v2.position.y - v3.position.y) * (v1.position.x - v3.position.x)) + ((v3.position.x - v2.position.x) * (v1.position.y - v3.position.y)));
 
