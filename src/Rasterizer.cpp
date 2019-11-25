@@ -3,6 +3,7 @@
 #include "Scene.hpp"
 #include "Vertex.hpp"
 // #include "cmath"
+#include "Mat4.hpp"
 #include "math.hpp"
 
 Rasterizer::Rasterizer(uint *width, uint *height) : m_width{width}, m_height{height}, render_target{*width, *height} {}
@@ -10,16 +11,16 @@ Rasterizer::~Rasterizer() {}
 
 void Rasterizer::render_scene(Scene *pScene)
 {
-    //set the color in black
+    // TO DO : set the color in black
     for (Entity &e : pScene->entities)
     {
 
-        switch (POINT)
+        switch (TRIANGLE)
         {
         case POINT:
         {
             for (uint i = 0; i < e.mesh->indices.size(); i++)
-                draw_point(e.mesh->vertices[i]);
+                draw_point(e.mesh->vertices[i], e.transfo);
             break;
         }
         case TRIANGLE:
@@ -28,7 +29,7 @@ void Rasterizer::render_scene(Scene *pScene)
                 break;
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
-                draw_triangle(e.mesh->vertices[i], e.mesh->vertices[i + 1], e.mesh->vertices[i + 2]);
+                draw_triangle(e.mesh->vertices[i], e.mesh->vertices[i + 1], e.mesh->vertices[i + 2], e.transfo);
             break;
         }
 
@@ -39,8 +40,8 @@ void Rasterizer::render_scene(Scene *pScene)
 
     { // Render target
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, render_target.getTextureName());
         render_target.uploadTexture();
+        glBindTexture(GL_TEXTURE_2D, render_target.getTextureName());
         render_target.clearBuffer();
 
         glBegin(GL_QUADS);
@@ -56,14 +57,19 @@ void Rasterizer::render_scene(Scene *pScene)
 
         glTexCoord2f(0, 0);
         glVertex2f(-1, -1);
+
         glBindTexture(GL_TEXTURE_2D, 0);
         glEnd();
     }
 }
 
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
+void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 {
-
+    
+    v1.position = (transfo * Vec4{v1.position, 1}).xyz;
+    v2.position = (transfo * Vec4{v2.position, 1}).xyz;
+    v3.position = (transfo * Vec4{v3.position, 1}).xyz;
+    
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
     float yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
@@ -73,11 +79,11 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
     if (xMin < 0)
         xMin = 0;
     if (xMax > *m_width)
-        xMax = 0; //width ?
+        xMax = *m_width;
     if (yMin < 0)
         yMin = 0;
     if (yMax > *m_height)
-        yMax = 0; //height ?
+        yMax = *m_height;
 
     for (float y = yMin; y < yMax; y++)
     {
@@ -99,7 +105,8 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
     }
 }
 
-void Rasterizer::draw_point(Vertex &v)
+void Rasterizer::draw_point(Vertex v, Mat4& transfo)
 {
+    v.position = (transfo * Vec4{v.position, 1}).xyz;
     render_target.SetPixelColor(v.position.x, v.position.y, v.color);
 }
