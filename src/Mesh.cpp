@@ -13,14 +13,14 @@ Mesh *Mesh::CreateCube()
 {
     Mesh *mesh = new Mesh{};
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF,0x00, 0x00}});  // 0
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0x00, 0xFF, 0x00}});   // 1
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0x00, 0x00, 0xFF}}); // 2
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0x00, 0x00}});  // 3
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});   // 4
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0x00, 0x00, 0xFF}});    // 5
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0x00, 0x00}});   // 6
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});  // 7
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0x00, 0x00}});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0x00, 0xFF, 0x00}});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0x00, 0x00, 0xFF}});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0x00, 0x00}});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0x00, 0x00, 0xFF}});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0x00, 0x00}});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});
 
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
@@ -36,6 +36,8 @@ Mesh *Mesh::CreateCube()
     mesh->indices.push_back(4);
     mesh->indices.push_back(6);
     mesh->indices.push_back(5);
+
+    return mesh;
 }
 
 Mesh *Mesh::CreateSphere(int latitudeCount, int longitudeCount)

@@ -17,9 +17,7 @@ void Entity::translate(float x, float y, float z)
 }
 
 /*
- *  float x : angle in radian
- *  float z : angle in radian
- *  float y : angle in radian
+ * Angles in radian
  */
 void Entity::rotate(float x, float y, float z)
 {
