@@ -3,6 +3,7 @@
 #include "Scene.hpp"
 #include "Vertex.hpp"
 // #include "cmath"
+#include "Mat4.hpp"
 #include "math.hpp"
 
 Rasterizer::Rasterizer(uint *width, uint *height) : m_width{width}, m_height{height}, render_target{*width, *height} {}
@@ -19,7 +20,7 @@ void Rasterizer::render_scene(Scene *pScene)
         case POINT:
         {
             for (uint i = 0; i < e.mesh->indices.size(); i++)
-                draw_point(e.mesh->vertices[i]);
+                draw_point(e.mesh->vertices[i], e.transfo);
             break;
         }
         case TRIANGLE:
@@ -28,7 +29,7 @@ void Rasterizer::render_scene(Scene *pScene)
                 break;
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
-                draw_triangle(e.mesh->vertices[i], e.mesh->vertices[i + 1], e.mesh->vertices[i + 2]);
+                draw_triangle(e.mesh->vertices[i], e.mesh->vertices[i + 1], e.mesh->vertices[i + 2], e.transfo);
             break;
         }
 
@@ -61,9 +62,12 @@ void Rasterizer::render_scene(Scene *pScene)
     }
 }
 
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTarget, uint width, uint height)
+void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Mat4& transfo)
 {
-
+    v1.position = (transfo * Vec4{v1.position, 1}).xyz;
+    v2.position = (transfo * Vec4{v2.position, 1}).xyz;
+    v3.position = (transfo * Vec4{v3.position, 1}).xyz;
+    
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
     float yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
@@ -72,12 +76,12 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTar
     // TO DO : change the width and the height
     if (xMin < 0)
         xMin = 0;
-    if (xMax > width)
-        xMax = 0; //width ?
+    if (xMax > *m_width)
+        xMax = *m_width;
     if (yMin < 0)
         yMin = 0;
-    if (yMax > height)
-        yMax = 0; //height ?
+    if (yMax > *m_height)
+        yMax = *m_height;
 
     for (float y = yMin; y < yMax; y++)
     {
@@ -94,22 +98,13 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTar
 
             //if (fabs((w1 + w2 + w3) - 1) == 0)
             if (w1 >= 0.f && w2 >= 0.f && w3 >= 0.0005f)
-                pTarget.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                render_target.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
         }
     }
 }
 
-void Rasterizer::draw_point(Vertex &v, Texture &t)
+void Rasterizer::draw_point(Vertex &v, Mat4& transfo)
 {
-    t.SetPixelColor(v.position.x, v.position.y, v.color);
-}
-
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
-{
-    draw_triangle(v1, v2, v3, render_target, *m_width, *m_height);
-}
-
-void Rasterizer::draw_point(Vertex &v)
-{
-    draw_point(v, render_target);
+    v.position = (transfo * Vec4{v.position, 1}).xyz;
+    render_target.SetPixelColor(v.position.x, v.position.y, v.color);
 }

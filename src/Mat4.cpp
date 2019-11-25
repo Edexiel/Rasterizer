@@ -13,6 +13,11 @@ Mat4::Mat4(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, const Vec4 &v4)
 Mat4::Mat4(const float (&array)[16]) : a{*array} {}
 Mat4::~Mat4() {}
 
+static Mat4 identity()
+{
+    // return Mat4{{{1,0,0,0},}}
+}
+
 static Mat4 CreateTranslationMatrix(const Vec3 &t)
 {
     return Mat4{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {t.x, t.y, t.z, 1}};
@@ -59,7 +64,7 @@ static Mat4 CreateTransformMatrix(const Vec3 &t, const Vec3 &r, const Vec3 &s)
     return CreateTranslationMatrix(t) * (CreateXRotationMatrix(r.x) * CreateYRotationMatrix(r.y) * CreateZRotationMatrix(r.z) )* CreateScaleMatrix(s);
 }
 
-Mat4 Mat4::operator+(const Mat4 &other)
+Mat4 Mat4::operator+(const Mat4 &other) const
 {
     Mat4 res{0};
     for (int i = 0; i < 16; i++)
@@ -68,7 +73,7 @@ Mat4 Mat4::operator+(const Mat4 &other)
     return res;
 }
 
-Mat4 Mat4::operator*(const Mat4 &other)
+Mat4 Mat4::operator*(const Mat4 &other) const 
 {
     Mat4 res = {0};
 
@@ -79,7 +84,7 @@ Mat4 Mat4::operator*(const Mat4 &other)
     return res;
 }
 
-Vec4 Mat4::operator*(const Vec4 &_v)
+Vec4 Mat4::operator*(const Vec4 &_v) const 
 {
     Vec4 res{0, 0, 0, 0};
     for (int i = 0; i < 4; i++)
