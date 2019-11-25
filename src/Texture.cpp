@@ -25,7 +25,7 @@ void Texture::SetPixelColor(uint x, uint y, const Color &c)
 
 void Texture::clearBuffer()
 {
-    memset(pixels, 0x7F, width * height * sizeof(Color));
+    memset(pixels, 0xFF, width * height * sizeof(Color));
     // for (size_t i = 0; i < width *height; i++)
     //     pixels[i] = {0xFF,0x00,0x00};
 }
