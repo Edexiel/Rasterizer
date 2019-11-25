@@ -1,22 +1,19 @@
-#pragma once 
+#pragma once
 #include "Mesh.hpp"
 #include "Mat4.hpp"
-
 
 class Entity
 {
 private:
-
 public:
-    Mesh* mesh;
+    Mesh *mesh;
     Mat4 transfo;
     Entity();
-    Entity(Mesh* _mesh);
-    Entity(Mesh* mesh, Mat4& transfo);
+    Entity(Mesh *_mesh);
+    Entity(Mesh *mesh, Mat4 &transfo);
     ~Entity();
 
-    // void scale(float x);
-    // void translate();
-    // void rotate();
+    void scale(float x, float y, float z);
+    void translate(float x, float y, float z);
+    void rotate(float x, float y, float z);
 };
-
