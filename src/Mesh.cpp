@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "Vec4.hpp"
+#include <cmath>
 
 Mesh::Mesh()
 {
@@ -42,6 +43,33 @@ Mesh *Mesh::CreateCube()
 
 Mesh *Mesh::CreateSphere(int latitudeCount, int longitudeCount)
 {
+        // Mesh *mesh = new Mesh{};
+
+    // float x, y, z, alpha, beta; // Storage for coordinates and angles
+    // float radius = 1.0f;
+    // int gradation = 32;
+
+    // for (alpha = 0.0; alpha < M_PI; alpha += M_PI/gradation)
+    // {    
+    //     for (beta = 0.0; beta < 2.00 * M_PI; beta += M_PI/gradation)            
+    //     {            
+    //         x = radius * cos(beta) * sin(alpha);
+    //         y = radius * sin(beta) * sin(alpha);
+    //         z = radius * cos(alpha);
+    //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
+    //         x = radius * cos(beta) * sin(alpha + M_PI / gradation);
+    //         y = radius * sin(beta) * sin(alpha + M_PI / gradation);
+    //         z = radius * cos(alpha + M_PI / gradation);            
+    //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
+
+
+    //         return mesh;            
+    //     }
+
+    float y = cosf(i * M_PI / l);
+    float r = sin(i * M_PI / l);
+    float x = cosf(j * (M_PI * 2) / L) * r;
+    float z = sinf(j * (M_PI * 2) / L) * r;
 }
 
 Mesh *Mesh::CreateTriangle()

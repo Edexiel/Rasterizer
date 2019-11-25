@@ -5,6 +5,7 @@
 // #include "cmath"
 #include "Mat4.hpp"
 #include "math.hpp"
+#include "Vec2.hpp"
 
 Rasterizer::Rasterizer(uint *width, uint *height) : m_width{width}, m_height{height}, render_target{*width, *height} {}
 Rasterizer::~Rasterizer() {}
@@ -65,11 +66,14 @@ void Rasterizer::render_scene(Scene *pScene)
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 {
-
     v1.position = (transfo * Vec4{v1.position, 1}).xyz;
     v2.position = (transfo * Vec4{v2.position, 1}).xyz;
     v3.position = (transfo * Vec4{v3.position, 1}).xyz;
-       
+
+    get_viewport_pos(v1);
+    get_viewport_pos(v2);
+    get_viewport_pos(v3);
+
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
     float yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
@@ -108,5 +112,12 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 void Rasterizer::draw_point(Vertex v, Mat4& transfo)
 {
     v.position = (transfo * Vec4{v.position, 1}).xyz;
+    get_viewport_pos(v);
     render_target.SetPixelColor(v.position.x, v.position.y, v.color);
+}
+
+void Rasterizer::get_viewport_pos(Vertex &v)
+{
+    v.position.x = (v.position.x + 1)  * 0.5 * *m_width;
+    v.position.y = (v.position.y + 1)  * 0.5 * *m_height;
 }
