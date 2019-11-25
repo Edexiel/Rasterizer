@@ -15,6 +15,7 @@ public:
             float r,g,b,a;
         };
         float e[4];
+        Vec3 xyz;
     };
 
     Vec4();
@@ -26,5 +27,5 @@ public:
     float getMagnitude() const;
     void Normalize();
     Vec4 operator+(Vec4 &other);
-    Vec4 operator*(float float_other);
+    Vec4 operator*(float f);
 };
