@@ -12,7 +12,7 @@ public:
     Mat4 transfo;
     Entity();
     Entity(Mesh* _mesh);
-    Entity(Mesh* mesh, Mat4& transfo);
+    Entity(Mesh* mesh, Mat4 transfo);
     ~Entity();
 
     // void scale(float x);

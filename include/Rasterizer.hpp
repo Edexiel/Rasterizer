@@ -18,8 +18,8 @@ private:
 
     Texture render_target;
     
-    void draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Mat4& transfo);
-    void draw_point(Vertex &v1, Mat4& transfo);
+    void draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo);
+    void draw_point(Vertex v1, Mat4& transfo);
 public:
     Rasterizer(uint *width, uint *height);
     ~Rasterizer();

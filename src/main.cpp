@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
     Scene scene{};
 
-    // scene.entities.push_back({Mesh::CreateTriangle,});
+    scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{0.5,0,0,0}, Vec4{0,0.5,0,0}, Vec4{0,0,0.5,0}, Vec4{0,0,0,1} }});
 
     // Mesh mesh_triangle{}
 
@@ -84,9 +84,9 @@ int main(int argc, char *argv[])
     // scene.entities.push_back()
 
     // Main loop
-    Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
-    Vertex v2 {{800, 50, 0}, {0, 255, 0}};
-    Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
+    // Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
+    // Vertex v2 {{800, 50, 0}, {0, 255, 0}};
+    // Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
 
     float sample = 1.f; // moyenne d'une seconde
     uint frames;

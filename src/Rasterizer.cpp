@@ -11,7 +11,7 @@ Rasterizer::~Rasterizer() {}
 
 void Rasterizer::render_scene(Scene *pScene)
 {
-    //set the color in black
+    // TO DO : set the color in black
     for (Entity &e : pScene->entities)
     {
 
@@ -40,8 +40,8 @@ void Rasterizer::render_scene(Scene *pScene)
 
     { // Render target
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, render_target.getTextureName());
         render_target.uploadTexture();
+        glBindTexture(GL_TEXTURE_2D, render_target.getTextureName());
         render_target.clearBuffer();
 
         glBegin(GL_QUADS);
@@ -57,13 +57,15 @@ void Rasterizer::render_scene(Scene *pScene)
 
         glTexCoord2f(0, 0);
         glVertex2f(-1, -1);
+
         glBindTexture(GL_TEXTURE_2D, 0);
         glEnd();
     }
 }
 
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Mat4& transfo)
+void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 {
+    
     v1.position = (transfo * Vec4{v1.position, 1}).xyz;
     v2.position = (transfo * Vec4{v2.position, 1}).xyz;
     v3.position = (transfo * Vec4{v3.position, 1}).xyz;
@@ -103,7 +105,7 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Mat4& transfo
     }
 }
 
-void Rasterizer::draw_point(Vertex &v, Mat4& transfo)
+void Rasterizer::draw_point(Vertex v, Mat4& transfo)
 {
     v.position = (transfo * Vec4{v.position, 1}).xyz;
     render_target.SetPixelColor(v.position.x, v.position.y, v.color);
