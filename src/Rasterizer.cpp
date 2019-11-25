@@ -65,11 +65,11 @@ void Rasterizer::render_scene(Scene *pScene)
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 {
-    
+
     v1.position = (transfo * Vec4{v1.position, 1}).xyz;
     v2.position = (transfo * Vec4{v2.position, 1}).xyz;
     v3.position = (transfo * Vec4{v3.position, 1}).xyz;
-    
+       
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
     float yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
