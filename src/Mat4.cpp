@@ -30,30 +30,36 @@ Mat4 Mat4::CreateScaleMatrix(const Vec3 &scale)
 
 //AVX
 /*
- *  float angle in degres
+ *  float angle in rad
  */
 Mat4 Mat4::CreateXRotationMatrix(const float angle)
 {
-    float c = cosf(angle * M_PI / 180);
-    float s = sinf(angle * M_PI / 180);
+    float c = cosf(angle);
+    float s = sinf(angle);
 
     return Mat4{{1, 0, 0, 0}, {0, c, s, 0}, {0, -s, c, 0}, {0, 0, 0, 1}};
 }
 
 //AVX
+/*
+ *  float angle in rad
+ */
 Mat4 Mat4::CreateYRotationMatrix(const float angle)
 {
-    float c = cosf(angle * M_PI / 180);
-    float s = sinf(angle * M_PI / 180);
+    float c = cosf(angle);
+    float s = sinf(angle);
 
     return Mat4{{c, 0, -s, 0}, {0, 1, 0, 0}, {s, 0, c, 0}, {0, 0, 0, 1}};
 }
 
 //AVX
+/*
+ *  float angle in rad
+ */
 Mat4 Mat4::CreateZRotationMatrix(const float angle)
 {
-    float c = cosf(angle * M_PI / 180);
-    float s = sinf(angle * M_PI / 180);
+    float c = cosf(angle);
+    float s = sinf(angle);
 
     return Mat4{{c, s, 0, 0}, {-s, c, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 }
