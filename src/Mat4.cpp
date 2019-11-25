@@ -93,9 +93,14 @@ Mat4 Mat4::operator*(const Mat4 &other) const
 Vec4 Mat4::operator*(const Vec4 &_v) const
 {
     Vec4 res{0, 0, 0, 0};
-    for (int i = 0; i < 4; i++)
-        for (int j = 0; j < 4; j++)
-            res.e[i] += v[i].e[j] * _v.e[j];
+    //for (int i = 0; i < 4; i++)
+    //    for (int j = 0; j < 4; j++)
+    //        res.e[i] += v[i].e[j] * _v.e[j];
+
+    res.x = _v.x * v[0].e[0] + _v.y * v[1].e[0] + _v.z * v[2].e[0] + _v.w * v[3].e[0];
+    res.y = _v.x * v[0].e[1] + _v.y * v[1].e[1] + _v.z * v[2].e[1] + _v.w * v[3].e[1];
+    res.z = _v.x * v[0].e[2] + _v.y * v[1].e[2] + _v.z * v[2].e[2] + _v.w * v[3].e[2];
+    res.w = _v.x * v[0].e[3] + _v.y * v[1].e[3] + _v.z * v[2].e[3] + _v.w * v[3].e[3];
 
     return res;
 }
