@@ -26,6 +26,6 @@ public:
 
     void render_scene(Scene *pScene);
 
-    void draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3);
+    void draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Mat4& transfo);
     void draw_point(Vertex &v1);
 };

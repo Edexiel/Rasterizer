@@ -82,11 +82,6 @@ int main(int argc, char *argv[])
     // scene.entities.push_back()
 
     // Main loop
-<<<<<<< HEAD
-    Vertex v1 {{250, 50, 0}, {255, 0, 0}};
-    Vertex v2 {{500, 50, 0}, {255, 0, 0}};
-    Vertex v3 {{375, 300, 0}, {0, 0, 255}};
-=======
     Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
     Vertex v2 {{800, 50, 0}, {0, 255, 0}};
     Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
@@ -94,7 +89,6 @@ int main(int argc, char *argv[])
     float sample = 1.f; // moyenne d'une seconde
     uint frames;
     double time_acc;
->>>>>>> f1022d7a2ea9026eefe4242a23ee36da9f32ff45
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -121,8 +115,8 @@ int main(int argc, char *argv[])
         // glClearColor(0.5, 0.5, 0.5, 1);
 
         // Present buffer
-        // renderer.draw_triangle(v1, v2, v3);
-        renderer.render_scene();
+        //renderer.draw_triangle(v1, v2, v3);
+        renderer.render_scene(&scene);
         
 
         glfwSwapBuffers(window);

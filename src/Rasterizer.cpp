@@ -14,7 +14,7 @@ void Rasterizer::render_scene(Scene *pScene)
     for (Entity &e : pScene->entities)
     {
 
-        switch (POINT)
+        switch (TRIANGLE)
         {
         case POINT:
         {

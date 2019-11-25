@@ -2,7 +2,7 @@
 
 #include "glad/glad.h"
 #include <GL/glu.h>
-
+#include "math.hpp"
 #include "Color.hpp"
 
 class Texture
