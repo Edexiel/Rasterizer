@@ -61,7 +61,7 @@ void Rasterizer::render_scene(Scene *pScene)
     }
 }
 
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTarget, uint width, uint height)
+void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
 {
 
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
@@ -72,11 +72,11 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTar
     // TO DO : change the width and the height
     if (xMin < 0)
         xMin = 0;
-    if (xMax > width)
+    if (xMax > *m_width)
         xMax = 0; //width ?
     if (yMin < 0)
         yMin = 0;
-    if (yMax > height)
+    if (yMax > *m_height)
         yMax = 0; //height ?
 
     for (float y = yMin; y < yMax; y++)
@@ -94,22 +94,12 @@ void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3, Texture &pTar
 
             //if (fabs((w1 + w2 + w3) - 1) == 0)
             if (w1 >= 0.f && w2 >= 0.f && w3 >= 0.0005f)
-                pTarget.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                render_target.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
         }
     }
 }
 
-void Rasterizer::draw_point(Vertex &v, Texture &t)
-{
-    t.SetPixelColor(v.position.x, v.position.y, v.color);
-}
-
-void Rasterizer::draw_triangle(Vertex &v1, Vertex &v2, Vertex &v3)
-{
-    draw_triangle(v1, v2, v3, render_target, *m_width, *m_height);
-}
-
 void Rasterizer::draw_point(Vertex &v)
 {
-    draw_point(v, render_target);
+    render_target.SetPixelColor(v.position.x, v.position.y, v.color);
 }

@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
 
     Scene scene{};
 
+    // scene.entities.push_back({Mesh::CreateTriangle,});
+
     // Mesh mesh_triangle{}
 
     // Entity e_triangle{};

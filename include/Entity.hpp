@@ -11,6 +11,7 @@ public:
     Mesh* mesh;
     Mat4 transfo;
     Entity();
+    Entity(Mesh* mesh, Mat4& transfo);
     ~Entity();
 };
 

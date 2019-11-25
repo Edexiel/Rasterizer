@@ -13,6 +13,11 @@ Mat4::Mat4(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, const Vec4 &v4)
 Mat4::Mat4(const float (&array)[16]) : a{*array} {}
 Mat4::~Mat4() {}
 
+static Mat4 identity()
+{
+    // return Mat4{{{1,0,0,0},}}
+}
+
 static Mat4 CreateTranslationMatrix(const Vec3 &t)
 {
     return Mat4{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {t.x, t.y, t.z, 1}};

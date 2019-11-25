@@ -17,6 +17,7 @@ public:
     Mat4(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, const Vec4 &v4);
     ~Mat4();
 
+    static Mat4 identity();
     static Mat4 CreateTranslationMatrix(const Vec3 &translation);
     static Mat4 CreateScaleMatrix(const Vec3 &scale);
     static Mat4 CreateXRotationMatrix(const float angle);
