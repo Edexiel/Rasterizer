@@ -13,17 +13,17 @@ Mat4::Mat4(const Vec4 &v1, const Vec4 &v2, const Vec4 &v3, const Vec4 &v4)
 Mat4::Mat4(const float (&array)[16]) : a{*array} {}
 Mat4::~Mat4() {}
 
-static Mat4 identity()
+Mat4 Mat4::identity()
 {
-    // return Mat4{{{1,0,0,0},}}
+    return Mat4{{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}};
 }
 
-static Mat4 CreateTranslationMatrix(const Vec3 &t)
+Mat4 Mat4::CreateTranslationMatrix(const Vec3 &t)
 {
     return Mat4{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {t.x, t.y, t.z, 1}};
 }
 
-static Mat4 CreateScaleMatrix(const Vec3 &scale)
+Mat4 Mat4::CreateScaleMatrix(const Vec3 &scale)
 {
     return Mat4{{scale.x, 0, 0, 0}, {0, scale.y, 0, 0}, {0, 0, scale.z, 0}, {0, 0, 0, 1}};
 }
@@ -32,7 +32,7 @@ static Mat4 CreateScaleMatrix(const Vec3 &scale)
 /*
  *  float angle in degres
  */
-static Mat4 CreateXRotationMatrix(const float angle)
+Mat4 Mat4::CreateXRotationMatrix(const float angle)
 {
     float c = cosf(angle * M_PI / 180);
     float s = sinf(angle * M_PI / 180);
@@ -41,7 +41,7 @@ static Mat4 CreateXRotationMatrix(const float angle)
 }
 
 //AVX
-static Mat4 CreateYRotationMatrix(const float angle)
+Mat4 Mat4::CreateYRotationMatrix(const float angle)
 {
     float c = cosf(angle * M_PI / 180);
     float s = sinf(angle * M_PI / 180);
@@ -50,7 +50,7 @@ static Mat4 CreateYRotationMatrix(const float angle)
 }
 
 //AVX
-static Mat4 CreateZRotationMatrix(const float angle)
+Mat4 Mat4::CreateZRotationMatrix(const float angle)
 {
     float c = cosf(angle * M_PI / 180);
     float s = sinf(angle * M_PI / 180);
@@ -59,21 +59,21 @@ static Mat4 CreateZRotationMatrix(const float angle)
 }
 
 //AVX
-static Mat4 CreateTransformMatrix(const Vec3 &t, const Vec3 &r, const Vec3 &s)
+Mat4 Mat4::CreateTransformMatrix(const Vec3 &t, const Vec3 &r, const Vec3 &s)
 {
-    return CreateTranslationMatrix(t) * (CreateXRotationMatrix(r.x) * CreateYRotationMatrix(r.y) * CreateZRotationMatrix(r.z) )* CreateScaleMatrix(s);
+    return CreateTranslationMatrix(t) * (CreateXRotationMatrix(r.x) * CreateYRotationMatrix(r.y) * CreateZRotationMatrix(r.z)) * CreateScaleMatrix(s);
 }
 
-Mat4 Mat4::operator+(const Mat4 &other)
+Mat4 Mat4::operator+(const Mat4 &other) const
 {
     Mat4 res{0};
     for (int i = 0; i < 16; i++)
         res.a[i] = a[i] + other.a[i];
-    
+
     return res;
 }
 
-Mat4 Mat4::operator*(const Mat4 &other)
+Mat4 Mat4::operator*(const Mat4 &other) const
 {
     Mat4 res = {0};
 
@@ -84,7 +84,7 @@ Mat4 Mat4::operator*(const Mat4 &other)
     return res;
 }
 
-Vec4 Mat4::operator*(const Vec4 &_v)
+Vec4 Mat4::operator*(const Vec4 &_v) const
 {
     Vec4 res{0, 0, 0, 0};
     for (int i = 0; i < 4; i++)
@@ -93,4 +93,3 @@ Vec4 Mat4::operator*(const Vec4 &_v)
 
     return res;
 }
-
