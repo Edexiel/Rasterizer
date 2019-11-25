@@ -63,23 +63,24 @@ int main(int argc, char *argv[])
     }
     glfwSetKeyCallback(window, key_callback);
 
-    double time;
+    // Time && fps
+    double time = 0.f;
     double deltaTime;
+    float sample = 1.f; // moyenne d'une seconde
+    uint frames = 0;
+    double time_acc = 0.f;
 
     // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
 
-    Rasterizer renderer{&resWidth,&resHeight};
-
+    Rasterizer renderer{&resWidth, &resHeight};
 
     //Serious stuff
 
     Scene scene{};
 
-    scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
+    scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     //scene.entities[0].scale(0.5, 0.5, 1);
     //scene.entities[0].translate(100, 100, 0);
-
-
 
     // Mesh mesh_triangle{}
 
@@ -92,27 +93,33 @@ int main(int argc, char *argv[])
     // Vertex v2 {{800, 50, 0}, {0, 255, 0}};
     // Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
 
-    float sample = 1.f; // moyenne d'une seconde
-    uint frames;
-    double time_acc;
+    float rotation = 0.f;
+
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        
-        {   // DeltaTime
+
+        { // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
 
             time_acc += deltaTime;
             frames++;
 
-            if(time_acc >= sample)
+            if (time_acc >= sample)
             {
-                std::cout << "FPS: " << 1 / (time_acc/frames) << std::endl;
+                std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
                 frames = 0;
                 time_acc = 0.f;
             }
         }
+
+        rotation += 0.015f * deltaTime;
+
+        if (rotation > 0.5f)
+            scene.entities[0].rotate(0.f, 0.f, 0.f);
+        else
+            scene.entities[0].rotate(0.f, rotation, 0.f);
 
         // Resize viewport
         // glfwGetWindowSize(window, &screenWidth, &screenHeight);
@@ -123,7 +130,6 @@ int main(int argc, char *argv[])
         // Present buffer
         //renderer.draw_triangle(v1, v2, v3);
         renderer.render_scene(&scene);
-        
 
         glfwSwapBuffers(window);
     }

@@ -16,4 +16,7 @@ public:
     void scale(float x, float y, float z);
     void translate(float x, float y, float z);
     void rotate(float x, float y, float z);
+
+    void update(double deltaTime);
+    void draw(double deltaTime);
 };
