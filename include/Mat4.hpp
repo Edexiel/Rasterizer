@@ -25,7 +25,7 @@ public:
     static Mat4 CreateZRotationMatrix(const float angle);
     static Mat4 CreateTransformMatrix(const Vec3 &position, const Vec3 &rotation, const Vec3 &scale);
 
-    Mat4 operator+(const Mat4 &other);
-    Mat4 operator*(const Mat4 &other);
-    Vec4 operator*(const Vec4 &v);
+    Mat4 operator+(const Mat4 &other) const;
+    Mat4 operator*(const Mat4 &other) const;
+    Vec4 operator*(const Vec4 &v) const;
 };
