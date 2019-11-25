@@ -83,9 +83,9 @@ int main(int argc, char *argv[])
     // scene.entities.push_back()
 
     // Main loop
-    Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
-    Vertex v2 {{800, 50, 0}, {0, 255, 0}};
-    Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
+    Vertex v1 {{250, 50, 0}, {255, 0, 0}};
+    Vertex v2 {{500, 50, 0}, {255, 0, 0}};
+    Vertex v3 {{375, 300, 0}, {0, 0, 255}};
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
