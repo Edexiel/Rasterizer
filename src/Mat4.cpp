@@ -15,7 +15,7 @@ Mat4::~Mat4() {}
 
 Mat4 Mat4::identity()
 {
-    return Mat4{{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}};
+    return Mat4{{1, 0, 0, 0},{0, 1, 0, 0},{0, 0, 1, 0}, {0, 0, 0, 1}};
 }
 
 Mat4 Mat4::CreateTranslationMatrix(const Vec3 &t)
