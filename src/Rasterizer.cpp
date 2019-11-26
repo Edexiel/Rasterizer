@@ -20,8 +20,8 @@ void Rasterizer::render_scene(Scene *pScene)
         {
         case POINT:
         {
-            for (uint i = 0; i < e.mesh->indices.size(); i++)
-                draw_point(e.mesh->vertices[e.mesh->indices[i]], e.transfo);
+            for (uint i = 0; i < e.mesh->vertices.size(); i++)
+                draw_point(e.mesh->vertices[i], e.transfo);
             break;
         }
         case TRIANGLE:
@@ -102,8 +102,7 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 
             float w3 = 1.f - w1 - w2;
 
-            //if (fabs((w1 + w2 + w3) - 1) == 0)
-            if (w1 >= 0.f && w2 >= 0.f && w3 >= 0.0005f)
+            if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1 )
                 render_target.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
         }
     }
