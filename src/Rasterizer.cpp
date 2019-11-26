@@ -7,7 +7,7 @@
 #include "math.hpp"
 #include "Vec2.hpp"
 
-Rasterizer::Rasterizer(uint *width, uint *height) : m_width{width}, m_height{height}, render_target{*width, *height} {}
+Rasterizer::Rasterizer(uint *width, uint *height) : m_width{width}, m_height{height}, render_target{*width, *height},depth_buffer{*width, *height} {}
 Rasterizer::~Rasterizer() {}
 
 void Rasterizer::render_scene(Scene *pScene)
@@ -15,8 +15,7 @@ void Rasterizer::render_scene(Scene *pScene)
     // TO DO : set the color in black
     for (Entity &e : pScene->entities)
     {
-
-        switch (TRIANGLE)
+        switch (e.getDrawMode())
         {
         case POINT:
         {
