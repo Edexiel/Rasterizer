@@ -103,14 +103,15 @@ void Rasterizer::upload_texture() const
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo)
 {
+    float aspect = m_width /m_height;
+    // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
 
-    v1.position = (transfo * Vec4{v1.position, 1}).xyz;
-    v2.position = (transfo * Vec4{v2.position, 1}).xyz;
-    v3.position = (transfo * Vec4{v3.position, 1}).xyz;
+    Mat4 ortho {{m_width * 0.5, 0, 0, 0}, {0, m_height * 0.5, 0, 0}, {0, 0, 0, 0}, {m_width * 0.5, m_height * 0.5, 0, 1}};
+    Mat4 matOrtho = ortho * transfo;
+    v1.position = (matOrtho * Vec4{v1.position, 1}).xyz;
+    v2.position = (matOrtho * Vec4{v2.position, 1}).xyz;
+    v3.position = (matOrtho * Vec4{v3.position, 1}).xyz;
 
-    get_viewport_pos(v1.position);
-    get_viewport_pos(v2.position);
-    get_viewport_pos(v3.position);
 
     Vec3 vec1 {v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2 {v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
@@ -160,6 +161,7 @@ void Rasterizer::get_viewport_pos(Vec3 &v)
 {
     v.x = (v.x + 1)  * 0.5 * m_width;
     v.y = (v.y + 1)  * 0.5 * m_height;
+    v.z = (v.z + 1)  * 0.5 * Z_FAR;
 }
 
 void Rasterizer::set_pixel_color(uint x, uint y, uint z, const Color &c)

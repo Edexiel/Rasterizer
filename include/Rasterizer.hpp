@@ -3,8 +3,8 @@
 #include "Texture.hpp"
 #include "Scene.hpp"
 
-#define Z_FAR 9999;
-#define Z_NEAR 0;
+#define Z_FAR 1;
+#define Z_NEAR -1;
 
 class Rasterizer
 {
