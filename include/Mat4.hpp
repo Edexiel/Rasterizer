@@ -18,13 +18,13 @@ public:
     ~Mat4();
 
     static Mat4 identity();
+    static Mat4 viewportMatrix( int x, int y, int width, int height);
     static Mat4 CreateTranslationMatrix(const Vec3 &translation);
     static Mat4 CreateScaleMatrix(const Vec3 &scale);
     static Mat4 CreateXRotationMatrix(const float angle);
     static Mat4 CreateYRotationMatrix(const float angle);
     static Mat4 CreateZRotationMatrix(const float angle);
     static Mat4 CreateTransformMatrix(const Vec3 &position, const Vec3 &rotation, const Vec3 &scale);
-
     Mat4 operator+(const Mat4 &other) const;
     Mat4 operator*(const Mat4 &other) const;
     Vec4 operator*(const Vec4 &v) const;
