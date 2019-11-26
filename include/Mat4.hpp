@@ -19,6 +19,7 @@ public:
 
     static Mat4 identity();
     static Mat4 viewportMatrix( int x, int y, int width, int height);
+    static Mat4 orthoMatrix( float left, float right, float bottom,float top,float near,float far);
     static Mat4 CreateTranslationMatrix(const Vec3 &translation);
     static Mat4 CreateScaleMatrix(const Vec3 &scale);
     static Mat4 CreateXRotationMatrix(const float angle);
