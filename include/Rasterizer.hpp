@@ -8,6 +8,7 @@ class Rasterizer
 private:
     uint m_width;
     uint m_height;
+    float m_aspect;
 
     Color *color_buffer;
     float *depth_buffer;
@@ -17,7 +18,6 @@ private:
     void draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
     void draw_sphere();
-    void get_viewport_pos(Vec3 &v1);
     void set_pixel_color(uint x, uint y, uint z, const Color &c);
     void upload_texture() const;
 
