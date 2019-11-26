@@ -6,6 +6,7 @@
 #include "Mat4.hpp"
 #include "math.hpp"
 #include "Vec2.hpp"
+#include "Vec3.hpp"
 #include "cstring"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
