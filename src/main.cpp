@@ -72,14 +72,14 @@ int main(int argc, char *argv[])
 
     // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
 
-    Rasterizer renderer{&resWidth, &resHeight};
+    Rasterizer renderer{resWidth, resHeight};
 
     //Serious stuff
 
     Scene scene{};
 
     // scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
+    // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities[0].scale(0.5, 0.5, 1);
     // scene.entities.push_back(Entity{Mesh::CreateSphere(4, 8), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
@@ -88,18 +88,6 @@ int main(int argc, char *argv[])
     //scene.entities[0].translate(100, 100, 0);
     // scene.entities[0].rotate(0, 0.1f, 0);
 
-    // Mesh mesh_triangle{}
-
-    // Entity e_triangle{};
-    // e_triangle.mesh =
-    // scene.entities.push_back()
-
-    // Main loop
-    // Vertex v1 {{-1000, 50, 0}, {255, 0, 0}};
-    // Vertex v2 {{800, 50, 0}, {0, 255, 0}};
-    // Vertex v3 {{-350, -300, 0}, {0, 0, 255}};
-
-    float rotation = 0.f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -120,22 +108,11 @@ int main(int argc, char *argv[])
             }
         }
 
-        rotation += 0.015f * deltaTime;
+        renderer.clear_color_buffer();
+        renderer.clear_depth_buffer();
 
-        if (rotation > 0.5f)
-            scene.entities[0].rotate(0.f, 0.f, 0.f);
-        else
-            scene.entities[0].rotate(0.f, rotation, 0.f);
-
-        // Resize viewport
-        // glfwGetWindowSize(window, &screenWidth, &screenHeight);
-
-        // glViewport(0, 0, screenWidth, screenHeight);
-        // glClearColor(0.5, 0.5, 0.5, 1);
-
-        // Present buffer
-        //renderer.draw_triangle(v1, v2, v3);
         renderer.render_scene(&scene);
+        renderer.draw_scene();
 
         glfwSwapBuffers(window);
     }

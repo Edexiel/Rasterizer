@@ -1,8 +1,8 @@
 #include "Entity.hpp"
 
-Entity::Entity() : transfo{Mat4::identity()}, draw_mode{TRIANGLE} {}
-Entity::Entity(Mesh *_mesh) : mesh{_mesh}, transfo{Mat4::identity()}, draw_mode{TRIANGLE} {}
-Entity::Entity(Mesh *_mesh, Mat4 _transfo) : mesh{_mesh}, transfo{_transfo}, draw_mode{TRIANGLE} {}
+Entity::Entity() : draw_mode{TRIANGLE}, transfo{Mat4::identity()} {}
+Entity::Entity(Mesh *_mesh) : draw_mode{TRIANGLE}, mesh{_mesh}, transfo{Mat4::identity()} {}
+Entity::Entity(Mesh *_mesh, Mat4 _transfo) : draw_mode{TRIANGLE}, mesh{_mesh}, transfo{_transfo} {}
 
 Entity::~Entity() {}
 
@@ -39,11 +39,4 @@ void Entity::setDrawMode(DRAW_MODE d_m)
 DRAW_MODE Entity::getDrawMode()
 {
     return draw_mode;
-}
-
-void Entity::update(double deltaTime)
-{
-}
-void Entity::draw(double deltaTime)
-{
 }
