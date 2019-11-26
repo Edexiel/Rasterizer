@@ -106,7 +106,6 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo)
     float aspect = m_width /m_height;
     // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
 
-    Mat4 ortho {{m_width * 0.5, 0, 0, 0}, {0, m_height * 0.5, 0, 0}, {0, 0, 0, 0}, {m_width * 0.5, m_height * 0.5, 0, 1}};
     Mat4 matOrtho = ortho * transfo;
     v1.position = (matOrtho * Vec4{v1.position, 1}).xyz;
     v2.position = (matOrtho * Vec4{v2.position, 1}).xyz;
@@ -116,10 +115,10 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo)
     Vec3 vec1 {v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2 {v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
-    float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
-    float yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
-    float yMax = max(max(v1.position.y, v2.position.y), v3.position.y);
+    int xMin = min(min(v1.position.x, v2.position.x), v3.position.x) - 1;
+    int xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
+    int yMin = min(min(v1.position.y, v2.position.y), v3.position.y) - 1;
+    int yMax = max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
 
     // TO DO : change the width and the height
     if (xMin < 0)
@@ -131,9 +130,10 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo)
     if (yMax > m_height)
         yMax = m_height;
 
-    for (float y = yMin; y < yMax; y++)
+
+    for (int y = yMin; y < yMax; y++)
     {
-        for (float x = xMin; x < xMax; x++)
+        for (int x = xMin; x < xMax; x++)
         {
             Vec3 q {x - v1.position.x, y - v1.position.y, 0};
             //AVX

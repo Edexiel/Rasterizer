@@ -104,3 +104,9 @@ Vec4 Mat4::operator*(const Vec4 &_v) const
 
     return res;
 }
+
+
+Mat4 Mat4::viewportMatrix(int x, int y, int width, int height)
+{
+    return {{width / (x * 2), 0, 0, 0}, {0, height / (y * 2), 0, 0}, {0, 0, 0, 0}, {width * 0.5, height * 0.5, 0, 1}};
+}
