@@ -25,4 +25,3 @@ enum DRAW_MODE
     TRIANGLE_STRIP,
     FORM
 };
-
