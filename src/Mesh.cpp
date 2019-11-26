@@ -26,14 +26,47 @@ Mesh *Mesh::CreateCube()
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
     mesh->indices.push_back(2);
+
+    mesh->indices.push_back(1);
+    mesh->indices.push_back(2);
+    mesh->indices.push_back(3);
+
+    mesh->indices.push_back(2);
+    mesh->indices.push_back(3);
+    mesh->indices.push_back(4);
+
     mesh->indices.push_back(3);
     mesh->indices.push_back(4);
     mesh->indices.push_back(1);
+
+    mesh->indices.push_back(4);
+    mesh->indices.push_back(1);
+    mesh->indices.push_back(5);
+
+    mesh->indices.push_back(1);
+    mesh->indices.push_back(5);
+    mesh->indices.push_back(0);
+
     mesh->indices.push_back(5);
     mesh->indices.push_back(0);
     mesh->indices.push_back(6);
+
+    mesh->indices.push_back(0);
+    mesh->indices.push_back(6);
+    mesh->indices.push_back(2);
+
+    mesh->indices.push_back(6);
     mesh->indices.push_back(2);
     mesh->indices.push_back(7);
+
+    mesh->indices.push_back(2);
+    mesh->indices.push_back(7);
+    mesh->indices.push_back(4);
+
+    mesh->indices.push_back(7);
+    mesh->indices.push_back(4);
+    mesh->indices.push_back(6);
+
     mesh->indices.push_back(4);
     mesh->indices.push_back(6);
     mesh->indices.push_back(5);
@@ -50,20 +83,19 @@ Mesh *Mesh::CreateCube()
 //     // int gradation = 32;
 
 //     // for (alpha = 0.0; alpha < M_PI; alpha += M_PI/gradation)
-//     // {    
-//     //     for (beta = 0.0; beta < 2.00 * M_PI; beta += M_PI/gradation)            
-//     //     {            
+//     // {
+//     //     for (beta = 0.0; beta < 2.00 * M_PI; beta += M_PI/gradation)
+//     //     {
 //     //         x = radius * cos(beta) * sin(alpha);
 //     //         y = radius * sin(beta) * sin(alpha);
 //     //         z = radius * cos(alpha);
 //     //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
 //     //         x = radius * cos(beta) * sin(alpha + M_PI / gradation);
 //     //         y = radius * sin(beta) * sin(alpha + M_PI / gradation);
-//     //         z = radius * cos(alpha + M_PI / gradation);            
+//     //         z = radius * cos(alpha + M_PI / gradation);
 //     //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
 
-
-//     //         return mesh;            
+//     //         return mesh;
 //     //     }
 
 //     float y = cosf(i * M_PI / l);
