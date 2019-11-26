@@ -66,13 +66,17 @@ void Rasterizer::render_scene(Scene *pScene)
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 {
+
     v1.position = (transfo * Vec4{v1.position, 1}).xyz;
     v2.position = (transfo * Vec4{v2.position, 1}).xyz;
     v3.position = (transfo * Vec4{v3.position, 1}).xyz;
 
-    get_viewport_pos(v1);
-    get_viewport_pos(v2);
-    get_viewport_pos(v3);
+    get_viewport_pos(v1.position);
+    get_viewport_pos(v2.position);
+    get_viewport_pos(v3.position);
+
+    Vec3 vec1 {v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
+    Vec3 vec2 {v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
     float xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     float xMax = max(max(v1.position.x, v2.position.x), v3.position.x);
@@ -93,17 +97,17 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
     {
         for (float x = xMin; x < xMax; x++)
         {
+            Vec3 q {x - v1.position.x, y - v1.position.y, 0};
             //AVX
-            float w1 = (((v2.position.y - v3.position.y) * (x - v3.position.x)) + ((v3.position.x - v2.position.x) * (y - v3.position.y))) /
-                       (((v2.position.y - v3.position.y) * (v1.position.x - v3.position.x)) + ((v3.position.x - v2.position.x) * (v1.position.y - v3.position.y)));
-
-            float w2 = (((v3.position.y - v1.position.y) * (x - v3.position.x)) + ((v1.position.x - v3.position.x) * (y - v3.position.y))) /
-                       (((v2.position.y - v3.position.y) * (v1.position.x - v3.position.x)) + ((v3.position.x - v2.position.x) * (v1.position.y - v3.position.y)));
-
+            float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
+            float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
             float w3 = 1.f - w1 - w2;
 
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1 )
+            {
+                float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
                 render_target.SetPixelColor(x, y, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+            }
         }
     }
 }
@@ -111,12 +115,12 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo)
 void Rasterizer::draw_point(Vertex v, Mat4& transfo)
 {
     v.position = (transfo * Vec4{v.position, 1}).xyz;
-    get_viewport_pos(v);
+    get_viewport_pos(v.position);
     render_target.SetPixelColor(v.position.x, v.position.y, v.color);
 }
 
-void Rasterizer::get_viewport_pos(Vertex &v)
+void Rasterizer::get_viewport_pos(Vec3 &v)
 {
-    v.position.x = (v.position.x + 1)  * 0.5 * *m_width;
-    v.position.y = (v.position.y + 1)  * 0.5 * *m_height;
+    v.x = (v.x + 1)  * 0.5 * *m_width;
+    v.y = (v.y + 1)  * 0.5 * *m_height;
 }

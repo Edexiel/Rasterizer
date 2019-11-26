@@ -23,7 +23,4 @@ public:
     Vec2 operator*(float float_other);
 };
 
-float cross_product(Vec2& v1, Vec2& v2)
-{
-    
-}
+
