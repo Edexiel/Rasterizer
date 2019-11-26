@@ -18,4 +18,10 @@ T min(T a, T b)
     return a < b ? a : b;
 }
 
-
+enum DRAW_MODE
+{
+    POINT,
+    TRIANGLE,
+    TRIANGLE_STRIP,
+    FORM
+};
