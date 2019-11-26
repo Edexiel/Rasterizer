@@ -7,6 +7,7 @@ enum
 {
     POINT,
     TRIANGLE,
+    TRIANGLE_STRIP,
     FORM
 };
 

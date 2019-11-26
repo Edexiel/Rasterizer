@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "Vec4.hpp"
+#include <iostream>
 #include <cmath>
 
 Mesh::Mesh()
@@ -74,36 +75,6 @@ Mesh *Mesh::CreateCube()
     return mesh;
 }
 
-// Mesh *Mesh::CreateSphere(int latitudeCount, int longitudeCount)
-// {
-//         // Mesh *mesh = new Mesh{};
-
-//     // float x, y, z, alpha, beta; // Storage for coordinates and angles
-//     // float radius = 1.0f;
-//     // int gradation = 32;
-
-//     // for (alpha = 0.0; alpha < M_PI; alpha += M_PI/gradation)
-//     // {
-//     //     for (beta = 0.0; beta < 2.00 * M_PI; beta += M_PI/gradation)
-//     //     {
-//     //         x = radius * cos(beta) * sin(alpha);
-//     //         y = radius * sin(beta) * sin(alpha);
-//     //         z = radius * cos(alpha);
-//     //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
-//     //         x = radius * cos(beta) * sin(alpha + M_PI / gradation);
-//     //         y = radius * sin(beta) * sin(alpha + M_PI / gradation);
-//     //         z = radius * cos(alpha + M_PI / gradation);
-//     //         mesh->vertices.push_back(Vertex{{x, y, z}, {255, 0.0 ,0.0}});
-
-//     //         return mesh;
-//     //     }
-
-//     float y = cosf(i * M_PI / l);
-//     float r = sin(i * M_PI / l);
-//     float x = cosf(j * (M_PI * 2) / L) * r;
-//     float z = sinf(j * (M_PI * 2) / L) * r;
-// }
-
 Mesh *Mesh::CreateTriangle()
 {
     Mesh *mesh = new Mesh{};
@@ -119,6 +90,45 @@ Mesh *Mesh::CreateTriangle()
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
     mesh->indices.push_back(2);
+
+    return mesh;
+    
+}
+
+Mesh *Mesh::CreateSphere(int l, int L)
+{
+    Mesh *mesh = new Mesh{};
+
+
+    for (float i = 0; i < l; i++)
+    {
+        for (float j = 0; j < L + 1; j++)
+        {
+            float r = sin(i * M_PI / l);
+            mesh->vertices.push_back(Vertex{{cosf(j * (M_PI * 2) / L) * r, cosf(i * M_PI / l), sinf(j * (M_PI * 2) / L) * r}, {255, 0 ,0}});
+            mesh->indices.push_back(i + j * l);
+            mesh->indices.push_back(1 + i + j * l);
+            mesh->indices.push_back(i + L + 1 + j * l);
+        }    
+    }
+    mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
+
+    unsigned int i_max = mesh->vertices.size() - 1;
+    
+    
+    // for (float i = 0; i < l; i++)
+    // {
+    //     for (float j = 0; j < L + 1; j++)
+    //     {
+    //         int index = i + L + 1 > i_max ? i_max : i + L + 1;
+    //         mesh->indices.push_back(i + j * l);
+    //         //mesh->indices.push_back(1 + i + j * l);
+    //         mesh->indices.push_back(index + j * l);
+    //     }    
+    // }
+
+    // mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
+    // mesh->indices.push_back(mesh->vertices.size());
 
     return mesh;
 }
