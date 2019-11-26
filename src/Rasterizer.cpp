@@ -21,7 +21,7 @@ void Rasterizer::render_scene(Scene *pScene)
         case POINT:
         {
             for (uint i = 0; i < e.mesh->indices.size(); i++)
-                draw_point(e.mesh->vertices[i], e.transfo);
+                draw_point(e.mesh->vertices[e.mesh->indices[i]], e.transfo);
             break;
         }
         case TRIANGLE:
@@ -30,7 +30,7 @@ void Rasterizer::render_scene(Scene *pScene)
                 break;
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
-                draw_triangle(e.mesh->vertices[i], e.mesh->vertices[i + 1], e.mesh->vertices[i + 2], e.transfo);
+                draw_triangle(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]], e.transfo);
             break;
         }
 
