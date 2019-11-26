@@ -34,3 +34,8 @@ Vec3 Vec3::operator*(float other)
 {
     return {x * other, y * other, z * other};
 }
+
+float cross_product(Vec3& v1, Vec3& v2)
+{
+    return (v1.x) * (v2.y) - (v2.x) * (v1.y);   
+}

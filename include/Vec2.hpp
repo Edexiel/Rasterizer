@@ -23,7 +23,11 @@ public:
     Vec2 operator*(float float_other);
 };
 
+<<<<<<< HEAD
+
+=======
 // float cross_product(Vec2& v1, Vec2& v2)
 // {
     
 // }
+>>>>>>> e6cf72ad0cb08e63e750161ecd33454311e0d234

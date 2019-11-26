@@ -21,7 +21,7 @@ private:
     void draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4& transfo);
     void draw_point(Vertex v1, Mat4& transfo);
     void draw_sphere();
-    void get_viewport_pos(Vertex &v1);
+    void get_viewport_pos(Vec3 &v1);
 public:
     Rasterizer(uint width, uint height);
     ~Rasterizer();

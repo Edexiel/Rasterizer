@@ -35,8 +35,11 @@ Vec2 Vec2::operator*(float other)
 }
 
 
+<<<<<<< HEAD
+=======
 // float cross_product(Vec2& v1, Vec2& v2)
 // {
 //     return (v2.position.y - v3.position.y) * (x - v3.position.x) + (v3.position.x - v2.position.x) * (y - v3.position.y);   
 // }
+>>>>>>> e6cf72ad0cb08e63e750161ecd33454311e0d234
 
