@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
     float aspect = screenWidth / screenHeight;
 
 
+    float aspect = screenWidth / screenHeight;
+
+
     float modres = 1;
 
     uint resWidth = screenWidth / modres;
@@ -77,7 +80,7 @@ int main(int argc, char *argv[])
 
     Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(-1,1,resWidth,resHeight);
+    renderer.viewport = Mat4::viewportMatrix(1,1,resWidth,resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect,aspect,-1.f,1.f,0.f,100.f);
     renderer.projection = Mat4::identity();
 
