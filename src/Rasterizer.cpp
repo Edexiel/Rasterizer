@@ -14,7 +14,6 @@ Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{heigh
     color_buffer = new Color[width * height];
     depth_buffer = new float[width * height];
 
-
     clear_color_buffer();
     clear_depth_buffer();
 
@@ -94,7 +93,7 @@ void Rasterizer::clear_depth_buffer()
 {
     // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
     for (size_t i = 0; i < m_width * m_height; i++)
-        depth_buffer[i] = -1;
+        depth_buffer[i] = 1;
 }
 
 void Rasterizer::upload_texture() const
@@ -106,8 +105,6 @@ void Rasterizer::upload_texture() const
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation)
 {
-    // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
-
     Mat4 mat_finale = viewport * projection * transformation;
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
@@ -132,20 +129,21 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     if (yMax > m_height)
         yMax = m_height;
 
-
     for (uint y = yMin; y < yMax; y++)
     {
         for (uint x = xMin; x < xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
             //AVX
+
             float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
             float w3 = 1.f - w1 - w2;
 
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
-                float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                float z = w1 * v1.position.z + w2 * v2.position.z + v3.position.z * w3;
+                // std::cout << z << std::endl;
                 set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
             }
         }
@@ -159,11 +157,12 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transfo)
     set_pixel_color(v.position.x, v.position.y, 0, v.color);
 }
 
-void Rasterizer::set_pixel_color(uint x, uint y, uint z, const Color &c)
+void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
+
     if (z < depth_buffer[x + y * m_width])
     {
-        color_buffer[x + y * m_width] = c;
-        depth_buffer[x + y * m_width] = z;
     }
+    color_buffer[x + y * m_width] = c;
+    depth_buffer[x + y * m_width] = z;
 }

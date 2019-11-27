@@ -18,7 +18,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main(int argc, char *argv[])
 {
     uint screenWidth = 800;
-    uint screenHeight = 600;
+    uint screenHeight = 400;
 
     float aspect = screenWidth / screenHeight;
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1,1,resWidth,resHeight);
+    renderer.viewport = Mat4::viewportMatrix(-1,1,resWidth,resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect,aspect,-1.f,1.f,0.f,100.f);
     renderer.projection = Mat4::identity();
 
@@ -85,18 +85,17 @@ int main(int argc, char *argv[])
 
     Scene scene{};
 
-    // scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
+    scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
+    // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities[0].scale(0.5, 0.5, 1);
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(4, 8), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(4, 8), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
     // scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
     scene.entities[0].scale(0.5, 0.5, 0.5);
     scene.entities[0].translate(0, 0, 0);
 
-   
-
-
+    scene.entities[1].scale(0.5, 0.5, 0.5);
+    scene.entities[1].translate(0, 0, -10);
 
     while (!glfwWindowShouldClose(window))
     {
