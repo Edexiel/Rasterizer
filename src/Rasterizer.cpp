@@ -9,7 +9,7 @@
 #include "Vec3.hpp"
 #include "cstring"
 
-Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
+Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}, ambientLight{0.50}
 {
     color_buffer = new Color[width * height];
     depth_buffer = new float[width * height];
@@ -58,7 +58,7 @@ void Rasterizer::render_scene(Scene *pScene)
 
             for (uint i = 0; i < e.mesh->indices.size() - 1; i += 1)
                 draw_line(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.transfo);
-                draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
+            draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
 
@@ -149,11 +149,20 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
             float w3 = 1.f - w1 - w2;
+            float minW = min(min(w1, w2), w3);
 
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
-                float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                set_pixel_color(x, y, z, {v1.color * w3 + v2.color * w1 + v3.color * w2});
+                if (minW < 0.01f)
+                {
+                    float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                    set_pixel_color(x, y, z, {255 * ambientLight, 255 * ambientLight, 255 * ambientLight});
+                }
+                else
+                {
+                    float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                    set_pixel_color(x, y, z, {v1.color * w3 * ambientLight + v2.color * w1 * ambientLight + v3.color * w2 * ambientLight});
+                }
             }
         }
     }
@@ -191,11 +200,11 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
     {
         if (steep)
         {
-            set_pixel_color(y, x, 0, v1.color);
+            set_pixel_color(y, x, 0, v1.color * ambientLight);
         }
         else
         {
-            set_pixel_color(x, y, 0, v1.color);
+            set_pixel_color(x, y, 0, v1.color * ambientLight);
         }
 
         error -= dy;
@@ -212,7 +221,7 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
     Mat4 mat_finale = viewport * projection * transformation;
     v.position = (mat_finale * Vec4{v.position, 1}).xyz;
     // viewport
-    set_pixel_color(v.position.x, v.position.y, 0, v.color);
+    set_pixel_color(v.position.x, v.position.y, 0, v.color * ambientLight);
 }
 
 void Rasterizer::set_pixel_color(uint x, uint y, uint z, const Color &c)
