@@ -8,7 +8,6 @@ class Rasterizer
 private:
     uint m_width;
     uint m_height;
-    float m_aspect;
 
     Color *color_buffer;
     float *depth_buffer;

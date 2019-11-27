@@ -14,7 +14,6 @@ Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{heigh
     color_buffer = new Color[width * height];
     depth_buffer = new float[width * height];
 
-    m_aspect = m_width / m_height;
 
     clear_color_buffer();
     clear_depth_buffer();
@@ -118,10 +117,10 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    int xMin = min(min(v1.position.x, v2.position.x), v3.position.x) - 1;
-    int xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
-    int yMin = min(min(v1.position.y, v2.position.y), v3.position.y) - 1;
-    int yMax = max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
+    uint xMin = min(min(v1.position.x, v2.position.x), v3.position.x) - 1;
+    uint xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
+    uint yMin = min(min(v1.position.y, v2.position.y), v3.position.y) - 1;
+    uint yMax = max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
 
     // TO DO : change the width and the height
     if (xMin < 0)
@@ -134,9 +133,9 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
         yMax = m_height;
 
 
-    for (int y = yMin; y < yMax; y++)
+    for (uint y = yMin; y < yMax; y++)
     {
-        for (int x = xMin; x < xMax; x++)
+        for (uint x = xMin; x < xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
             //AVX

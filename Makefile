@@ -39,4 +39,4 @@ rast: $(OBJS)
 	$(CXX) -o $@ $(LDFLAGS) $^ $(LDLIBS)
 
 clean:
-	rm -f $(OBJS) $(DEPS) StackIt
+	rm -f $(OBJS) $(DEPS) rast

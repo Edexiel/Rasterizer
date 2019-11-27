@@ -17,15 +17,20 @@ Mat4 Mat4::identity()
 {
     return Mat4{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 }
-
+/*
+* x : largeur du clip space
+* y: hauteur du clip space
+* width : largeur de la viewport
+* height : hauteur de la viewport
+*/
 Mat4 Mat4::viewportMatrix(int x, int y, int width, int height)
 {
-    return {{width / (x * 2), 0, 0, 0}, {0, height / (y * 2), 0, 0}, {0, 0, 0, 0}, {width * 0.5, height * 0.5, 0, 1}};
+    return {{width / (x * 2.f), 0.f, 0.f, 0.f}, {0.f, height / (y * 2.f), 0.f, 0.f}, {0.f, 0.f, 0.f, 0.f}, {width * 0.5f, height * 0.5f, 0.f, 1.f}};
 }
 
 Mat4 Mat4::orthoMatrix(float left, float right, float bottom, float top, float near, float far)
 {
-    return {{2 / (right - left), 0, 0, 0}, {0, 2 / (top - bottom), 0, 0}, {0, 0, -2 / (far - near), 0}, {-((right + left) / (right - left)), -((top + bottom) / (top - bottom)), -((far + near) / (far - near)), 1}};
+    return {{2.f / (right - left), 0.f, 0.f, 0.f}, {0.f, 2.f / (top - bottom), 0.f, 0.f}, {0.f, 0.f, -2.f / (far - near), 0.f}, {-((right + left) / (right - left)), -((top + bottom) / (top - bottom)), -((far + near) / (far - near)), 1.f}};
 }
 
 Mat4 Mat4::CreateTranslationMatrix(const Vec3 &t)
