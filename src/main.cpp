@@ -8,6 +8,7 @@
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
+#include "math.h"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -17,7 +18,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 int main(int argc, char *argv[])
 {
-    uint screenWidth = 1121;
+    uint screenWidth = 800;
     uint screenHeight = 600;
 
     float aspect = screenWidth / screenHeight;
@@ -89,10 +90,12 @@ int main(int argc, char *argv[])
     // scene.entities[0].scale(0.5, 0.5, 0.5);
     // scene.entities[0].translate(0, 0, 0);
 
-    scene.entities.push_back(Entity{Mesh::CreateSphere(4, 8)});
-    scene.entities[0].scale(1.f, 1.f, 1.f);
-    // scene.entities[0].scale(0.99999f, 0.99999f, 0.99999f);
-    scene.entities[0].translate(0, 0, -101);
+    scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
+    // scene.entities[0].scale(1.f, 1.f, 1.f);
+    scene.entities[0].scale(0.25f, 0.25f, 0.25f);
+    scene.entities[0].translate(0.f, 0, 0);
+    scene.entities[0].setDrawMode(TRIANGLE);
+    
 
     while (!glfwWindowShouldClose(window))
     {
