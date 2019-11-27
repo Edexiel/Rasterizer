@@ -87,14 +87,12 @@ int main(int argc, char *argv[])
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
     // scene.entities[0].translate(0, 0, 0);
-    // scene.entities[0].scale(0.5, 0.5, 0.5);
-    // scene.entities[0].translate(0, 0, 0);
 
     scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     scene.entities[0].scale(0.25f, 0.25f, 0.25f);
     scene.entities[0].translate(0.f, 0, 0);
-    scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[0].setDrawMode(LINE);
     
 
     while (!glfwWindowShouldClose(window))
