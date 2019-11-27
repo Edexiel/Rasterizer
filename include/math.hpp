@@ -23,5 +23,7 @@ enum DRAW_MODE
     POINT,
     TRIANGLE,
     TRIANGLE_STRIP,
+    LINE,
+    
     FORM
 };
