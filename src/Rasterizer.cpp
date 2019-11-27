@@ -155,12 +155,7 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-<<<<<<< HEAD
-
-                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
-=======
                 set_pixel_color(x, y, z, {v1.color * w3 + v2.color * w1 + v3.color * w2});
->>>>>>> 95053794770c76a7bf83af7a868cf0dd4ff7f45b
             }
         }
     }
