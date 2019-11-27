@@ -98,7 +98,7 @@ void Rasterizer::draw_scene()
 
 void Rasterizer::clear_color_buffer()
 {
-    memset(color_buffer, 0xAF, m_width * m_height * sizeof(Color));
+    memset(color_buffer, 0xDF, m_width * m_height * sizeof(Color));
     // for (size_t i = 0; i < m_width * m_height; i++)
     //     color_buffer[i] = {255, 255, 255};
 }
