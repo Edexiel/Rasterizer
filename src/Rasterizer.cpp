@@ -2,7 +2,7 @@
 #include "Rasterizer.hpp"
 #include "Scene.hpp"
 #include "Vertex.hpp"
-// #include "cmath"
+#include "cmath"
 #include "Mat4.hpp"
 #include "math.hpp"
 #include "Vec2.hpp"
@@ -13,7 +13,6 @@ Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{heigh
 {
     color_buffer = new Color[width * height];
     depth_buffer = new float[width * height];
-
 
     clear_color_buffer();
     clear_depth_buffer();
@@ -50,6 +49,16 @@ void Rasterizer::render_scene(Scene *pScene)
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
                 draw_triangle(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]], e.transfo);
+            break;
+        }
+        case LINE:
+        {
+            if (e.mesh->indices.size() < 2)
+                break;
+
+            for (uint i = 0; i < e.mesh->indices.size() - 1; i += 1)
+                draw_line(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.transfo);
+                draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
 
@@ -107,14 +116,14 @@ void Rasterizer::upload_texture() const
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation)
 {
     // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
-    Mat4 mat_finale = viewport * projection * transformation;
+    Mat4 mat_finale = projection * viewport * transformation;
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
     v3.position = (mat_finale * Vec4{v3.position, 1}).xyz;
 
-    Vec3 vec1{v1.position.x - v2.position.x, v1.position.y - v2.position.y, 0};
-    Vec3 vec2{v3.position.x - v2.position.x, v3.position.y - v2.position.y, 0};
+    Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
+    Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
     uint xMin = min(min(v1.position.x, v2.position.x), v3.position.x) - 1;
     uint xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
@@ -131,12 +140,11 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     if (yMax > m_height)
         yMax = m_height;
 
-
     for (uint y = yMin; y < yMax; y++)
     {
         for (uint x = xMin; x < xMax; x++)
         {
-            Vec3 q{x - v2.position.x, y - v2.position.y, 0};
+            Vec3 q{x - v1.position.x, y - v1.position.y, 0};
             //AVX
             float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
@@ -145,15 +153,64 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, {v1.color * w3 + v2.color * w1 + v3.color * w2});
             }
         }
     }
 }
 
-void Rasterizer::draw_point(Vertex v, Mat4 &transfo)
+void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
 {
-    v.position = (transfo * Vec4{v.position, 1}).xyz;
+    Mat4 mat_finale = viewport * projection * transformation;
+    v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
+    v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
+
+    const bool steep = (fabs(v2.position.y - v1.position.y) > fabs(v2.position.x - v1.position.x));
+    if (steep)
+    {
+        std::swap(v1.position.x, v1.position.y);
+        std::swap(v2.position.x, v2.position.y);
+    }
+
+    if (v1.position.x > v2.position.x)
+    {
+        std::swap(v1.position.x, v2.position.x);
+        std::swap(v1.position.y, v2.position.y);
+    }
+
+    const float dx = v2.position.x - v1.position.x;
+    const float dy = fabs(v2.position.y - v1.position.y);
+
+    float error = dx / 2.0f;
+    const int ystep = (v1.position.y < v2.position.y) ? 1 : -1;
+    int y = (int)v1.position.y;
+
+    const int maxX = (int)v2.position.x;
+
+    for (int x = (int)v1.position.x; x < maxX; x++)
+    {
+        if (steep)
+        {
+            set_pixel_color(y, x, 0, v1.color);
+        }
+        else
+        {
+            set_pixel_color(x, y, 0, v1.color);
+        }
+
+        error -= dy;
+        if (error < 0)
+        {
+            y += ystep;
+            error += dx;
+        }
+    }
+}
+
+void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
+{
+    Mat4 mat_finale = viewport * projection * transformation;
+    v.position = (mat_finale * Vec4{v.position, 1}).xyz;
     // viewport
     set_pixel_color(v.position.x, v.position.y, 0, v.color);
 }
@@ -163,6 +220,6 @@ void Rasterizer::set_pixel_color(uint x, uint y, uint z, const Color &c)
     if (z < depth_buffer[x + y * m_width])
     {
     }
-        color_buffer[x + y * m_width] = c;
-        depth_buffer[x + y * m_width] = z;
+    color_buffer[x + y * m_width] = c;
+    depth_buffer[x + y * m_width] = z;
 }
