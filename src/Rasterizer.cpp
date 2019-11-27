@@ -22,8 +22,9 @@ Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{heigh
     upload_texture();
 
     glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -85,9 +86,9 @@ void Rasterizer::draw_scene()
 
 void Rasterizer::clear_color_buffer()
 {
-    memset(color_buffer, 0xFF, m_width * m_height * sizeof(Color));
-    // for (size_t i = 0; i < width *height; i++)
-    //     pixels[i] = {0xFF,0x00,0x00};
+    // memset(color_buffer, 0x7F, m_width * m_height * sizeof(Color));
+    for (size_t i = 0; i < m_width * m_height; i++)
+        color_buffer[i] = {255, 255, 255};
 }
 void Rasterizer::clear_depth_buffer()
 {
@@ -105,8 +106,8 @@ void Rasterizer::upload_texture() const
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation)
 {
-    // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
-    Mat4 mat_finale = viewport * projection * transformation;
+    // Mat4 mat_finale =  viewport * projection * transformation;
+    Mat4 mat_finale = viewport * transformation;
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
@@ -115,12 +116,12 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     Vec3 vec1{v1.position.x - v2.position.x, v1.position.y - v2.position.y, 0};
     Vec3 vec2{v3.position.x - v2.position.x, v3.position.y - v2.position.y, 0};
 
-    uint xMin = min(min(v1.position.x, v2.position.x), v3.position.x) - 1;
+    uint xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
     uint xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
-    uint yMin = min(min(v1.position.y, v2.position.y), v3.position.y) - 1;
+    uint yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
     uint yMax = max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
 
-    // TO DO : change the width and the height
+    // // TO DO : change the width and the height
     if (xMin < 0)
         xMin = 0;
     if (xMax > m_width)
@@ -129,7 +130,6 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
         yMin = 0;
     if (yMax > m_height)
         yMax = m_height;
-
 
     for (uint y = yMin; y < yMax; y++)
     {
@@ -145,6 +145,7 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+
                 set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
             }
         }
