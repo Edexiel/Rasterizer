@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     // scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities[0].scale(0.5, 0.5, 1);
-    scene.entities.push_back(Entity{Mesh::CreateSphere(4, 8), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(16, 32), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
     // scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
     scene.entities[0].scale(0.9f, 0.9f, 0.9f);

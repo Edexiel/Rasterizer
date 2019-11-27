@@ -20,6 +20,7 @@ private:
     void draw_sphere();
     void set_pixel_color(uint x, uint y, uint z, const Color &c);
     void upload_texture() const;
+    float ambientLight;
 
 public:
     Rasterizer(uint width, uint height);
