@@ -15,6 +15,7 @@ private:
     GLuint color_buffer_texture;
 
     void draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo);
+    void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
     void draw_sphere();
     void set_pixel_color(uint x, uint y, float z, const Color &c);
