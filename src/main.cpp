@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
     uint screenWidth = 800;
     uint screenHeight = 600;
 
+    float aspect = screenWidth / screenHeight;
+
+
     float modres = 1;
 
     uint resWidth = screenWidth / modres;
@@ -73,6 +76,10 @@ int main(int argc, char *argv[])
     // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
 
     Rasterizer renderer{resWidth, resHeight};
+
+    renderer.viewport = Mat4::viewportMatrix(1,1,resWidth,resHeight);
+    // renderer.projection = Mat4::orthoMatrix(-aspect,aspect,-1.f,1.f,0.f,100.f);
+    renderer.projection = Mat4::identity();
 
     //Serious stuff
 
