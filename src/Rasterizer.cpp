@@ -106,7 +106,6 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo)
     float aspect = m_width /m_height;
     // Mat4 ortho {{2/(aspect+aspect), 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {-((aspect-aspect)/(aspect+aspect)),-(0 /2),-(1 +- 1), 1}};
 
-    Mat4 matOrtho = ortho * transfo;
     v1.position = (matOrtho * Vec4{v1.position, 1}).xyz;
     v2.position = (matOrtho * Vec4{v2.position, 1}).xyz;
     v3.position = (matOrtho * Vec4{v3.position, 1}).xyz;
