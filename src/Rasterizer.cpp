@@ -9,7 +9,7 @@
 #include "Vec3.hpp"
 #include "cstring"
 
-Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}, ambientLight{0.50}
+Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
 {
     color_buffer = new Color[width * height];
     depth_buffer = new float[width * height];
@@ -49,7 +49,7 @@ void Rasterizer::render_scene(Scene *pScene)
                 break;
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
-                draw_triangle(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]], e.transfo);
+                draw_triangle(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]], e.transfo, pScene->m_light);
             break;
         }
         case LINE:
@@ -116,7 +116,7 @@ void Rasterizer::upload_texture() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation)
+void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation, light& light)
 {
     // Mat4 mat_finale =  viewport * projection * transformation;
     Mat4 mat_finale = viewport * transformation;
@@ -124,6 +124,14 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
     v3.position = (mat_finale * Vec4{v3.position, 1}).xyz;
+
+    v1.normal   = (mat_finale * Vec4{v1.normal, 0}).xyz;
+    v2.normal   = (mat_finale * Vec4{v2.normal, 0}).xyz;
+    v3.normal   = (mat_finale * Vec4{v3.normal, 0}).xyz;
+
+    light.apply_light(v1);
+    light.apply_light(v2);
+    light.apply_light(v3);
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
@@ -153,19 +161,19 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
             float w3 = 1.f - w1 - w2;
-            float minW = min(min(w1, w2), w3);
+            // float minW = min(min(w1, w2), w3);
 
             if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
             {
-                if (minW < 0.01f)
+                // if (minW < 0.01f)
+                // {
+                //     float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                //     set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
+                // }
+                // else
                 {
                     float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                    set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
-                }
-                else
-                {
-                    float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                    set_pixel_color(x, y, z, {v1.color * w3 + v2.color * w1 + v3.color * w2});
+                    set_pixel_color(x, y, z, {(v1.color * w3 + v2.color * w1 + v3.color * w2)});
                 }
             }
         }
@@ -177,6 +185,7 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
     Mat4 mat_finale = viewport * transformation;
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
+
 
 
     const bool steep = (fabs(v2.position.y - v1.position.y) > fabs(v2.position.x - v1.position.x));

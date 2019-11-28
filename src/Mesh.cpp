@@ -1,8 +1,8 @@
 #include "Mesh.hpp"
 #include "Vec4.hpp"
+#include "Vertex.hpp"
 #include <iostream>
 #include <cmath>
-
 Mesh::Mesh()
 {
 }
@@ -23,6 +23,12 @@ Mesh *Mesh::CreateCube()
     mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0x00, 0x00, 0xFF}});
     mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0x00, 0x00}});
     mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});
+
+    for (uint i = 0; i < mesh->vertices.size(); i++)
+    {
+        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize();
+    }
+    
 
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
@@ -86,7 +92,11 @@ Mesh *Mesh::CreateTriangle()
     mesh->vertices.push_back(v1);
     mesh->vertices.push_back(v2);
     mesh->vertices.push_back(v3);
-
+    for (uint i = 0; i < mesh->vertices.size(); i++)
+    {
+        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize(); 
+    }
+    
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
     mesh->indices.push_back(2);
@@ -106,16 +116,17 @@ Mesh *Mesh::CreateSphere(int l, int L)
         {
             float r = sin(i * M_PI / l);
             mesh->vertices.push_back(Vertex{{cosf(j * (M_PI * 2) / L) * r, cosf(i * M_PI / l), sinf(j * (M_PI * 2) / L) * r}, {255, 0 ,0}});
-            // mesh->indices.push_back(i + j * l);
-            // mesh->indices.push_back(1 + i + j * l);
-            // mesh->indices.push_back(i + L + 1 + j * l);
         }    
     }
     mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
 
     unsigned int i_max = mesh->vertices.size() - 1;
     
-    
+    for (uint i = 0; i < mesh->vertices.size(); i++)
+    {
+        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize(); 
+    }
+
     for (float i = 0; i < i_max; i++)
     {
         int index = i + L + 1 > i_max ? i_max : i + L + 1;
@@ -128,9 +139,5 @@ Mesh *Mesh::CreateSphere(int l, int L)
         mesh->indices.push_back(index2);
         mesh->indices.push_back(index);           
     }
-
-    // mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
-    // mesh->indices.push_back(mesh->vertices.size());
-
     return mesh;
 }

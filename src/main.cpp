@@ -19,7 +19,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main(int argc, char *argv[])
 {
     uint screenWidth = 800;
-    uint screenHeight = 600;
+    uint screenHeight = 800;
 
     float aspect = screenWidth / screenHeight;
 
@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
 
     Scene scene{};
 
+    //scene.m_light.viewport = &renderer.viewport;
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
@@ -90,7 +91,10 @@ int main(int argc, char *argv[])
 
     scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
-    scene.entities[0].scale(0.2f, 0.2f, 0.2f);
+    // double x, y;
+    scene.m_light = {{0, 1, 0}, 0.5, 0.7, 1.f};
+    scene.m_light.v_light = (renderer.viewport * Vec4{scene.m_light.v_light, 0}).xyz;
+    // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
     scene.entities[0].translate(0.f, 0, 0);
     scene.entities[0].setDrawMode(TRIANGLE);
     
@@ -98,7 +102,7 @@ int main(int argc, char *argv[])
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
+        // glfwGetCursorPos(window, &x, &y);
         { // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();

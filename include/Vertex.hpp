@@ -7,4 +7,5 @@ struct Vertex
 {
     Vec3 position;
     Color color;
+    Vec3 normal;
 };
