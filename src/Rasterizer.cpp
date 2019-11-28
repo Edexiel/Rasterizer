@@ -149,13 +149,12 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
         for (int x = xMin; x < xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
-            //AVX
 
-            float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
+            float w3 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
-            float w3 = 1.f - w1 - w2;
+            float w1 = 1.f - w2 - w3;
 
-            if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
+            if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
                 // float z = 2*()
@@ -167,8 +166,8 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
                 // {
                                         // std::cout << z << std::endl;
 
-                // set_pixel_color(x, y, z, {v1.color * w3 + v2.color * w1 + v3.color * w2});
-                set_pixel_color(x, y, z, {z*255*-1 , z*255*-1,z*255*-1});
+                // set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, {-z*255 , -z*255,-z*255});
                 // }
             }
         }
@@ -236,7 +235,7 @@ inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
     if (z <= depth_buffer[x + y * m_width])
     {
-    }
         color_buffer[x + y * m_width] = c;
         depth_buffer[x + y * m_width] = z;
+    }
 }

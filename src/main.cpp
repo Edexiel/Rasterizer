@@ -87,11 +87,12 @@ int main()
     // scene.entities[0].translate(0.f, 0.f, -10.f);
     // scene.entities[0].setDrawMode(TRIANGLE);
 
-
     scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     scene.entities[1].scale(1.f, 1.f, 1.f);
-    scene.entities[1].translate(0.f, 0.f, 0.f);
+    scene.entities[1].translate(0.f, 0.f, -1.f);
+    // scene.entities[0].rotate(0.10f, 0, 0);
+
     scene.entities[1].setDrawMode(TRIANGLE);
 
     while (!glfwWindowShouldClose(window))
@@ -112,9 +113,10 @@ int main()
                 time_acc = 0.f;
             }
         }
-            // scene.entities[0].rotate(0,0.05f,0);
-            scene.entities[0].rotate(0.01f,0,0);
-            // scene.entities[1].rotate(0f,0,0);
+        scene.entities[0].rotate(0.01f, 0, 0);
+
+        // scene.entities[0].rotate(0,0.05f,0);
+        // scene.entities[1].rotate(0f,0,0);
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
