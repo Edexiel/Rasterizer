@@ -10,7 +10,7 @@ Vec3::~Vec3() {}
 // AVX optimization Here
 float Vec3::getMagnitude() const
 {
-    return sqrt(x * x * y * y * z * z);
+    return sqrtf(x * x * y * y * z * z);
 }
 
 void Vec3::Normalize()

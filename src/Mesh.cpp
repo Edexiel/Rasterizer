@@ -3,26 +3,22 @@
 #include <iostream>
 #include <cmath>
 
-Mesh::Mesh()
-{
-}
+Mesh::Mesh(){}
 
-Mesh::~Mesh()
-{
-}
+Mesh::~Mesh(){}
 
 Mesh *Mesh::CreateCube()
 {
     Mesh *mesh = new Mesh{};
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0x00, 0x00}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0x00, 0xFF, 0x00}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0x00, 0x00, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0x00, 0x00}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0x00, 0x00, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0x00, 0x00}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0x00, 0x00}});  //0       
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0x00, 0xFF, 0x00}});   //1   
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0x00, 0x00, 0xFF}}); //2       
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0x00, 0x00}});  //3       
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});   //4   
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0x00, 0x00, 0xFF}});    //5   
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0x00, 0x00}});   //6   
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0x00, 0xFF, 0x00}});  //7       
 
     mesh->indices.push_back(0);
     mesh->indices.push_back(1);
@@ -100,15 +96,12 @@ Mesh *Mesh::CreateSphere(int l, int L)
     Mesh *mesh = new Mesh{};
 
 
-    for (float i = 0; i < l; i++)
+    for (int i = 0; i < l; i++)
     {
-        for (float j = 0; j < L + 1; j++)
+        for (int j = 0; j < L + 1; j++)
         {
-            float r = sin(i * M_PI / l);
-            mesh->vertices.push_back(Vertex{{cosf(j * (M_PI * 2) / L) * r, cosf(i * M_PI / l), sinf(j * (M_PI * 2) / L) * r}, {255, 0 ,0}});
-            // mesh->indices.push_back(i + j * l);
-            // mesh->indices.push_back(1 + i + j * l);
-            // mesh->indices.push_back(i + L + 1 + j * l);
+            float r = sinf(i * (float)M_PI / (float)l);
+            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, {255, 0 ,0}});
         }    
     }
     mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
@@ -116,10 +109,10 @@ Mesh *Mesh::CreateSphere(int l, int L)
     unsigned int i_max = mesh->vertices.size() - 1;
     
     
-    for (float i = 0; i < i_max; i++)
+    for (uint i = 0; i < i_max; i++)
     {
-        int index = i + L + 1 > i_max ? i_max : i + L + 1;
-        int index2 = i + L > i_max ? i_max : i + L;
+        uint index = i + L + 1 > i_max ? i_max : i + L + 1;
+        uint index2 = i + L > i_max ? i_max : i + L;
         mesh->indices.push_back(i);
         mesh->indices.push_back(1 + i);
         mesh->indices.push_back(index);
@@ -128,9 +121,6 @@ Mesh *Mesh::CreateSphere(int l, int L)
         mesh->indices.push_back(index2);
         mesh->indices.push_back(index);           
     }
-
-    // mesh->vertices.push_back({{0, -1, 0},{255, 0 ,0}});
-    // mesh->indices.push_back(mesh->vertices.size());
 
     return mesh;
 }
