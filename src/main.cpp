@@ -8,6 +8,7 @@
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
+#include "math.h"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -22,8 +23,7 @@ int main(int argc, char *argv[])
 
     float aspect = screenWidth / screenHeight;
 
-
-    float modres = 1;
+    uint modres = 1;
 
     uint resWidth = screenWidth / modres;
     uint resHeight = screenHeight / modres;
@@ -77,26 +77,23 @@ int main(int argc, char *argv[])
 
     Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1,1,resWidth,resHeight);
-    // renderer.projection = Mat4::orthoMatrix(-aspect,aspect,-1.f,1.f,0.f,100.f);
-    renderer.projection = Mat4::identity();
-
-    //Serious stuff
+    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
+    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    // renderer.viewport = Mat4::identity();
 
     Scene scene{};
 
-    // scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    // scene.entities[0].scale(0.5, 0.5, 1);
-    scene.entities.push_back(Entity{Mesh::CreateSphere(16, 32), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
+    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(0.5, 0.5, 0.5);
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
-    scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].translate(0, 0, 0);
+    // scene.entities[0].translate(0, 0, 0);
 
-   
-
-
+    scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
+    // scene.entities[0].scale(1.f, 1.f, 1.f);
+    scene.entities[0].scale(0.25f, 0.25f, 0.25f);
+    scene.entities[0].translate(0.f, 0, 0);
+    scene.entities[0].setDrawMode(LINE);
+    
 
     while (!glfwWindowShouldClose(window))
     {

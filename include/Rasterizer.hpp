@@ -18,7 +18,7 @@ private:
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
     void draw_sphere();
-    void set_pixel_color(uint x, uint y, uint z, const Color &c);
+    void set_pixel_color(uint x, uint y, float z, const Color &c);
     void upload_texture() const;
     float ambientLight;
 

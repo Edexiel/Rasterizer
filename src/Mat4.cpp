@@ -25,7 +25,7 @@ Mat4 Mat4::identity()
 */
 Mat4 Mat4::viewportMatrix(int x, int y, int width, int height)
 {
-    return {{width / (x * 2.f), 0.f, 0.f, 0.f}, {0.f, -(height / (y * 2.f)), 0.f, 0.f}, {0.f, 0.f, 1.f, 0.f}, {width * 0.5f, height * 0.5f, 0.f, 1.f}};
+    return {{(float)width / ((float)x * 2.f), 0.f, 0.f, 0.f}, {0.f, -((float)height / ((float)y * 2.f)), 0.f, 0.f}, {0.f, 0.f, 1.f, 0.f}, {(float)width * 0.5f, (float)height * 0.5f, 0.f, 1.f}};
 }
 
 Mat4 Mat4::orthoMatrix(float left, float right, float bottom, float top, float near, float far)
