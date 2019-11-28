@@ -77,23 +77,19 @@ int main(int argc, char *argv[])
 
     Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
+    renderer.viewport   = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
     renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    // renderer.viewport = Mat4::identity();
 
     Scene scene{};
 
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
-    // scene.entities[0].scale(0.5, 0.5, 0.5);
-    // scene.entities[0].translate(0, 0, 0);
 
     scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     scene.entities[0].scale(0.25f, 0.25f, 0.25f);
     scene.entities[0].translate(0.f, 0, 0);
     scene.entities[0].setDrawMode(LINE);
-    
 
     while (!glfwWindowShouldClose(window))
     {

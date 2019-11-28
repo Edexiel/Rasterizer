@@ -118,8 +118,8 @@ void Rasterizer::upload_texture() const
 
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation)
 {
-    // Mat4 mat_finale =  viewport * projection * transformation;
-    Mat4 mat_finale = viewport * transformation;
+    Mat4 mat_finale =  viewport * projection * transformation;
+    // Mat4 mat_finale = viewport * transformation;
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
