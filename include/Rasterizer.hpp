@@ -2,7 +2,7 @@
 
 #include "Texture.hpp"
 #include "Scene.hpp"
-
+#include "light.hpp"
 class Rasterizer
 {
 private:
@@ -12,6 +12,8 @@ private:
     Color *color_buffer;
     float *depth_buffer;
 
+    light m_light;
+    
     GLuint color_buffer_texture;
 
     void draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transfo);
@@ -20,7 +22,6 @@ private:
     void draw_sphere();
     void set_pixel_color(uint x, uint y, float z, const Color &c);
     void upload_texture() const;
-    float ambientLight;
 
 public:
     Rasterizer(uint width, uint height);

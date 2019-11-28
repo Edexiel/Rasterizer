@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     float aspect = screenWidth / screenHeight;
 
-    uint modres = 1;
+    float modres = 1.5;
 
     uint resWidth = screenWidth / modres;
     uint resHeight = screenHeight / modres;
@@ -87,9 +87,9 @@ int main(int argc, char *argv[])
 
     scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
-    scene.entities[0].scale(0.25f, 0.25f, 0.25f);
+    scene.entities[0].scale(0.2f, 0.2f, 0.2f);
     scene.entities[0].translate(0.f, 0, 0);
-    scene.entities[0].setDrawMode(LINE);
+    scene.entities[0].setDrawMode(TRIANGLE);
 
     while (!glfwWindowShouldClose(window))
     {
