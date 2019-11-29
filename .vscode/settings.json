@@ -1,6 +1,10 @@
 {
     "files.associations": {
 <<<<<<< HEAD
+        "iostream": "cpp",
+        "ostream": "cpp"
+=======
+<<<<<<< HEAD
         "cctype": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
@@ -60,5 +64,6 @@
 =======
         "iostream": "cpp"
 >>>>>>> d06e79fc72f965faec141261aedc26c4ebe07119
+>>>>>>> 238dc529b203a32bc145fc97a0929a4b723659bd
     }
 }

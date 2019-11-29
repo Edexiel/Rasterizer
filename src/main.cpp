@@ -19,7 +19,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main()
 {
     uint screenWidth = 800;
-    uint screenHeight = 800;
+    uint screenHeight = 600;
 
     float aspect = screenWidth / (float)screenHeight;
 
@@ -76,8 +76,8 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::identity();
+    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
@@ -91,7 +91,7 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     // double x, y;
-    scene.m_light = {{0, 0, 1.f}, 0.3, 0.7, 1.f};
+    scene.m_light = {{0, 0, 10.f}, 0.1, 0.3, 1.f};
     // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
     // scene.entities[0].translate(0, 0, 0);
     scene.entities[0].setDrawMode(TRIANGLE);

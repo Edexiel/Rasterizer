@@ -10,7 +10,7 @@ public:
     float diffuseLight;
     float specularLight;
 
-    Color diffuse_light(Vertex& n);
-    Color ambient_light(Vertex& n);
+    float diffuse_light(Vertex& n);
+    float ambient_light(Vertex& n);
     void  apply_light(Vertex& n);
 };
