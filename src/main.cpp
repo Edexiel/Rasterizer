@@ -76,23 +76,23 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::identity();
+    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    // scene.entities.push_back(Entity{Mesh::CreateCube()});
-    // scene.entities[0].scale(1.f, 1.f, 1.f);
-    // scene.entities[0].translate(0.f, 0.f, -10.f);
+    scene.entities.push_back(Entity{Mesh::CreateCube()});
+    scene.entities[0].scale(1.f, 1.f, 1.f);
+    scene.entities[0].translate(0.5f, 0.f, 0.f);
     // scene.entities[0].setDrawMode(TRIANGLE);
 
     scene.entities.push_back(Entity{Mesh::CreateTriangle()});
-    // scene.entities[0].scale(1.f, 1.f, 1.f);
-    scene.entities[1].scale(1.f, 1.f, 1.f);
-    scene.entities[1].translate(0.f, 0.f, -1.f);
-    // scene.entities[0].rotate(0.10f, 0, 0);
-
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(18,32)});
+    scene.entities[0].scale(1.f, 1.f, 1.f);
+    // scene.entities[1].scale(0.3f, 0.3f, 0.3f);
+    scene.entities[1].translate(0.f, 0.f, 0.f);
+    // scene.entiti1s[0].rotate(0.10f, 0, 0);1
     scene.entities[1].setDrawMode(TRIANGLE);
 
     while (!glfwWindowShouldClose(window))
@@ -113,7 +113,7 @@ int main()
                 time_acc = 0.f;
             }
         }
-        scene.entities[0].rotate(0.01f, 0, 0);
+        scene.entities[0].rotate(0, 0.01f, 0);
 
         // scene.entities[0].rotate(0,0.05f,0);
         // scene.entities[1].rotate(0f,0,0);
