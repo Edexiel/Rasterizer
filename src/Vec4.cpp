@@ -28,9 +28,7 @@ void Vec4::Homogenize()
 // AVX optimization Here
 float Vec4::getMagnitude() const
 {
-    Vec4 v{x, y, z, w};
-
-    return sqrt(v.x * v.x * v.y * v.y * v.z * v.z);
+    return sqrtf(x * x * y * y * z * z);
 }
 
 void Vec4::Normalize()

@@ -10,7 +10,7 @@ Vec2::~Vec2() {}
 // AVX optimization Here
 float Vec2::getMagnitude() const
 {
-    return sqrt(x * x * y * y);
+    return sqrtf(x * x * y * y);
 }
 
 void Vec2::Normalize()

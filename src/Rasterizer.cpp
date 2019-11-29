@@ -106,7 +106,7 @@ void Rasterizer::clear_depth_buffer()
 {
     // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
     for (size_t i = 0; i < m_width * m_height; i++)
-        depth_buffer[i] = -1;
+        depth_buffer[i] = 0;
 }
 
 void Rasterizer::upload_texture() const
@@ -119,7 +119,8 @@ void Rasterizer::upload_texture() const
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation, light& light)
 {
     // Mat4 mat_finale =  viewport * projection * transformation;
-    Mat4 mat_finale = viewport * transformation;
+    Mat4 mat_finale = viewport * projection * transformation;
+    // Mat4 mat_finale = viewport * transformation;
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
@@ -136,45 +137,46 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    uint xMin = min(min(v1.position.x, v2.position.x), v3.position.x);
-    uint xMax = max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
-    uint yMin = min(min(v1.position.y, v2.position.y), v3.position.y);
-    uint yMax = max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
+    int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
+    int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
+    int yMin = (int)min(min(v1.position.y, v2.position.y), v3.position.y);
+    int yMax = (int)max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
 
     // // TO DO : change the width and the height
     if (xMin < 0)
         xMin = 0;
-    if (xMax > m_width)
+    if ((uint)xMax > m_width)
         xMax = m_width;
     if (yMin < 0)
         yMin = 0;
-    if (yMax > m_height)
+    if ((uint)yMax > m_height)
         yMax = m_height;
 
-    for (uint y = yMin; y < yMax; y++)
+    for (int y = yMin; y < yMax; y++)
     {
-        for (uint x = xMin; x < xMax; x++)
+        for (int x = xMin; x < xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
-            //AVX
 
-            float w1 = cross_product(q, vec2) / cross_product(vec1, vec2);
+            float w3 = cross_product(q, vec2) / cross_product(vec1, vec2);
             float w2 = cross_product(vec1, q) / cross_product(vec1, vec2);
-            float w3 = 1.f - w1 - w2;
-            // float minW = min(min(w1, w2), w3);
+            float w1 = 1.f - w2 - w3;
 
-            if (w1 >= 0.f && w2 >= 0.f && w1 + w2 <= 1)
+            if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
-                // if (minW < 0.01f)
+                float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                // float z = 2*()
+                // if (min(min(w1, w2), w3) < 0.016f)
                 // {
-                //     float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
                 //     set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
                 // }
                 // else
-                {
-                    float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                    set_pixel_color(x, y, z, {(v1.color * w3 + v2.color * w1 + v3.color * w2)});
-                }
+                // {
+                                        // std::cout << z << std::endl;
+
+                // set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, {-z*255 , -z*255,-z*255});
+                // }
             }
         }
     }
@@ -182,7 +184,8 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
 
 void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
 {
-    Mat4 mat_finale = viewport * transformation;
+    Mat4 mat_finale = viewport * projection * transformation;
+
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
 
@@ -202,7 +205,7 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
     }
 
     const float dx = v2.position.x - v1.position.x;
-    const float dy = fabs(v2.position.y - v1.position.y);
+    const float dy = fabsf(v2.position.y - v1.position.y);
 
     float error = dx / 2.0f;
     const int ystep = (v1.position.y < v2.position.y) ? 1 : -1;
@@ -235,15 +238,14 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
     Mat4 mat_finale = viewport * projection * transformation;
     v.position = (mat_finale * Vec4{v.position, 1}).xyz;
     // viewport
-    set_pixel_color(v.position.x, v.position.y, 0, v.color);
+    set_pixel_color((uint)v.position.x, (uint)v.position.y, 0, v.color);
 }
 
-void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
+inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
-
-    if (z < depth_buffer[x + y * m_width])
+    if (z <= depth_buffer[x + y * m_width])
     {
+        color_buffer[x + y * m_width] = c;
+        depth_buffer[x + y * m_width] = z;
     }
-    color_buffer[x + y * m_width] = c;
-    depth_buffer[x + y * m_width] = z;
 }

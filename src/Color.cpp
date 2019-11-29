@@ -3,9 +3,9 @@
 
 Color operator*(Color c, float w)
 {
-    c.r *= w;
-    c.g *= w;
-    c.b *= w;
+    c.r = (unsigned char)(c.r * w);
+    c.g = (unsigned char)(c.g * w);
+    c.b = (unsigned char)(c.b * w);
 
     return c;
 }
