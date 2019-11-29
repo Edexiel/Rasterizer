@@ -88,9 +88,8 @@ int main()
     // scene.entities[0].translate(0.f, 0.f, -10.f);
     // scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.entities.push_back(Entity{Mesh::CreateTriangle()});
+    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
-<<<<<<< HEAD
     // double x, y;
     scene.m_light = {{0, 1, 0}, 0.3, 0.7, 1.f};
     scene.m_light.v_light = (renderer.viewport * Vec4{scene.m_light.v_light, 0}).xyz;
@@ -98,13 +97,6 @@ int main()
     scene.entities[0].translate(0.f, 0, 0);
     scene.entities[0].setDrawMode(TRIANGLE);
     
-=======
-    scene.entities[1].scale(1.f, 1.f, 1.f);
-    scene.entities[1].translate(0.f, 0.f, -1.f);
-    // scene.entities[0].rotate(0.10f, 0, 0);
-
-    scene.entities[1].setDrawMode(TRIANGLE);
->>>>>>> d06e79fc72f965faec141261aedc26c4ebe07119
 
     while (!glfwWindowShouldClose(window))
     {
@@ -128,8 +120,6 @@ int main()
 
         // scene.entities[0].rotate(0,0.05f,0);
         // scene.entities[1].rotate(0f,0,0);
-
-        scene.entities[0].rotate(0, 0.01, 0);
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();

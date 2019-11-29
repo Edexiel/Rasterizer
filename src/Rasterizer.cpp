@@ -165,7 +165,6 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
             if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                // float z = 2*()
                 // if (min(min(w1, w2), w3) < 0.016f)
                 // {
                 //     set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
@@ -174,8 +173,8 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
                 // {
                                         // std::cout << z << std::endl;
 
-                // set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
-                set_pixel_color(x, y, z, {-z*255 , -z*255,-z*255});
+                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                // set_pixel_color(x, y, z, {-z*255 , -z*255,-z*255});
                 // }
             }
         }
@@ -245,7 +244,7 @@ inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
     if (z <= depth_buffer[x + y * m_width])
     {
+    }
         color_buffer[x + y * m_width] = c;
         depth_buffer[x + y * m_width] = z;
-    }
 }
