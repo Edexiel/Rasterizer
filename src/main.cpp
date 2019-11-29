@@ -81,6 +81,7 @@ int main()
 
     Scene scene{};
 
+    //scene.m_light.viewport = &renderer.viewport;
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     scene.entities.push_back(Entity{Mesh::CreateCube()});
     scene.entities[0].scale(1.f, 1.f, 1.f);
@@ -98,7 +99,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
+        // glfwGetCursorPos(window, &x, &y);
         { // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();

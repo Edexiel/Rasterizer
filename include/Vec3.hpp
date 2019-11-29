@@ -26,8 +26,9 @@ public:
 
     float getMagnitude() const;
     void Normalize();
+    Vec3 get_normalize() const;
     Vec3 operator+(Vec3 &other);
     Vec3 operator*(float float_other);
 };
-
-float cross_product(Vec3& v1, Vec3& v2);
+    float cross_product(Vec3 &v1, Vec3 &v2);
+    float dot_product(Vec3 &v1, Vec3 &v2);
