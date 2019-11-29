@@ -10,7 +10,7 @@ Vec3::~Vec3() {}
 // AVX optimization Here
 float Vec3::getMagnitude() const
 {
-    return sqrt(x * x * y * y * z * z);
+    return sqrt(x * x + y * y + z * z);
 }
 
 void Vec3::Normalize()
@@ -24,12 +24,12 @@ void Vec3::Normalize()
     y /= mag;
     z /= mag;
 }
-Vec3 Vec3::get_normalize()
+Vec3 Vec3::get_normalize() const
 {
     float mag = getMagnitude();
     if (mag == 0) {return *this;}
 
-    return{x /= mag,y /= mag,z /= mag};
+    return {x / mag, y / mag, z / mag};
 }
 Vec3 Vec3::operator+(Vec3 &other)
 {

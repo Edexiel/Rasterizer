@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     scene.entities.push_back(Entity{Mesh::CreateSphere(10, 10)});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     // double x, y;
-    scene.m_light = {{0, 1, 0}, 0.5, 0.7, 1.f};
+    scene.m_light = {{0, 1, 0}, 0.3, 0.7, 1.f};
     scene.m_light.v_light = (renderer.viewport * Vec4{scene.m_light.v_light, 0}).xyz;
     // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
     scene.entities[0].translate(0.f, 0, 0);
@@ -117,6 +117,8 @@ int main(int argc, char *argv[])
                 time_acc = 0.f;
             }
         }
+
+        scene.entities[0].rotate(0, 0.01, 0);
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();

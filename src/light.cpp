@@ -7,7 +7,7 @@
 
 Color light::diffuse_light(Vertex& v)
 {
-    Vec3 lightRay {v.position.x - v_light.x, v.position.y - v_light.y, v.position.z - v_light.z};
+    Vec3 lightRay { v_light.x - v.position.x , v_light.y - v.position.y, v_light.z - v.position.z};
     lightRay.Normalize();
     return v.color * diffuseLight * dot_product(lightRay, v.normal);
 }

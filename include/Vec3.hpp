@@ -26,7 +26,7 @@ public:
 
     float getMagnitude() const;
     void Normalize();
-    Vec3 get_normalize();
+    Vec3 get_normalize() const;
     Vec3 operator+(Vec3 &other);
     Vec3 operator*(float float_other);
 };
