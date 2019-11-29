@@ -82,7 +82,7 @@ int main()
     Scene scene{};
 
     //scene.m_light.viewport = &renderer.viewport;
-    // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(32, 64)});
     // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     // scene.entities[0].translate(0.f, 0.f, -10.f);
@@ -91,10 +91,9 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     // double x, y;
-    scene.m_light = {{0, 1, 0}, 0.3, 0.7, 1.f};
-    scene.m_light.v_light = (renderer.viewport * Vec4{scene.m_light.v_light, 0}).xyz;
+    scene.m_light = {{0, 0, 1.f}, 0.3, 0.7, 1.f};
     // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
-    scene.entities[0].translate(0.f, 0, 0);
+    // scene.entities[0].translate(0, 0, 0);
     scene.entities[0].setDrawMode(TRIANGLE);
     
 
@@ -116,7 +115,7 @@ int main()
                 time_acc = 0.f;
             }
         }
-        scene.entities[0].rotate(0.01f, 0, 0);
+        scene.entities[0].rotate(0, 0.01f, 0);
 
         // scene.entities[0].rotate(0,0.05f,0);
         // scene.entities[1].rotate(0f,0,0);

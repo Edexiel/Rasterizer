@@ -61,7 +61,7 @@ void Rasterizer::render_scene(Scene *pScene)
             {
                 draw_line(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.transfo);
             }
-            draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
+            // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
 
@@ -119,13 +119,12 @@ void Rasterizer::upload_texture() const
 void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation, light& light)
 {
     // Mat4 mat_finale =  viewport * projection * transformation;
-    Mat4 mat_finale = viewport * projection * transformation;
+    Mat4 mat_finale = viewport * projection;
+
+    v1.position = (transformation * Vec4{v1.position, 1}).xyz;
+    v2.position = (transformation * Vec4{v2.position, 1}).xyz;
+    v3.position = (transformation * Vec4{v3.position, 1}).xyz;
     // Mat4 mat_finale = viewport * transformation;
-
-    v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
-    v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
-    v3.position = (mat_finale * Vec4{v3.position, 1}).xyz;
-
     v1.normal   = (transformation * Vec4{v1.normal, 0}).xyz;
     v2.normal   = (transformation * Vec4{v2.normal, 0}).xyz;
     v3.normal   = (transformation * Vec4{v3.normal, 0}).xyz;
@@ -133,6 +132,14 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     light.apply_light(v1);
     light.apply_light(v2);
     light.apply_light(v3);
+
+    v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
+    v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
+    v3.position = (mat_finale * Vec4{v3.position, 1}).xyz;
+
+    
+
+    
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
@@ -231,6 +238,7 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
         }
     }
 }
+
 
 void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
 {
