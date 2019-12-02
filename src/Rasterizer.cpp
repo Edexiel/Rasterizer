@@ -7,6 +7,7 @@
 #include "math.hpp"
 #include "Vec2.hpp"
 #include "Vec3.hpp"
+#include "Vec4.hpp"
 #include "cstring"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
@@ -46,10 +47,13 @@ void Rasterizer::render_scene(Scene *pScene)
         case TRIANGLE:
         {
             if (e.mesh->indices.size() < 3)
-                break;
+                return;
 
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
-                draw_triangle(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]], e.transfo, pScene->m_light);
+            {
+                Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
+                draw_triangle(triangle, e.transfo);
+            }
             break;
         }
         case LINE:
@@ -116,24 +120,14 @@ void Rasterizer::upload_texture() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transformation, light& light)
+void Rasterizer::raster_triangle(Vertex (&vertices)[3])
 {
-    Mat4 mat_finale = viewport * projection * transformation;
+    // shortcuts
+    Vertex& v1 = vertices[0];
+    Vertex& v2 = vertices[1];
+    Vertex& v3 = vertices[2];
 
-    v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
-    v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
-    v3.position = (mat_finale * Vec4{v3.position, 1}).xyz;
 
-    v1.normal   = (transformation * Vec4{v1.normal, 0}).xyz;
-    v2.normal   = (transformation * Vec4{v2.normal, 0}).xyz;
-    v3.normal   = (transformation * Vec4{v3.normal, 0}).xyz;
-
-    // light.apply_light(v1);
-    // light.apply_light(v2);
-    // light.apply_light(v3);
-
-    Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
-    Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
     int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
     int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
@@ -148,6 +142,9 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
         yMin = 0;
     if ((uint)yMax > m_height)
         yMax = m_height;
+
+    Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
+    Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
     for (int y = yMin; y < yMax; y++)
     {
@@ -168,11 +165,42 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
                 // }
                 // else
                 // {
-                    set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
                 // }
             }
         }
     }
+}
+
+void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
+{
+    // clipSpace = projection * modelview * vec3 (4D) [-w,w]
+    //      clipping out of bound triangles (0001 0010 0100)
+    // NDC = vec3/vec4.w                         (3D) [-1,1]
+    //  Back face culling
+    // Screen coordinate = viewport * ndc        (2D)
+
+    Vec4 clipCoord[3];
+    for (short i = 0; i < 3; i++)
+    {
+        clipCoord[i] = projection * transformation * (Vec4){vertices[i].position,1.f};
+    }
+
+    // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
+    Vec3 ndc[3];
+    for (short i = 0; i < 3; i++)
+    {
+        ndc[i] = clipCoord[i].homogenize().xyz ; 
+    }
+
+    Vertex screenCoord[3];
+    for (short i = 0; i < 3; i++)
+    {
+        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i],1.f}).xyz,vertices[i].color};
+    }
+    
+    raster_triangle(screenCoord);
+
 }
 
 void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
@@ -181,8 +209,6 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
 
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
-
-
 
     const bool steep = (fabs(v2.position.y - v1.position.y) > fabs(v2.position.x - v1.position.x));
     if (steep)
@@ -236,6 +262,7 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
 
 inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
+    std::cout << z << std::endl;
     uint index = x + y * m_width;
     if (z < depth_buffer[index])
     {

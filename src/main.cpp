@@ -92,7 +92,7 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateSphere(18,32)});
     scene.entities[0].scale(1.f, 1.f, 1.f);
     // scene.entities[1].scale(0.3f, 0.3f, 0.3f);
-    scene.entities[1].translate(0.f, 0.f, 0.f);
+    scene.entities[1].translate(0.f, 0.f, -10.f);
     // scene.entiti1s[0].rotate(0.10f, 0, 0);1
     scene.entities[1].setDrawMode(TRIANGLE);
 
@@ -114,7 +114,7 @@ int main()
                 time_acc = 0.f;
             }
         }
-        scene.entities[0].rotate(0, 0.01f, 0);
+        scene.entities[0].rotate(0.01f,0, 0);
 
         // scene.entities[0].rotate(0,0.05f,0);
         // scene.entities[1].rotate(0f,0,0);
