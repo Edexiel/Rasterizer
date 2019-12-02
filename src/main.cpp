@@ -19,7 +19,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main()
 {
     uint screenWidth = 800;
-    uint screenHeight = 600;
+    uint screenHeight = 800;
 
     float aspect = screenWidth / (float)screenHeight;
 
@@ -82,19 +82,24 @@ int main()
     Scene scene{};
 
     //scene.m_light.viewport = &renderer.viewport;
-    scene.entities.push_back(Entity{Mesh::CreateSphere(32, 64)});
-    // scene.entities.push_back(Entity{Mesh::CreateCube()});
-    // scene.entities[0].scale(1.f, 1.f, 1.f);
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(16, 32)});
+    scene.entities.push_back(Entity{Mesh::CreateCube()});
+    // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
     // scene.entities[0].translate(0.f, 0.f, -10.f);
     // scene.entities[0].setDrawMode(TRIANGLE);
 
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities[0].scale(1.f, 1.f, 1.f);
     // double x, y;
-    scene.m_light = {{0, 0, 10.f}, 0.1, 0.3, 1.f};
+    scene.m_light = {{0.0f, 0.0f, 1.0f}, 0.2f, 0.4f, 0.4f};
+
+    scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.m_light.v_light.x, scene.m_light.v_light.y, scene.m_light.v_light.z)});
+
     // scene.entities[0].scale(0.5f, 0.5f, 0.5f);
-    // scene.entities[0].translate(0, 0, 0);
+    //  scene.entities[0].translate(0, 0, 0);
     scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[1].setDrawMode(LINE);
+
     
 
     while (!glfwWindowShouldClose(window))
