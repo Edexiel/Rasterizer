@@ -9,8 +9,10 @@ public:
     float ambientLight;
     float diffuseLight;
     float specularLight;
+    float alpha;
 
     float diffuse_light(Vertex& n);
     float ambient_light(Vertex& n);
+    float specular_light(Vertex& n);
     void  apply_light(Vertex& n);
 };

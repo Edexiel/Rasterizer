@@ -8,7 +8,7 @@ class Mesh
 public:
     std::vector<Vertex> vertices;
     std::vector<int> indices;
-    std::vector<Vec3> normals;
+    // std::vector<Vec3> normals;
     Mesh();
     ~Mesh();
     static Mesh* CreateTriangle();

@@ -129,6 +129,10 @@ void Rasterizer::draw_triangle(Vertex v1, Vertex v2, Vertex v3, Mat4 &transforma
     v2.normal   = (transformation * Vec4{v2.normal, 0}).xyz;
     v3.normal   = (transformation * Vec4{v3.normal, 0}).xyz;
 
+    v1.normal.Normalize();
+    v2.normal.Normalize();
+    v3.normal.Normalize();
+
     light.apply_light(v1);
     light.apply_light(v2);
     light.apply_light(v3);
