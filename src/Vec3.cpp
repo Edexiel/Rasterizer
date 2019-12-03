@@ -13,7 +13,7 @@ float Vec3::getMagnitude() const
     return sqrtf(x * x + y * y + z * z);
 }
 
-void Vec3::Normalize()
+void Vec3::normalize()
 {
     float mag = getMagnitude();
 
@@ -27,26 +27,39 @@ void Vec3::Normalize()
 Vec3 Vec3::get_normalize() const
 {
     float mag = getMagnitude();
-    if (mag == 0) {return *this;}
+    if (mag == 0)
+    {
+        return *this;
+    }
 
     return {x / mag, y / mag, z / mag};
 }
-Vec3 Vec3::operator+(Vec3 &other)
+Vec3 Vec3::operator+(const Vec3 &other) const
 {
     return {x + other.x, y + other.y, z + other.z};
 }
 
-Vec3 Vec3::operator*(float other)
+Vec3 Vec3::operator-(const Vec3 &other) const
+{
+    return {x - other.x, y - other.y, z - other.z};
+}
+
+Vec3 Vec3::operator*(float other) const
 {
     return {x * other, y * other, z * other};
 }
 
-float cross_product(Vec3& v1, Vec3& v2)
+float Vec3::cross_product_z(const Vec3& v1,const Vec3& v2)
 {
-    return (v1.x) * (v2.y) - (v2.x) * (v1.y);   
+    return v1.x * v2.y - v2.x * v1.y;
 }
 
-float dot_product(Vec3& v1, Vec3& v2)
+Vec3 Vec3::cross_product(const Vec3 &v1,const Vec3 &v2)
 {
-    return v1.x + v2.x + v1.y + v2.y + v1.z + v2.z;
+    return {(v1.y * v2.z) - (v1.z * v2.y), (v1.z * v2.x) - (v1.x * v2.z), (v1.x * v2.y) - (v1.y * v2.x)};
+}
+
+float Vec3::dot_product(const Vec3 &v1, const Vec3 &v2)
+{
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }

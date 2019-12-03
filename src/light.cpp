@@ -8,8 +8,8 @@
 Color light::diffuse_light(Vertex& v)
 {
     Vec3 lightRay { v_light.x - v.position.x , v_light.y - v.position.y, v_light.z - v.position.z};
-    lightRay.Normalize();
-    return v.color * diffuseLight * dot_product(lightRay, v.normal);
+    lightRay.normalize();
+    return v.color * diffuseLight * Vec3::dot_product(lightRay, v.normal);
 }
 
 Color light::ambient_light(Vertex& v)

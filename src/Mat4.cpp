@@ -33,6 +33,29 @@ Mat4 Mat4::orthoMatrix(float left, float right, float bottom, float top, float n
     return {{2.f / (right - left), 0.f, 0.f, 0.f}, {0.f, 2.f / (top - bottom), 0.f, 0.f}, {0.f, 0.f, -2.f / (far - near), 0.f}, {-((right + left) / (right - left)), -((top + bottom) / (top - bottom)), -((far + near) / (far - near)), 1.f}};
 }
 
+static Mat4 perspective(float fovyInDegrees, float aspectRatio, float znear, float zfar)
+{
+    float ymax, xmax;
+    // float temp, temp2, temp3, temp4;
+    ymax = znear * tanf(fovyInDegrees * M_PI / 360.0);
+    // ymin = -ymax;
+    // xmin = -ymax * aspectRatio;
+    xmax = ymax * aspectRatio;
+    return frustum(-xmax, xmax, -ymax, ymax, znear, zfar);
+}
+
+static Mat4 frustum(float left, float right, float bottom, float top, float znear, float zfar)
+{
+    float nn, rl, tl, fn;
+    nn = 2.0 * znear;
+    rl = right - left;
+    tl = top - bottom;
+    fn = zfar - znear;
+
+    return {{nn / rl, 0.f, 0.f, 0.f}, {0.f, nn / tl, 0.f, 0.f}, {(right + left) / rl, (top + bottom) / tl, (-zfar - znear) / fn, -1.0}, {0,0, (-nn * zfar) / fn, 0.f}};
+}
+
+
 Mat4 Mat4::CreateTranslationMatrix(const Vec3 &t)
 {
     return Mat4{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {t.x, t.y, t.z, 1}};

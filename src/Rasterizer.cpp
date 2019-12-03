@@ -110,7 +110,7 @@ void Rasterizer::clear_depth_buffer()
 {
     // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
     for (size_t i = 0; i < m_width * m_height; i++)
-        depth_buffer[i] = 9999;
+        depth_buffer[i] = 1.1f;
 }
 
 void Rasterizer::upload_texture() const
@@ -130,9 +130,9 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
 
 
     int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
-    int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x) + 1;
+    int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x);
     int yMin = (int)min(min(v1.position.y, v2.position.y), v3.position.y);
-    int yMax = (int)max(max(v1.position.y, v2.position.y), v3.position.y) + 1;
+    int yMax = (int)max(max(v1.position.y, v2.position.y), v3.position.y);
 
     if (xMin < 0)
         xMin = 0;
@@ -146,14 +146,14 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    for (int y = yMin; y < yMax; y++)
+    for (int y = yMin; y <= yMax; y++)
     {
-        for (int x = xMin; x < xMax; x++)
+        for (int x = xMin; x <= xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
 
-            float w2 = cross_product(q, vec2) / cross_product(vec1, vec2);
-            float w3 = cross_product(vec1, q) / cross_product(vec1, vec2);
+            float w2 = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
+            float w3 = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
             float w1 = 1.f - w2 - w3;
 
             if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
@@ -177,7 +177,7 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
     // clipSpace = projection * modelview * vec3 (4D) [-w,w]
     //      clipping out of bound triangles (0001 0010 0100)
     // NDC = vec3/vec4.w                         (3D) [-1,1]
-    //  Back face culling
+    //      Back face culling
     // Screen coordinate = viewport * ndc        (2D)
 
     Vec4 clipCoord[3];
@@ -192,6 +192,13 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
     {
         ndc[i] = clipCoord[i].homogenize().xyz ; 
     }
+
+    // back face culling
+    // if(Vec3::cross_product_z(ndc[1] - ndc[0],ndc[2] - ndc[0]) < 0.f )
+    // {
+    //     std::cout<<"culled" <<std::endl;
+    //     return;
+    // }
 
     Vertex screenCoord[3];
     for (short i = 0; i < 3; i++)
@@ -262,9 +269,9 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
 
 inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
 {
-    std::cout << z << std::endl;
+    // std::cout << z << std::endl;
     uint index = x + y * m_width;
-    if (z < depth_buffer[index])
+    if (z <= depth_buffer[index])
     {
         color_buffer[index] = c;
         depth_buffer[index] = z;

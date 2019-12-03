@@ -25,10 +25,14 @@ public:
     ~Vec3();
 
     float getMagnitude() const;
-    void Normalize();
+    void normalize();
     Vec3 get_normalize() const;
-    Vec3 operator+(Vec3 &other);
-    Vec3 operator*(float float_other);
+
+    Vec3 operator+(const Vec3 &other) const;
+    Vec3 operator-(const Vec3 &other) const;
+    Vec3 operator*(float float_other) const;
+
+    static float cross_product_z(const Vec3 &v1,const Vec3 &v2) ;
+    static Vec3 cross_product(const Vec3 &v1,const Vec3 &v2) ;
+    static float dot_product(const Vec3 &v1,const Vec3 &v2) ;
 };
-    float cross_product(Vec3 &v1, Vec3 &v2);
-    float dot_product(Vec3 &v1, Vec3 &v2);

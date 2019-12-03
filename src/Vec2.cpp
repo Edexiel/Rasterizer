@@ -13,7 +13,7 @@ float Vec2::getMagnitude() const
     return sqrtf(x * x * y * y);
 }
 
-void Vec2::Normalize()
+void Vec2::normalize()
 {
     float mag = getMagnitude();
 

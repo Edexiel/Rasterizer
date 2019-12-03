@@ -114,7 +114,7 @@ int main()
                 time_acc = 0.f;
             }
         }
-        scene.entities[0].rotate(0.01f,0, 0);
+        scene.entities[0].rotate(0,0.01f, 0);
 
         // scene.entities[0].rotate(0,0.05f,0);
         // scene.entities[1].rotate(0f,0,0);

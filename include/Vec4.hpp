@@ -25,7 +25,7 @@ public:
 
     Vec4& homogenize();
     float getMagnitude() const;
-    void Normalize();
+    void normalize();
     Vec4 operator+(Vec4 &other);
     Vec4 operator*(float f);
 };

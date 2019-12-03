@@ -33,7 +33,7 @@ float Vec4::getMagnitude() const
     return sqrtf(x * x * y * y * z * z);
 }
 
-void Vec4::Normalize()
+void Vec4::normalize()
 {
     float mag = getMagnitude();
 
