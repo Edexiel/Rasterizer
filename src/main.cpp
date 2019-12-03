@@ -76,7 +76,8 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    renderer.projection = Mat4::perspective(70,aspect,-10,10);
     // renderer.projection = Mat4::identity();
 
     Scene scene{};
@@ -85,14 +86,14 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
     scene.entities.push_back(Entity{Mesh::CreateCube()});
     scene.entities[0].scale(1.f, 1.f, 1.f);
-    scene.entities[0].translate(0.5f, 0.f, 0.f);
+    scene.entities[0].translate(0.5f, 0.f, 2.4f);
     // scene.entities[0].setDrawMode(TRIANGLE);
 
     scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     // scene.entities.push_back(Entity{Mesh::CreateSphere(18,32)});
     scene.entities[0].scale(1.f, 1.f, 1.f);
     // scene.entities[1].scale(0.3f, 0.3f, 0.3f);
-    scene.entities[1].translate(0.f, 0.f, -10.f);
+    scene.entities[1].translate(0.f, 0.f, 2.f);
     // scene.entiti1s[0].rotate(0.10f, 0, 0);1
     scene.entities[1].setDrawMode(TRIANGLE);
 
