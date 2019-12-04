@@ -15,14 +15,16 @@ Vec4::Vec4(const Vec3 &vec3, float _w = 1.0f)
 
 Vec4::~Vec4() {}
 
-void Vec4::Homogenize()
+Vec4& Vec4::homogenize()
 {
     if (w == 0 || w == 1)
-        return;
+        return *this;
 
     x /= w;
     y /= w;
     z /= w;
+
+    return *this;
 }
 
 // AVX optimization Here
@@ -31,7 +33,7 @@ float Vec4::getMagnitude() const
     return sqrtf(x * x * y * y * z * z);
 }
 
-void Vec4::Normalize()
+void Vec4::normalize()
 {
     float mag = getMagnitude();
 

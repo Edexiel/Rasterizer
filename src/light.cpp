@@ -6,12 +6,19 @@
 #include "Color.hpp"
 #include <iostream>
 #include <cmath>
-float light::diffuse_light(Vertex& v)
+
+
+Light::Light(){}
+Light::Light(Vec3 _v_light,float _ambientLight,float _diffuseLight,float _specularLight,float _alpha): v_light{_v_light},ambientLight{_ambientLight},diffuseLight{_diffuseLight},specularLight{_specularLight},alpha{_alpha} {}
+
+Light::~Light(){}
+
+float Light::diffuse_light(Vertex& v)
 {
-    v_light.Normalize();
-    Vec3 pos  = v.position.get_normal();
-    Vec3 to_light = (v_light - pos).get_normal();
-    float diffuse = dot_product(to_light, v.normal);
+    v_light.normalize();
+    Vec3 pos  = v.position.get_normalize();
+    Vec3 to_light = (v_light - pos).get_normalize();
+    float diffuse = Vec3::dot_product(to_light, v.normal);
 
     if (diffuse < 0)
         return 0;
@@ -19,21 +26,16 @@ float light::diffuse_light(Vertex& v)
     return (diffuseLight * diffuse);
 }
 
-float light::ambient_light(Vertex& v)
+float Light::specular_light(Vertex& v)
 {
-    return ambientLight;
-}
-
-float light::specular_light(Vertex& v)
-{
-    v_light.Normalize();
-    Vec3 pos  = v.position.get_normal();
-    Vec3 to_light = (v_light - pos).get_normal();
+    v_light.normalize();
+    Vec3 pos  = v.position.get_normalize();
+    Vec3 to_light = (v_light - pos).get_normalize();
     float dotProductLN = (dot_product(to_light, v.normal) * 2);
     if (dotProductLN < 0)
         dotProductLN = 0;
 
-    Vec3 R =  (v.normal * dotProductLN - to_light).get_normal();
+    Vec3 R =  (v.normal * dotProductLN - to_light).get_normalize();
     float spec = specularLight * powf(dot_product(R, V), alpha);
     if (spec < 0)
         return 0;
@@ -41,9 +43,9 @@ float light::specular_light(Vertex& v)
     return spec;
 }
 
-void light::apply_light(Vertex& v)
+Color Light::apply_light(Vertex& v)
 {
-    float m_ambientLight = ambient_light(v);
+    float m_ambientLight = ambientLight;
     float m_diffuseLight = diffuse_light(v);
     float m_specularLight = specular_light(v);
     // if( v.color.r * (m_ambientLight + m_diffuseLight)< 255)
@@ -61,5 +63,5 @@ void light::apply_light(Vertex& v)
     // else
     //     v.color.b = 255;
 
-    v.color = v.color * (m_ambientLight + m_diffuseLight + m_specularLight);
+    return v.color * (m_ambientLight + m_diffuseLight + m_specularLight);
 }

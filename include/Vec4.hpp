@@ -23,9 +23,9 @@ public:
     Vec4(const Vec3 &vec3, float _w);
     ~Vec4();
 
-    void Homogenize();
+    Vec4& homogenize();
     float getMagnitude() const;
-    void Normalize();
+    void normalize();
     Vec4 operator+(Vec4 &other);
     Vec4 operator*(float f);
 };
