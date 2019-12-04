@@ -3,6 +3,8 @@
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "light.hpp"
+#include "Vertex.hpp"
+
 class Rasterizer
 {
 private:
@@ -14,8 +16,9 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(Vertex (&vertices)[3], Mat4 transformation);
+    void draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light &light);
     void raster_triangle(Vertex (&vertices)[3]);
+
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
     void draw_sphere();

@@ -8,7 +8,7 @@ class Scene
 {
 public:
     std::vector<Entity> entities;
-    light m_light;
+    Light light;
     Scene();
     ~Scene();
 };

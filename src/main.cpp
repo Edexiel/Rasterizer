@@ -19,11 +19,11 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main()
 {
     uint screenWidth = 800;
-    uint screenHeight = 600;
+    uint screenHeight = 800;
 
     float aspect = screenWidth / (float)screenHeight;
 
-    float modres = 1;
+    float modres = 2;
 
     uint resWidth = (uint)(screenWidth / modres);
     uint resHeight = (uint)(screenHeight / modres);
@@ -75,27 +75,24 @@ int main()
 
     Rasterizer renderer{resWidth, resHeight};
 
+    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::perspective(70,aspect,-10,10);
+    renderer.projection = Mat4::perspective(90,aspect,-1,10);
     // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
-    //scene.m_light.viewport = &renderer.viewport;
-    // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(16, 32)});
     scene.entities.push_back(Entity{Mesh::CreateCube()});
-    scene.entities[0].scale(1.f, 1.f, 1.f);
-    scene.entities[0].translate(0.5f, 0.f, 2.4f);
-    // scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[0].scale(0.9f, 0.9f, 0.9f);
+    scene.entities[0].translate(0.f, 0.f, 2.f);
+    scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.entities.push_back(Entity{Mesh::CreateTriangle()});
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(18,32)});
-    scene.entities[0].scale(1.f, 1.f, 1.f);
-    // scene.entities[1].scale(0.3f, 0.3f, 0.3f);
-    scene.entities[1].translate(0.f, 0.f, 2.f);
-    // scene.entiti1s[0].rotate(0.10f, 0, 0);1
-    scene.entities[1].setDrawMode(TRIANGLE);
+
+    scene.light = {{0.0f, 0.0f, 1.5f}, 0.2f, 0.4f, 0.4f, 20.f};
+
+    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
     while (!glfwWindowShouldClose(window))
     {
@@ -115,13 +112,26 @@ int main()
                 time_acc = 0.f;
             }
         }
-        scene.entities[0].rotate(0,0.01f, 0);
 
-        // scene.entities[0].rotate(0,0.05f,0);
-        // scene.entities[1].rotate(0f,0,0);
+        scene.entities[0].rotate(0,0.01f, 0);
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
+
+        // if (glfwGetKey(window, GLFW_KEY_UP))
+        //     scene.entities[0].translate(0, 0.05f, 0);;
+        // if (glfwGetKey(window, GLFW_KEY_DOWN))
+        //     scene.entities[0].translate(0, -0.05f, 0);
+        // if (glfwGetKey(window, GLFW_KEY_LEFT))
+        //     scene.entities[0].translate(-0.05f, 0, 0);
+        // if (glfwGetKey(window, GLFW_KEY_RIGHT))
+        //     scene.entities[0].translate(0.05f, 0, 0);
+        // if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
+        //     scene.entities[0].translate(0, 0, -0.05f);
+        // if (glfwGetKey(window, GLFW_KEY_KP_ADD))
+        //     scene.entities[0].translate(0, 0, 0.05f);
+
+        
 
         renderer.render_scene(&scene);
         renderer.draw_scene();

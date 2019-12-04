@@ -1,14 +1,16 @@
 #include <iostream>
+#include <cstring>
+#include <cmath>
+
 #include "Rasterizer.hpp"
 #include "Scene.hpp"
 #include "Vertex.hpp"
-#include "cmath"
 #include "Mat4.hpp"
 #include "math.hpp"
 #include "Vec2.hpp"
 #include "Vec3.hpp"
 #include "Vec4.hpp"
-#include "cstring"
+#include "light.hpp"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
 {
@@ -52,7 +54,7 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
-                draw_triangle(triangle, e.transfo);
+                draw_triangle(triangle, e.transfo,pScene->light);
             }
             break;
         }
@@ -65,7 +67,7 @@ void Rasterizer::render_scene(Scene *pScene)
             {
                 draw_line(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.transfo);
             }
-            draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
+            // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
 
@@ -127,8 +129,6 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
     Vertex& v2 = vertices[1];
     Vertex& v3 = vertices[2];
 
-
-
     int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
     int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x);
     int yMin = (int)min(min(v1.position.y, v2.position.y), v3.position.y);
@@ -172,7 +172,7 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
     }
 }
 
-void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
+void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light& light)
 {
     // clipSpace = projection * modelview * vec3 (4D) [-w,w]
     //      clipping out of bound triangles (0001 0010 0100)
@@ -180,11 +180,24 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
     //      Back face culling
     // Screen coordinate = viewport * ndc        (2D)
 
+
     Vec4 clipCoord[3];
     for (short i = 0; i < 3; i++)
     {
         clipCoord[i] = projection * transformation * (Vec4){vertices[i].position,1.f};
     }
+
+    // clipping 
+
+
+    // Light per Vertex
+    float mult_colors[3];
+
+    for (short i = 0; i < 3; i++)
+    {
+        mult_colors[i] = light.apply_light(vertices[i].position,vertices[i].normal);
+    }
+
 
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
     Vec3 ndc[3];
@@ -203,7 +216,7 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation)
     Vertex screenCoord[3];
     for (short i = 0; i < 3; i++)
     {
-        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i],1.f}).xyz,vertices[i].color};
+        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i],1.f}).xyz,vertices[i].color * mult_colors[i],vertices[i].normal};
     }
     
     raster_triangle(screenCoord);

@@ -28,9 +28,7 @@ Vec3 Vec3::get_normalize() const
 {
     float mag = getMagnitude();
     if (mag == 0)
-    {
         return *this;
-    }
 
     return {x / mag, y / mag, z / mag};
 }

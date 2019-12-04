@@ -1,16 +1,23 @@
-#pragma once 
+#pragma once
 #include "Vec3.hpp"
 #include "Vertex.hpp"
 #include "Mat4.hpp"
-class light
+
+class Light
 {
+
 public:
+    Light();
+    Light(Vec3 v_light,float ambientLight,float diffuseLight,float specularLight,float alpha);
+    ~Light();
+
     Vec3 v_light;
     float ambientLight;
     float diffuseLight;
     float specularLight;
+    float alpha;
 
-    Color diffuse_light(Vertex& n);
-    Color ambient_light(Vertex& n);
-    void  apply_light(Vertex& n);
+    float diffuse_light(Vertex &n);
+    float specular_light(Vertex &n);
+    Color apply_light(Vertex &n);
 };

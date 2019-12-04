@@ -4,39 +4,58 @@
 #include "Mat4.hpp"
 #include "Vertex.hpp"
 #include "Color.hpp"
+#include <iostream>
+#include <cmath>
 
-Color light::diffuse_light(Vertex& v)
+
+Light::Light(){}
+Light::Light(Vec3 _v_light,float _ambientLight,float _diffuseLight,float _specularLight,float _alpha): v_light{_v_light},ambientLight{_ambientLight},diffuseLight{_diffuseLight},specularLight{_specularLight},alpha{_alpha} {}
+
+Light::~Light(){}
+
+float Light::diffuse_light(Vertex& v)
 {
-    Vec3 lightRay { v_light.x - v.position.x , v_light.y - v.position.y, v_light.z - v.position.z};
-    lightRay.normalize();
-    return v.color * diffuseLight * Vec3::dot_product(lightRay, v.normal);
+    v_light.normalize();
+    Vec3 pos  = v.position.get_normalize();
+    Vec3 to_light = (v_light - pos).get_normalize();
+    float diffuse = Vec3::dot_product(to_light, v.normal);
+
+    if (diffuse < 0)
+        return 0;
+    else
+        return (diffuseLight * diffuse);
 }
 
-Color light::ambient_light(Vertex& v)
+float Light::specular_light(Vertex& v)
 {
-    return v.color * ambientLight;
-}
-
-void light::apply_light(Vertex& v)
-{
-    Color m_ambientLight = ambient_light(v);
-    Color m_diffuseLight = diffuse_light(v);
-
-    v.color = m_diffuseLight;
+    v_light.normalize();
+    Vec3 pos  = v.position.get_normalize();
+    Vec3 to_light = (v_light - pos).get_normalize();
+    Vec3 R =  (v.normal * (Vec3::dot_product(to_light, v.normal) * 2) - to_light).get_normalize();
+    Vec3 V {0,0, 1.f};
     
-    // if(m_ambientLight.r + m_diffuseLight.r < 255)
-    //     v.color.r = m_ambientLight.r + m_diffuseLight.r;
+    return specularLight * powf(Vec3::dot_product(R, V), alpha);
+}
+
+Color Light::apply_light(Vertex& v)
+{
+    float m_ambientLight = ambientLight;
+    float m_diffuseLight = diffuse_light(v);
+    float m_specularLight = specular_light(v);
+    // if( v.color.r * (m_ambientLight + m_diffuseLight)< 255)
+    //     v.color.r = v.color.r * (m_diffuseLight);
     // else
     //     v.color.r = 255;
 
-    // if(m_ambientLight.g + m_diffuseLight.g < 255)
-    //     v.color.g = m_ambientLight.g + m_diffuseLight.g;
+    // if(v.color.g * (m_ambientLight + m_diffuseLight) < 255)
+    //     v.color.g = v.color.g * (m_diffuseLight);
     // else
     //     v.color.g = 255;
 
-    // if(m_ambientLight.b + m_diffuseLight.b < 255)
-    //     v.color.b = m_ambientLight.b + m_diffuseLight.b;
+    // if(v.color.b * (m_ambientLight + m_diffuseLight) < 255)
+    //     v.color.b = v.color.b * (m_diffuseLight);
     // else
     //     v.color.b = 255;
-    
+
+    return v.color * (m_ambientLight + m_diffuseLight + m_specularLight);
 }
