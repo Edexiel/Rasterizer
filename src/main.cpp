@@ -83,7 +83,11 @@ int main()
 
     Scene scene{};
 
+<<<<<<< HEAD
     scene.entities.push_back(Entity{Mesh::CreateSphere(20, 20)});
+=======
+    scene.entities.push_back(Entity{Mesh::CreateSphere(64, 128)});
+>>>>>>> a790579db6e8a79339befc0a1a3545d8592fa548
     // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].translate(0.f, 0.f, 5.f);
