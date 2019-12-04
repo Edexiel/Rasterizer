@@ -15,8 +15,8 @@ float light::diffuse_light(Vertex& v)
 
     if (diffuse < 0)
         return 0;
-    else
-        return (diffuseLight * diffuse);
+    
+    return (diffuseLight * diffuse);
 }
 
 float light::ambient_light(Vertex& v)
@@ -29,9 +29,16 @@ float light::specular_light(Vertex& v)
     v_light.Normalize();
     Vec3 pos  = v.position.get_normal();
     Vec3 to_light = (v_light - pos).get_normal();
-    Vec3 R =  ((v.normal * dot_product(to_light, v.normal) * 2) - to_light).get_normal();
-    Vec3 V {0,0, 1.f};
-    float spec = specularLight * pow(dot_product(R, V), alpha);
+    float dotProductLN = (dot_product(to_light, v.normal) * 2);
+    if (dotProductLN < 0)
+        dotProductLN = 0;
+
+    Vec3 R =  (v.normal * dotProductLN - to_light).get_normal();
+    float spec = specularLight * powf(dot_product(R, V), alpha);
+    if (spec < 0)
+        return 0;
+
+    return spec;
 }
 
 void light::apply_light(Vertex& v)

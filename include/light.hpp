@@ -6,6 +6,7 @@ class light
 {
 public:
     Vec3 v_light;
+    Vec3 V;
     float ambientLight;
     float diffuseLight;
     float specularLight;
