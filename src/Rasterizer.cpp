@@ -6,7 +6,7 @@
 #include "Scene.hpp"
 #include "Vertex.hpp"
 #include "Mat4.hpp"
-#include "math.hpp"
+#include "tools.hpp"
 #include "Vec2.hpp"
 #include "Vec3.hpp"
 #include "Vec4.hpp"
@@ -74,6 +74,8 @@ void Rasterizer::render_scene(Scene *pScene)
         default:
             break;
         }
+
+        e.resetTransformation();
     }
 }
 
@@ -129,19 +131,19 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
     Vertex &v2 = vertices[1];
     Vertex &v3 = vertices[2];
 
-    int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
-    int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x);
-    int yMin = (int)min(min(v1.position.y, v2.position.y), v3.position.y);
-    int yMax = (int)max(max(v1.position.y, v2.position.y), v3.position.y);
+    int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x),0.f);
+    int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y),0.f);
+    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width-1);
+    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height-1);
 
-    if (xMin < 0)
-        xMin = 0;
-    if ((uint)xMax >= m_width)
-        xMax = m_width-1;
-    if (yMin < 0)
-        yMin = 0;
-    if ((uint)yMax >= m_height)
-        yMax = m_height-1;
+    // if (xMin < 0)
+    //     xMin = 0;
+    // if ((uint)xMax >= m_width)
+    //     xMax = m_width-1;
+    // if (yMin < 0)
+    //     yMin = 0;
+    // if ((uint)yMax >= m_height)
+    //     yMax = m_height-1;
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};

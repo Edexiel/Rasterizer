@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 
 #include <string.h>
-#include "math.hpp"
+#include "tools.hpp"
 
 Texture::Texture(uint _width, uint _height) : width{_width}, height{_height}
 {

@@ -1,10 +1,11 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
-CXXFLAGS=-O0 -g -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function
+CXXFLAGS= -pipe -Og -g -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native #-mavx - mavx2
 CXXFLAGS+=-Iinclude
 CFLAGS=$(CXXFLAGS)
 CC=gcc
 CXX=g++
+# CXX=/home/g.nisi/Downloads/clang/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clang++
 
 # ifeq ($(CC),x86_64-w64-mingw32-gcc)
 # CPPFLAGS=-DCALLBACK=__stdcall
