@@ -1,10 +1,8 @@
 #pragma once
 
-#include "stb_image.h"
 #include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include <GL/glu.h>
-#include "math.hpp"
+#include "tools.hpp"
 #include "Color.hpp"
 
 class Texture
@@ -26,6 +24,5 @@ public:
     uint getWidth() const;
     uint getHeight() const;
 
-    unsigned char* load_PNG(const char* namefile);
     GLuint getTextureName() const;
 };

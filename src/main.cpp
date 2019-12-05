@@ -9,6 +9,7 @@
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
 #include "math.h"
+#include "Camera.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -23,7 +24,7 @@ int main()
 
     float aspect = screenWidth / (float)screenHeight;
 
-    float modres = 2.5f;
+    float modres = 1.f;
 
     uint resWidth = (uint)(screenWidth / modres);
     uint resHeight = (uint)(screenHeight / modres);
@@ -78,21 +79,23 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::perspective(90,aspect,-1,10);
+    renderer.projection = Mat4::perspective(90, aspect, -1, 10);
     // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
-    scene.entities.push_back(Entity{Mesh::CreateSphere(64, 128)});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(20, 20)});
     // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].translate(0.f, 0.f, 5.f);
     scene.entities[0].setDrawMode(TRIANGLE);
-
 
     scene.light = {{0.0f, 0.0f, 1.5f}, {0.0f, 0.0f, 1.f}, 0.2f, 0.4f, 0.4f, 100.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
+
+    Vec3 pos{0.f, 0.f, 5.f};
+    float rotX = 0;
+    float rotY = 0;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -112,27 +115,27 @@ int main()
                 time_acc = 0.f;
             }
         }
-        
-
-        // scene.entities[0].rotate(0,0.01f, 0);
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
         // scene.entities[0].rotate(0, 0.01f, 0);
 
-        if (glfwGetKey(window, GLFW_KEY_UP))
-            scene.entities[0].translate(0, 0.05f, 0);;
-        if (glfwGetKey(window, GLFW_KEY_DOWN))
-            scene.entities[0].translate(0, -0.05f, 0);
-        if (glfwGetKey(window, GLFW_KEY_LEFT))
-            scene.entities[0].translate(-0.05f, 0, 0);
-        if (glfwGetKey(window, GLFW_KEY_RIGHT))
-            scene.entities[0].translate(0.05f, 0, 0);
-        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
-            scene.entities[0].translate(0, 0, 0.05f);
-        if (glfwGetKey(window, GLFW_KEY_KP_ADD))
-            scene.entities[0].translate(0, 0, -0.05f);
+        // if (glfwGetKey(window, GLFW_KEY_UP))
+        //     pos.y += 0.05f;
+        // if (glfwGetKey(window, GLFW_KEY_DOWN))
+        //     pos.y -= 0.05f;
+        // if (glfwGetKey(window, GLFW_KEY_LEFT))
+        //     pos.x -= 0.05f;
+        // if (glfwGetKey(window, GLFW_KEY_RIGHT))
+        //     pos.x += 0.05f;
+        // if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
+        //     pos.z += 0.05f;
+        // if (glfwGetKey(window, GLFW_KEY_KP_ADD))
+        //     pos.z -= 0.05f;
 
+        move_camera(window, rotX, rotY, pos, screenWidth, screenHeight);
+        scene.entities[0].rotate({rotX, rotY + 180.f, 0});
+        scene.entities[0].translate(pos);
 
         renderer.render_scene(&scene);
         renderer.draw_scene();

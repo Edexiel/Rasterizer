@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 
 #include <string.h>
-#include "math.hpp"
+#include "tools.hpp"
 
 Texture::Texture(uint _width, uint _height) : width{_width}, height{_height}
 {
@@ -51,11 +51,3 @@ uint Texture::getHeight() const
     return height;
 }
 
-unsigned char* Texture::load_PNG(const char* namefile)
-{
-    stbi_set_flip_vertically_on_load(1);
-    int width, height, channels;
-	unsigned char* pixels = stbi_load(namefile, &width, &height, &channels, 0);
-
-    return pixels;
-}
