@@ -5,10 +5,11 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
+
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
-#include "math.h"
+#include "tools.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {

@@ -41,7 +41,7 @@ void Entity::resetTransformation()
     transfo.a[15]=1.f;
 }
 
-void Entity::setDrawMode(const DRAW_MODE d_m)
+void Entity::setDrawMode(DRAW_MODE d_m)
 {
     draw_mode = d_m;
 }

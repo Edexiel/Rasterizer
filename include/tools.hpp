@@ -27,30 +27,26 @@ enum DRAW_MODE
     FORM
 };
 
-// #include <immintrin.h>
 
-// void intrin_ZERO_float(float *a, uint size)
-// {
-//     size_t x = 0;
-//     const size_t inc = 32 / sizeof(*(a)); /*size of 256 bit register over size of variable*/
-//     for (; x < n - inc; x += inc)
-//     {
-//         _mm256_storeu_ps((float *)((a) + x), _mm256_setzero_ps());
-//         if (4 == sizeof(*(a)))
-//         {
-//             switch (n - x)
-//             {
-//             case 3:
-//                 (a)[x] = 0;
-//                 x++;
-//             case 2:
-//                 _mm_storeu_ps((float *)((a) + x), _mm_setzero_ps());
-//                 break;
-//             case 1:
-//                 (a)[x] = 0;
-//                 break;
-//             case 0:
-//                 break;
-//             };
-//         }
-//     }
+// #define intrin_ZERO_float(a,size)\
+// {\
+//     size_t x = 0;\
+//     for (; x < size - 8; x += 8)\
+//     {\
+//         _mm256_storeu_ps((a) + x, _mm256_setzero_ps());\
+//         switch (size - x)\
+//         {\
+//         case 3:\
+//             (a)[x] = 0;\
+//             x++;\
+//         case 2:\
+//             _mm_storeu_ps((a) + x, _mm_setzero_ps());\
+//             break;\
+//         case 1:\
+//             (a)[x] = 0;\
+//             break;\
+//         case 0:\
+//             break;\
+//         };\
+//     }\
+// }

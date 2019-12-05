@@ -109,6 +109,8 @@ void Rasterizer::clear_color_buffer()
     memset(color_buffer, 0xDF, m_width * m_height * sizeof(Color));
     // for (size_t i = 0; i < m_width * m_height; i++)
     //     color_buffer[i] = {255, 255, 255};
+
+    // intrin_ZERO_float((float*)color_buffer,m_width * m_height);
 }
 void Rasterizer::clear_depth_buffer()
 {
@@ -120,7 +122,7 @@ void Rasterizer::clear_depth_buffer()
 void Rasterizer::upload_texture() const
 {
     glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, color_buffer);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

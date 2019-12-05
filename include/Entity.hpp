@@ -24,6 +24,6 @@ public:
 
     void resetTransformation();
 
-    void setDrawMode(const DRAW_MODE d_m);
+    void setDrawMode(DRAW_MODE d_m);
     DRAW_MODE getDrawMode() const;
 };
