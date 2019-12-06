@@ -15,9 +15,7 @@ Light::~Light(){}
 
 float Light::diffuse_light(const Vec3&p, const Vec3& n)
 {
-    v_light.normalize();
-    Vec3 pos  = p.get_normalize();
-    Vec3 to_light = (v_light - pos).get_normalize();
+    Vec3 to_light = (v_light - p).get_normalize();
     float diffuse = Vec3::dot_product(to_light, n);
 
     if (diffuse < 0)
@@ -28,9 +26,8 @@ float Light::diffuse_light(const Vec3&p, const Vec3& n)
 
 float Light::specular_light(const Vec3&p, const Vec3& n)
 {
-    v_light.normalize();
-    Vec3 pos  = p.get_normalize();
-    Vec3 to_light = (v_light - pos).get_normalize();
+   
+    Vec3 to_light = (v_light - p).get_normalize();
     float dotProductLN = (Vec3::dot_product(to_light, n) * 2);
     if (dotProductLN < 0)
         dotProductLN = 0;

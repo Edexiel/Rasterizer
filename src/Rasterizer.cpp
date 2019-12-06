@@ -198,7 +198,7 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
 
     for (short i = 0; i < 3; i++)
     {
-        mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1}).xyz,vertices[i].normal);
+        mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1.f}).xyz,(transformation * (Vec4){vertices[i].normal,0.f}).xyz.get_normalize());
     }
 
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
