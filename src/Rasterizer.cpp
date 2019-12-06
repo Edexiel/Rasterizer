@@ -122,7 +122,7 @@ void Rasterizer::clear_depth_buffer()
 void Rasterizer::upload_texture() const
 {
     glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, color_buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -135,24 +135,15 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
 
     int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x),0.f);
     int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y),0.f);
-    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width-1);
-    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height-1);
-
-    // if (xMin < 0)
-    //     xMin = 0;
-    // if ((uint)xMax >= m_width)
-    //     xMax = m_width-1;
-    // if (yMin < 0)
-    //     yMin = 0;
-    // if ((uint)yMax >= m_height)
-    //     yMax = m_height-1;
+    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width);
+    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height);
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    for (int y = yMin; y <= yMax; y++)
+    for (int y = yMin; y < yMax; y++)
     {
-        for (int x = xMin; x <= xMax; x++)
+        for (int x = xMin; x < xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
 
@@ -163,6 +154,8 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
             if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+
+
                 // if (min(min(w1, w2), w3) < 0.016f)
                 // {
                 //     set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
@@ -194,12 +187,12 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
     // clipping
 
     // Light per Vertex
-    float mult_colors[3];
+    float mult_colors[3]{1.f,1.f,1.f};
 
-    for (short i = 0; i < 3; i++)
-    {
-        mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1.f}).xyz,(transformation * (Vec4){vertices[i].normal,0.f}).xyz.get_normalize());
-    }
+    // for (short i = 0; i < 3; i++)
+    // {
+    //     mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1.f}).xyz,(transformation * (Vec4){vertices[i].normal,0.f}).xyz.get_normalize());
+    // }
 
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
     Vec3 ndc[3];

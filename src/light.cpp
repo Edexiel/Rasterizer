@@ -6,6 +6,7 @@
 #include "Color.hpp"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 
 Light::Light(){}
@@ -18,8 +19,11 @@ float Light::diffuse_light(const Vec3&p, const Vec3& n)
     Vec3 to_light = (v_light - p).get_normalize();
     float diffuse = Vec3::dot_product(to_light, n);
 
-    if (diffuse < 0)
+    if (diffuse <= 0)
         return 0;
+    
+    // if(diffuse >= 1)
+    //     return diffuseLight;
     
     return (diffuseLight * diffuse);
 }

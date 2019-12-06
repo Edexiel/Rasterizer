@@ -20,7 +20,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 int main()
 {
     uint screenWidth = 800;
-    uint screenHeight = 800;
+    uint screenHeight = 600;
 
     float aspect = screenWidth / (float)screenHeight;
 
@@ -84,8 +84,8 @@ int main()
 
     Scene scene{};
 
-    scene.entities.push_back(Entity{Mesh::CreateSphere(40, 40)});
-    // scene.entities.push_back(Entity{Mesh::CreateCube()});
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(40, 40)});
+    scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
 
@@ -116,6 +116,7 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
+
         // scene.entities[0].rotate(0, 0.01f, 0);
 
         if (glfwGetKey(window, GLFW_KEY_UP))
@@ -133,6 +134,7 @@ int main()
 
         
         scene.entities[0].translate(pos);
+        scene.entities[0].rotate({0.78f,0.78f,0.f});
         scene.entities[0].scale({0.3f, 0.3f, 0.3f});
 
         renderer.render_scene(&scene);

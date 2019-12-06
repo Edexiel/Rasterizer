@@ -1,6 +1,7 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
-CXXFLAGS= -pipe -Og -g -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native #-mavx - mavx2
+# -no-pie -pg
+CXXFLAGS= -std=c++17 -O3 -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native #-mavx - mavx2
 CXXFLAGS+=-Iinclude
 CFLAGS=$(CXXFLAGS)
 CC=gcc
@@ -12,7 +13,7 @@ CXX=g++
 # LDFLAGS=-Llibs/mingw
 # LDLIBS=-lglfw -lgdi32 -lglu32 -
 # else
-# LDFLAGS=-Llibs/linux
+# LDFLAGS=-pg -no-pie
 LDLIBS=-lglfw -lGL -lGLU -ldl
 # endif
 
