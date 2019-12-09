@@ -51,7 +51,6 @@ Mat4 Mat4::frustum(float left, float right, float bottom, float top, float znear
     tb = top - bottom;
     fn = zfar - znear;
 
-    // return {{nn / rl, 0.f, 0.f, 0.f}, {0.f, nn / tb, 0.f, 0.f}, {(right + left) / rl, (top + bottom) / tb, (-zfar - znear) / fn, -1.0}, {0,0, (-nn * zfar) / fn, 0.f}};
     return {{nn / rl, 0.f, 0.f, 0.f}, {0.f, nn / tb, 0.f, 0.f}, {(right + left) / rl, (top + bottom) / tb, -(zfar + znear) / fn, -1.0}, {0,0, -(nn * zfar) / fn, 0.f}};
 }
 

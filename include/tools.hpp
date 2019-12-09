@@ -30,7 +30,7 @@ enum DRAW_MODE
 template<class T>
 T clamp(T v, T lo, T hi )
 {
-    assert( !(hi < lo) );
+    // assert( !(hi < lo) );
     return (v < lo) ? lo : (hi < v) ? hi : v;
 }
 

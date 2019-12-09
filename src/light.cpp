@@ -7,48 +7,51 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include "tools.hpp"
 
+Light::Light() {}
+Light::Light(Vec3 light, Vec3 camera, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
+    : m_ambientIntensity{ambientIntensity},
+      m_diffuseIntensity{diffuseIntensity},
+      m_specularIntensity{specularIntensity},
+      m_shininess{shininess},
+      camera_pos{camera},
+      light_pos{light} {}
 
-Light::Light(){}
-Light::Light(Vec3 _v_light, Vec3 _V, float _ambientLight,float _diffuseLight,float _specularLight,float _alpha): v_light{_v_light}, V {_V},ambientLight{_ambientLight},diffuseLight{_diffuseLight},specularLight{_specularLight},alpha{_alpha} {}
-
-Light::~Light(){}
-
-float Light::diffuse_light(const Vec3&p, const Vec3& n)
+Light::~Light()
 {
-    Vec3 to_light = (v_light - p).get_normalize();
-    float diffuse = Vec3::dot_product(to_light, n);
-
-    if (diffuse <= 0)
-        return 0;
-    
-    // if(diffuse >= 1)
-    //     return diffuseLight;
-    
-    return (diffuseLight * diffuse);
 }
 
-float Light::specular_light(const Vec3&p, const Vec3& n)
+float Light::diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const
 {
-   
-    Vec3 to_light = (v_light - p).get_normalize();
-    float dotProductLN = (Vec3::dot_product(to_light, n) * 2);
-    if (dotProductLN < 0)
-        dotProductLN = 0;
+    const float diffuseTerm = clamp(Vec3::dot_product(light_direction, normal), 0.f, 1.f);
 
-    Vec3 R =  (n * dotProductLN - to_light).get_normalize();
-    float spec = specularLight * powf(Vec3::dot_product(R, V), alpha);
-    if (spec < 0)
-        return 0;
-
-    return spec;
+    return m_diffuseIntensity * diffuseTerm; //mat_reflectance
 }
 
-float Light::apply_light(const Vec3&pos, const Vec3& normal)
+float Light::specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const
 {
-    float m_ambientLight = ambientLight;
-    float m_diffuseLight = diffuse_light(pos, normal);
-    float m_specularLight = specular_light(pos, normal);
+    float specular_term{0};
 
-    return m_ambientLight + m_diffuseLight + m_specularLight;
+    // Vec3 to_light = (m_light - position).get_normalize();
+
+    if (Vec3::dot_product(light_direction, normal) > 0)
+    {
+        // Vec3 R = (normal * dotProductLN - to_light).get_normalize();
+        const Vec3 half_vect = (light_direction + camera_direction).get_normalize();
+        specular_term = powf(Vec3::dot_product(normal, half_vect), m_shininess);
+    }
+    return m_specularIntensity * specular_term; // mat_specular
+}
+
+float Light::apply_light(Vertex &vertex, Vec3 &camera_pos, Vec3 &light_pos) const
+{
+    const Vec3 v_light{(light_pos - vertex.position).get_normalize()};
+    const Vec3 v_camera{(camera_pos - vertex.position).get_normalize()};
+    const Vec3 v_normal{vertex.normal.get_normalize()};
+
+    const float diffuse = diffuse_light(vertex.position, v_normal);
+    const float specular = specular_light(vertex.position, v_normal, v_camera);
+
+    vertex.color = vertex.color * (m_ambientIntensity + diffuse + specular);
 }

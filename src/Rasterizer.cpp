@@ -126,24 +126,24 @@ void Rasterizer::upload_texture() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Rasterizer::raster_triangle(Vertex (&vertices)[3])
+void Rasterizer::raster_triangle(Vertex (&vertices)[3], Light &light)
 {
     // shortcuts
     Vertex &v1 = vertices[0];
     Vertex &v2 = vertices[1];
     Vertex &v3 = vertices[2];
 
-    int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x),0.f);
-    int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y),0.f);
-    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width);
-    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height);
+    int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x), 0.f);
+    int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y), 0.f);
+    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x), (float)m_width - 1);
+    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y), (float)m_height - 1);
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    for (int y = yMin; y < yMax; y++)
+    for (int y = yMin; y <= yMax; y++)
     {
-        for (int x = xMin; x < xMax; x++)
+        for (int x = xMin; x <= xMax; x++)
         {
             Vec3 q{x - v1.position.x, y - v1.position.y, 0};
 
@@ -155,6 +155,12 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
             {
                 float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
 
+                Vec3 t_normal{v1.normal * w1 + v2.normal * w2 + v3.normal * w3};
+                Vec3 t_pos{v1.position * w1 + v2.position * w2 + v3.position * w3};
+                Color t_color{v1.color * w1 + v2.color * w2 + v3.color * w3};
+
+                Vertex t_result{t_pos, t_color, t_normal};
+                light.apply_light(t_result,light.camera_pos,light.light_pos);
 
                 // if (min(min(w1, w2), w3) < 0.016f)
                 // {
@@ -163,7 +169,7 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
                 // else
                 // {
                 // std::cout << "x: " << x << "y: " << y << "z: " << z << std::endl;
-                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, t_result.color);
                 // }
             }
         }
@@ -187,7 +193,7 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
     // clipping
 
     // Light per Vertex
-    float mult_colors[3]{1.f,1.f,1.f};
+    float mult_colors[3]{1.f, 1.f, 1.f};
 
     // for (short i = 0; i < 3; i++)
     // {
@@ -214,7 +220,7 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color * mult_colors[i], vertices[i].normal};
     }
 
-    raster_triangle(screenCoord);
+    raster_triangle(screenCoord, light);
 }
 
 void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
@@ -224,7 +230,7 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
 
-    const bool steep = (fabs(v2.position.y - v1.position.y) > fabs(v2.position.x - v1.position.x));
+    const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
     if (steep)
     {
         std::swap(v1.position.x, v1.position.y);

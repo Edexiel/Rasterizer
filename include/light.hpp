@@ -5,20 +5,21 @@
 
 class Light
 {
+private:
+    float m_ambientIntensity;
+    float m_diffuseIntensity;
+    float m_specularIntensity;
+    float m_shininess;
 
 public:
+    Vec3 camera_pos;
+    Vec3 light_pos;
+
     Light();
-    Light(Vec3 v_light, Vec3 V,float ambientLight,float diffuseLight,float specularLight,float alpha);
+    Light(Vec3 light_pos, Vec3 camera_pos, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
     ~Light();
 
-    Vec3 v_light;
-    Vec3 V; // V is the direction of the camera
-    float ambientLight;
-    float diffuseLight;
-    float specularLight;
-    float alpha;
-
-    float diffuse_light(const Vec3&pos, const Vec3& normal);
-    float specular_light(const Vec3&pos, const Vec3& normal);
-    float apply_light(const Vec3&pos, const Vec3& normal);
+    float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
+    float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;
+    float apply_light(Vertex &vertex, Vec3 &camera_pos, Vec3 &light_pos) const;
 };

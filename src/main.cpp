@@ -79,21 +79,22 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::perspective(90, aspect, 0.01, 10);
+    renderer.projection = Mat4::perspective(90.f, aspect, 0.01f, 10.f);
     // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(40, 40)});
-    scene.entities.push_back(Entity{Mesh::CreateCube()});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(15, 15)});
+    // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.light = {{0.0f, 0.0f, 0.f}, {0.0f, 0.0f, 1.f}, 0.2f, 0.4f, 0.4f, 100.f};
+    scene.light = (Light){{0.0f, 0.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 100.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
     Vec3 pos{0.f, 0.f, -1.f};
+    Vec3 rot{0.f, 0.f, 0.f};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -134,8 +135,10 @@ int main()
 
         
         scene.entities[0].translate(pos);
-        scene.entities[0].rotate({0.78f,0.78f,0.f});
-        scene.entities[0].scale({0.3f, 0.3f, 0.3f});
+        scene.entities[0].rotate(rot);
+        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
+        
+        // rot.y += 0.05f;
 
         renderer.render_scene(&scene);
         renderer.draw_scene();
