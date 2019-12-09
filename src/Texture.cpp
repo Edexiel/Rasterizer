@@ -51,3 +51,10 @@ uint Texture::getHeight() const
     return height;
 }
 
+char* load_PNG(const char* filename)
+{
+    stbi_set_flip_vertically_on_load(1);
+	int width, height, channels;
+    unsigned char* pixels = stbi_load(filename, &width, &height, &channels, 0);
+}
+

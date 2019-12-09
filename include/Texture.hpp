@@ -1,6 +1,8 @@
 #pragma once
 
+#include "stb_image.h"
 #include "glad/glad.h"
+#include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include "math.hpp"
 #include "Color.hpp"
@@ -26,3 +28,6 @@ public:
 
     GLuint getTextureName() const;
 };
+
+
+char* load_PNG(const char* filename);
