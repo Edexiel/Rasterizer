@@ -40,7 +40,7 @@ Mat4 Mat4::perspective(float fovyInDegrees, float aspectRatio, float znear, floa
     // ymin = -ymax;
     // xmin = -ymax * aspectRatio;
     xmax = ymax * aspectRatio;
-    return frustum(xmax, -xmax, ymax, -ymax, znear, zfar);
+    return frustum(-xmax, xmax, -ymax, ymax, znear, zfar);
 }
 
 Mat4 Mat4::frustum(float left, float right, float bottom, float top, float znear, float zfar)

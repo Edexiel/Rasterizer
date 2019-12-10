@@ -16,8 +16,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light &light);
-    void raster_triangle(Vertex (&vertices)[3]);
+    void draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light &light, Vec2* UV);
+    void raster_triangle(Vertex (&vertices)[3], Vec2* UV);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -31,6 +31,7 @@ public:
 
     Mat4 projection;
     Mat4 viewport;
+    Mat4 camera;
 
     void draw_scene();
     void render_scene(Scene *pScene);

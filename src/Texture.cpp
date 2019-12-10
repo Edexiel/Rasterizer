@@ -1,45 +1,23 @@
 #include "Texture.hpp"
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <GL/glu.h>
+#include "tools.hpp"
+#include <iostream>
+#include <cstring>
 
-#include <string.h>
-#include "math.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
-Texture::Texture(uint _width, uint _height) : width{_width}, height{_height}
+Texture::Texture() : width{0}, height{0}, texture{nullptr} {}
+Texture::Texture(const char *filename)
 {
-    pixels = new Color[_width * _height];
-    clearBuffer();
-
-    glGenTextures(1, &texture_name);
-    glBindTexture(GL_TEXTURE_2D, texture_name);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    load_PNG(filename);
 }
-
-Texture::~Texture() {}
-
-void Texture::SetPixelColor(uint x, uint y, const Color &c)
+Texture::~Texture()
 {
-    pixels[x + y * width] = c;
-}
-
-void Texture::clearBuffer()
-{
-    memset(pixels, 0xFF, width * height * sizeof(Color));
-    // for (size_t i = 0; i < width *height; i++)
-    //     pixels[i] = {0xFF,0x00,0x00};
-}
-
-void Texture::uploadTexture() const
-{
-    glBindTexture(GL_TEXTURE_2D, texture_name);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-GLuint Texture::getTextureName() const
-{
-    return texture_name;
+    if (texture != nullptr)
+        stbi_image_free(texture);
 }
 
 uint Texture::getWidth() const
@@ -51,10 +29,14 @@ uint Texture::getHeight() const
     return height;
 }
 
-char* load_PNG(const char* filename)
+void Texture::load_PNG(const char *filename)
 {
-    stbi_set_flip_vertically_on_load(1);
-	int width, height, channels;
-    unsigned char* pixels = stbi_load(filename, &width, &height, &channels, 0);
+    stbi_set_flip_vertically_on_load(true);
+    int channels;
+    texture = (Color *)stbi_load(filename, &width, &height, &channels, 3);
 }
 
+Color Texture::accessor(int x, int y)
+{
+    return this->texture[x + y * width];
+}

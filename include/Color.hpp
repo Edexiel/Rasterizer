@@ -2,7 +2,15 @@
 
 struct Color
 {  
-    unsigned char r, g, b;     
+    union
+    {
+        struct 
+        {
+            unsigned char r, g, b;     
+        };
+        unsigned char e[3];
+    };
+    
 };
 
 Color operator*(Color c, float w);

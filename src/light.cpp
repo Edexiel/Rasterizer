@@ -33,7 +33,7 @@ float Light::specular_light(const Vec3&p, const Vec3& n)
     Vec3 to_light = (v_light - pos).get_normalize();
     float dotProductLN = (Vec3::dot_product(to_light, n) * 2);
     if (dotProductLN < 0)
-        dotProductLN = 0;
+         return 0;
 
     Vec3 R =  (n * dotProductLN - to_light).get_normalize();
     float spec = specularLight * powf(Vec3::dot_product(R, V), alpha);

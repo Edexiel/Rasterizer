@@ -6,11 +6,12 @@
 #include "Scene.hpp"
 #include "Vertex.hpp"
 #include "Mat4.hpp"
-#include "math.hpp"
+#include "tools.hpp"
 #include "Vec2.hpp"
 #include "Vec3.hpp"
 #include "Vec4.hpp"
 #include "light.hpp"
+#include "Texture.hpp"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
 {
@@ -54,7 +55,8 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
-                draw_triangle(triangle, e.transfo,pScene->light);
+                Vec2 UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
+                draw_triangle(triangle, e.transfo, pScene->light, UVarray);
             }
             break;
         }
@@ -70,10 +72,11 @@ void Rasterizer::render_scene(Scene *pScene)
             // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
-
         default:
             break;
         }
+
+        e.resetTransformation();
     }
 }
 
@@ -122,26 +125,29 @@ void Rasterizer::upload_texture() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Rasterizer::raster_triangle(Vertex (&vertices)[3])
+void Rasterizer::raster_triangle(Vertex (&vertices)[3], Vec2* UV)
 {
+
+    //test texture
+    Texture texture{"media/cratetex.png"};
     // shortcuts
-    Vertex& v1 = vertices[0];
-    Vertex& v2 = vertices[1];
-    Vertex& v3 = vertices[2];
+    Vertex &v1 = vertices[0];
+    Vertex &v2 = vertices[1];
+    Vertex &v3 = vertices[2];
 
-    int xMin = (int)min(min(v1.position.x, v2.position.x), v3.position.x);
-    int xMax = (int)max(max(v1.position.x, v2.position.x), v3.position.x);
-    int yMin = (int)min(min(v1.position.y, v2.position.y), v3.position.y);
-    int yMax = (int)max(max(v1.position.y, v2.position.y), v3.position.y);
+    int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x),0.f);
+    int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y),0.f);
+    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width-1);
+    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height-1);
 
-    if (xMin < 0)
-        xMin = 0;
-    if ((uint)xMax > m_width)
-        xMax = m_width;
-    if (yMin < 0)
-        yMin = 0;
-    if ((uint)yMax > m_height)
-        yMax = m_height;
+    // if (xMin < 0)
+    //     xMin = 0;
+    // if ((uint)xMax >= m_width)
+    //     xMax = m_width-1;
+    // if (yMin < 0)
+    //     yMin = 0;
+    // if ((uint)yMax >= m_height)
+    //     yMax = m_height-1;
 
     Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
@@ -165,14 +171,18 @@ void Rasterizer::raster_triangle(Vertex (&vertices)[3])
                 // }
                 // else
                 // {
-                set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                // std::cout << "x: " << x << "y: " << y << "z: " << z << std::endl;
+                // set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
+                set_pixel_color(x, y, z, {texture.accessor(/*UV[0].x **/ w1 * texture.getWidth(), /*UV[0].y **/ w1 * texture.getHeight()) + 
+                                          texture.accessor(/*UV[1].x **/ w2 * texture.getWidth(), /*UV[1].y **/ w2 * texture.getHeight()) + 
+                                          texture.accessor(/*UV[2].x **/ w3 * texture.getWidth(), /*UV[2].y **/ w3 * texture.getHeight())});
                 // }
             }
         }
     }
 }
 
-void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light& light)
+void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light &light, Vec2* UV)
 {
     // clipSpace = projection * modelview * vec3 (4D) [-w,w]
     //      clipping out of bound triangles (0001 0010 0100)
@@ -180,15 +190,13 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
     //      Back face culling
     // Screen coordinate = viewport * ndc        (2D)
 
-
     Vec4 clipCoord[3];
     for (short i = 0; i < 3; i++)
     {
-        clipCoord[i] = projection * transformation * (Vec4){vertices[i].position,1.f};
+        clipCoord[i] = projection * camera  * transformation * (Vec4){vertices[i].position, 1.f};
     }
 
-    // clipping 
-
+    // clipping
 
     // Light per Vertex
     float mult_colors[3];
@@ -198,29 +206,27 @@ void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light
         mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1}).xyz,vertices[i].normal);
     }
 
-
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
     Vec3 ndc[3];
     for (short i = 0; i < 3; i++)
     {
-        ndc[i] = clipCoord[i].homogenize().xyz ; 
+        ndc[i] = clipCoord[i].homogenize().xyz;
     }
 
     // back face culling
-    // if(Vec3::cross_product_z(ndc[1] - ndc[0],ndc[2] - ndc[0]) < 0.f )
-    // {
-    //     std::cout<<"culled" <<std::endl;
-    //     return;
-    // }
+    if(Vec3::cross_product_z(ndc[1] - ndc[0],ndc[2] - ndc[0]) < 0.f )
+    {
+        // std::cout<<"culled" <<std::endl;
+        return;
+    }
 
     Vertex screenCoord[3];
     for (short i = 0; i < 3; i++)
     {
-        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i],1.f}).xyz,vertices[i].color * mult_colors[i],vertices[i].normal};
+        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color * mult_colors[i], vertices[i].normal};
     }
-    
-    raster_triangle(screenCoord);
 
+    raster_triangle(screenCoord , UV);
 }
 
 void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
