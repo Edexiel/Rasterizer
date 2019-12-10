@@ -33,25 +33,22 @@ float Light::specular_light(const Vec3 &normal, const Vec3 &light_direction, con
 {
     float specular_term{0};
 
-    // Vec3 to_light = (m_light - position).get_normalize();
-
-    if (Vec3::dot_product(light_direction, normal) > 0)
+    if (Vec3::dot_product(normal, light_direction) > 0)
     {
-        // Vec3 R = (normal * dotProductLN - to_light).get_normalize();
-        const Vec3 half_vect = (light_direction + camera_direction).get_normalize();
+        const Vec3 half_vect = Vec3::normalize(light_direction + camera_direction);
         specular_term = powf(Vec3::dot_product(normal, half_vect), m_shininess);
     }
     return m_specularIntensity * specular_term; // mat_specular
 }
 
-float Light::apply_light(Vertex &vertex, Vec3 &camera_pos, Vec3 &light_pos) const
+void Light::apply_light(const Vec3 &position, const Vec3 &normal, Color &color, Vec3 &camera_pos, Vec3 &light_pos) const
 {
-    const Vec3 v_light{(light_pos - vertex.position).get_normalize()};
-    const Vec3 v_camera{(camera_pos - vertex.position).get_normalize()};
-    const Vec3 v_normal{vertex.normal.get_normalize()};
+    const Vec3 v_light = Vec3::normalize(light_pos - position);
+    const Vec3 v_camera = Vec3::normalize(camera_pos - position);
+    const Vec3 v_normal = Vec3::normalize(normal);
 
-    const float diffuse = diffuse_light(vertex.position, v_normal);
-    const float specular = specular_light(vertex.position, v_normal, v_camera);
+    const float diffuse = diffuse_light(v_normal, v_light);
+    const float specular = specular_light(v_normal, v_light, v_camera);
 
-    vertex.color = vertex.color * (m_ambientIntensity + diffuse + specular);
+    color = color * (m_ambientIntensity + diffuse + specular);
 }

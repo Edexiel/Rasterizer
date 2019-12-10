@@ -30,7 +30,7 @@ Mesh *Mesh::CreateCube()
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
-        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize();
+        mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
     }
 
     mesh->indices.push_back(0); //mesh->normals.push_back(bottom);
@@ -99,7 +99,7 @@ Mesh *Mesh::CreateTriangle()
     mesh->vertices.push_back(v3);
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
-        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize();
+        mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
     }
 
     mesh->indices.push_back(0);
@@ -127,7 +127,7 @@ Mesh *Mesh::CreateSphere(int l, int L)
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
-        mesh->vertices[i].normal = mesh->vertices[i].position.get_normalize();
+        mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
     }
 
     for (uint i = 0; i < i_max; i++)
@@ -138,8 +138,8 @@ Mesh *Mesh::CreateSphere(int l, int L)
         mesh->indices.push_back(1 + i);
         mesh->indices.push_back(index);
 
-        mesh->indices.push_back(i);
         mesh->indices.push_back(index2);
+        mesh->indices.push_back(i);
         mesh->indices.push_back(index);
     }
 
@@ -156,13 +156,3 @@ Mesh *Mesh::CreateVectorLight(float x, float y, float z)
 
     return mesh;
 }
-
-// void Mesh::CreateNormals()
-// {
-//     for(int i = 0; i < indices.size() - 2; i += 3)
-//     {
-//         normals.push_back(vector_product(vertices[i + 1].position, vertices[i + 2].position));
-//         normals.push_back(vector_product(vertices[i + 2].position, vertices[i].position));
-//         normals.push_back(vector_product(vertices[i].position, vertices[i + 1].position));
-//     }
-// }

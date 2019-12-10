@@ -1,9 +1,9 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
 # -no-pie -pg
-CXXFLAGS= -std=c++17 -O3 -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native #-mavx - mavx2
-CXXFLAGS+=-Iinclude
+CXXFLAGS= -O3 -g -no-pie -pg -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math
 CFLAGS=$(CXXFLAGS)
+CXXFLAGS+= -std=c++17 
 CC=gcc
 CXX=g++
 # CXX=/home/g.nisi/Downloads/clang/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/bin/clang++
@@ -13,7 +13,7 @@ CXX=g++
 # LDFLAGS=-Llibs/mingw
 # LDLIBS=-lglfw -lgdi32 -lglu32 -
 # else
-# LDFLAGS=-pg -no-pie
+LDFLAGS=-pg -no-pie
 LDLIBS=-lglfw -lGL -lGLU -ldl
 # endif
 

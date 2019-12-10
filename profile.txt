@@ -3,46 +3,39 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  us/call  us/call  name    
- 50.01      0.33     0.33     2700   122.23   207.41  Rasterizer::raster_triangle(Vertex (&) [3])
- 13.64      0.42     0.09 18778656     0.00     0.00  operator*(Color, float)
-  9.09      0.48     0.06 69486112     0.00     0.00  Vec3::cross_product_z(Vec3 const&, Vec3 const&)
-  9.09      0.54     0.06                             Rasterizer::clear_depth_buffer()
-  7.58      0.59     0.05 12513704     0.00     0.00  operator+(Color, Color)
-  3.03      0.61     0.02 17376942     0.00     0.00  Vec3::Vec3(float, float, float)
-  3.03      0.63     0.02                             Vec3::operator*(float) const
-  1.52      0.64     0.01 17417491     0.00     0.00  Vec3::~Vec3()
-  1.52      0.65     0.01     9000     1.11     1.11  Mat4::operator*(Mat4 const&) const
-  1.52      0.66     0.01                             Rasterizer::render_scene(Scene*)
-  0.00      0.66     0.00    44112     0.00     0.00  Vec4::~Vec4()
-  0.00      0.66     0.00    24310     0.00     0.00  Vec3::Vec3()
-  0.00      0.66     0.00    19812     0.00     0.00  Vec4::Vec4(float, float, float, float)
-  0.00      0.66     0.00    16200     0.00     0.00  Vec4::Vec4(Vec3 const&, float)
-  0.00      0.66     0.00    16200     0.00     0.00  Mat4::operator*(Vec4 const&) const
-  0.00      0.66     0.00    12602     0.00     0.00  Mat4::~Mat4()
-  0.00      0.66     0.00     8100     0.00     0.00  Vec4::homogenize()
-  0.00      0.66     0.00     8100     0.00     0.00  Vec4::Vec4()
-  0.00      0.66     0.00      225     0.00     0.00  Mat4::CreateScaleMatrix(Vec3 const&)
-  0.00      0.66     0.00      225     0.00     0.00  Mat4::CreateXRotationMatrix(float)
-  0.00      0.66     0.00      225     0.00     0.00  Mat4::CreateYRotationMatrix(float)
-  0.00      0.66     0.00      225     0.00     0.00  Mat4::CreateTranslationMatrix(Vec3 const&)
-  0.00      0.66     0.00      225     0.00     0.00  Entity::resetTransformation()
-  0.00      0.66     0.00      225     0.00     0.00  Entity::getDrawMode() const
-  0.00      0.66     0.00        8     0.00     0.00  Vec3::get_normalize() const
-  0.00      0.66     0.00        7     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
-  0.00      0.66     0.00        4     0.00     0.00  void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
-  0.00      0.66     0.00        2     0.00     0.00  Mat4::Mat4()
-  0.00      0.66     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii
-  0.00      0.66     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN10RasterizerC2Ejj
-  0.00      0.66     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4MeshC2Ev
-  0.00      0.66     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5LightC2Ev
-  0.00      0.66     0.00        1     0.00     0.00  Mat4::identity()
-  0.00      0.66     0.00        1     0.00     0.01  Mesh::~Mesh()
-  0.00      0.66     0.00        1     0.00     0.00  Light::Light()
-  0.00      0.66     0.00        1     0.00     0.00  Light::~Light()
-  0.00      0.66     0.00        1     0.00     0.00  Entity::~Entity()
-  0.00      0.66     0.00        1     0.00     0.00  find_coreGL
-  0.00      0.66     0.00        1     0.00     0.00  get_exts
-  0.00      0.66     0.00        1     0.00     0.00  get_proc
+ 47.64      1.11     1.11   198483     5.59     9.78  Rasterizer::raster_triangle(Vertex (&) [3], Vec4 (&) [3], Vec4 (&) [3], Light&)
+ 35.63      1.94     0.83 30768557     0.03     0.03  Light::apply_light(Vec3 const&, Vec3 const&, Color&, Vec3&, Vec3&) const
+  8.58      2.14     0.20                             Rasterizer::clear_depth_buffer()
+  3.00      2.21     0.07   665600     0.11     3.17  Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&)
+  2.15      2.26     0.05  6585849     0.01     0.01  Mat4::operator*(Vec4 const&) const
+  1.29      2.29     0.03  5990400     0.01     0.01  Vec4::Vec4()
+  0.86      2.31     0.02  6589957     0.00     0.00  Vec4::Vec4(float, float, float, float)
+  0.43      2.32     0.01                             Rasterizer::render_scene(Scene*)
+  0.43      2.33     0.01                             Light::specular_light(Vec3 const&, Vec3 const&, Vec3 const&) const
+  0.00      2.33     0.00 17169406     0.00     0.00  Vec4::~Vec4()
+  0.00      2.33     0.00  4589049     0.00     0.00  Vec4::Vec4(Vec3 const&, float)
+  0.00      2.33     0.00  1996800     0.00     0.00  Vec4::homogenize()
+  0.00      2.33     0.00   667650     0.00     0.00  Mat4::~Mat4()
+  0.00      2.33     0.00     1024     0.00     0.00  Mat4::operator*(Mat4 const&) const
+  0.00      2.33     0.00      512     0.00     0.01  Mat4::CreateScaleMatrix(Vec3 const&)
+  0.00      2.33     0.00      512     0.00     0.01  Mat4::CreateTranslationMatrix(Vec3 const&)
+  0.00      2.33     0.00      512     0.00     0.00  Entity::resetTransformation()
+  0.00      2.33     0.00      512     0.00     0.00  Entity::getDrawMode() const
+  0.00      2.33     0.00       13     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
+  0.00      2.33     0.00       11     0.00     0.00  void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
+  0.00      2.33     0.00        2     0.00     0.00  Mat4::Mat4()
+  0.00      2.33     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii
+  0.00      2.33     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN10RasterizerC2Ejj
+  0.00      2.33     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4MeshC2Ev
+  0.00      2.33     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5LightC2Ev
+  0.00      2.33     0.00        1     0.00     0.01  Mat4::identity()
+  0.00      2.33     0.00        1     0.00     0.00  Mesh::~Mesh()
+  0.00      2.33     0.00        1     0.00     0.00  Light::Light()
+  0.00      2.33     0.00        1     0.00     0.00  Light::~Light()
+  0.00      2.33     0.00        1     0.00     0.00  Entity::~Entity()
+  0.00      2.33     0.00        1     0.00     0.00  find_coreGL
+  0.00      2.33     0.00        1     0.00     0.00  get_exts
+  0.00      2.33     0.00        1     0.00     0.00  get_proc
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -80,233 +73,170 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) for 1.51% of 0.66 seconds
+granularity: each sample hit covers 2 byte(s) for 0.43% of 2.33 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     87.7    0.01    0.57                 Rasterizer::render_scene(Scene*) [1]
-                0.33    0.23    2700/2700        Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-                0.01    0.00    8100/9000        Mat4::operator*(Mat4 const&) const [10]
-                0.00    0.00    8100/18778656     operator*(Color, float) [3]
-                0.00    0.00   40500/17417491     Vec3::~Vec3() [9]
-                0.00    0.00   40500/44112       Vec4::~Vec4() [34]
-                0.00    0.00   24300/24310       Vec3::Vec3() [35]
-                0.00    0.00   16200/16200       Vec4::Vec4(Vec3 const&, float) [37]
-                0.00    0.00   16200/16200       Mat4::operator*(Vec4 const&) const [38]
-                0.00    0.00   10800/12602       Mat4::~Mat4() [39]
-                0.00    0.00    8100/8100        Vec4::Vec4() [41]
-                0.00    0.00    8100/8100        Vec4::homogenize() [40]
-                0.00    0.00     225/225         Entity::getDrawMode() const [47]
-                0.00    0.00     225/225         Entity::resetTransformation() [46]
+[1]     91.0    0.01    2.11                 Rasterizer::render_scene(Scene*) [1]
+                0.07    2.04  665600/665600      Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+                0.00    0.00  665600/667650      Mat4::~Mat4() [36]
+                0.00    0.00     512/512         Entity::getDrawMode() const [39]
+                0.00    0.00     512/512         Entity::resetTransformation() [38]
 -----------------------------------------------
-                0.33    0.23    2700/2700        Rasterizer::render_scene(Scene*) [1]
-[2]     84.8    0.33    0.23    2700         Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-                0.09    0.00 18770556/18778656     operator*(Color, float) [3]
-                0.06    0.00 69486112/69486112     Vec3::cross_product_z(Vec3 const&, Vec3 const&) [4]
-                0.05    0.00 12513704/12513704     operator+(Color, Color) [6]
-                0.02    0.00 17376928/17376942     Vec3::Vec3(float, float, float) [7]
-                0.01    0.00 17376928/17417491     Vec3::~Vec3() [9]
+                0.07    2.04  665600/665600      Rasterizer::render_scene(Scene*) [1]
+[2]     90.6    0.07    2.04  665600         Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+                1.11    0.83  198483/198483      Rasterizer::raster_triangle(Vertex (&) [3], Vec4 (&) [3], Vec4 (&) [3], Light&) [3]
+                0.05    0.02 6585849/6585849     Mat4::operator*(Vec4 const&) const [6]
+                0.03    0.00 5990400/5990400     Vec4::Vec4() [7]
+                0.00    0.00 17165298/17169406     Vec4::~Vec4() [33]
+                0.00    0.00 4589049/4589049     Vec4::Vec4(Vec3 const&, float) [34]
+                0.00    0.00 1996800/1996800     Vec4::homogenize() [35]
 -----------------------------------------------
-                0.00    0.00    8100/18778656     Rasterizer::render_scene(Scene*) [1]
-                0.09    0.00 18770556/18778656     Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-[3]     13.6    0.09    0.00 18778656         operator*(Color, float) [3]
+                1.11    0.83  198483/198483      Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[3]     83.3    1.11    0.83  198483         Rasterizer::raster_triangle(Vertex (&) [3], Vec4 (&) [3], Vec4 (&) [3], Light&) [3]
+                0.83    0.00 30768557/30768557     Light::apply_light(Vec3 const&, Vec3 const&, Color&, Vec3&, Vec3&) const [4]
 -----------------------------------------------
-                0.06    0.00 69486112/69486112     Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-[4]      9.1    0.06    0.00 69486112         Vec3::cross_product_z(Vec3 const&, Vec3 const&) [4]
+                0.83    0.00 30768557/30768557     Rasterizer::raster_triangle(Vertex (&) [3], Vec4 (&) [3], Vec4 (&) [3], Light&) [3]
+[4]     35.6    0.83    0.00 30768557         Light::apply_light(Vec3 const&, Vec3 const&, Color&, Vec3&, Vec3&) const [4]
 -----------------------------------------------
                                                  <spontaneous>
-[5]      9.1    0.06    0.00                 Rasterizer::clear_depth_buffer() [5]
+[5]      8.6    0.20    0.00                 Rasterizer::clear_depth_buffer() [5]
 -----------------------------------------------
-                0.05    0.00 12513704/12513704     Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-[6]      7.6    0.05    0.00 12513704         operator+(Color, Color) [6]
+                0.05    0.02 6585849/6585849     Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[6]      3.0    0.05    0.02 6585849         Mat4::operator*(Vec4 const&) const [6]
+                0.02    0.00 6585849/6589957     Vec4::Vec4(float, float, float, float) [8]
 -----------------------------------------------
-                0.00    0.00      14/17376942     Mesh::CreateCube() [14]
-                0.02    0.00 17376928/17376942     Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-[7]      3.0    0.02    0.00 17376942         Vec3::Vec3(float, float, float) [7]
+                0.03    0.00 5990400/5990400     Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[7]      1.3    0.03    0.00 5990400         Vec4::Vec4() [7]
 -----------------------------------------------
-                                                 <spontaneous>
-[8]      3.0    0.02    0.00                 Vec3::operator*(float) const [8]
------------------------------------------------
-                0.00    0.00       1/17417491     Scene::~Scene() [15]
-                0.00    0.00       2/17417491     Light::~Light() [18]
-                0.00    0.00      14/17417491     void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [17]
-                0.00    0.00      16/17417491     Mesh::~Mesh() [16]
-                0.00    0.00      30/17417491     Mesh::CreateCube() [14]
-                0.00    0.00   40500/17417491     Rasterizer::render_scene(Scene*) [1]
-                0.01    0.00 17376928/17417491     Rasterizer::raster_triangle(Vertex (&) [3]) [2]
-[9]      1.5    0.01    0.00 17417491         Vec3::~Vec3() [9]
------------------------------------------------
-                0.00    0.00     225/9000        Entity::scale(Vec3 const&) [12]
-                0.00    0.00     225/9000        Entity::translate(Vec3 const&) [13]
-                0.00    0.00     450/9000        Entity::rotate(Vec3 const&) [11]
-                0.01    0.00    8100/9000        Rasterizer::render_scene(Scene*) [1]
-[10]     1.5    0.01    0.00    9000         Mat4::operator*(Mat4 const&) const [10]
+                0.00    0.00       4/6589957     Mat4::identity() [14]
+                0.00    0.00       4/6589957     Mat4::viewportMatrix(int, int, int, int) [16]
+                0.00    0.00       4/6589957     Mat4::perspective(float, float, float, float) [15]
+                0.00    0.00    2048/6589957     Mat4::CreateTranslationMatrix(Vec3 const&) [11]
+                0.00    0.00    2048/6589957     Mat4::CreateScaleMatrix(Vec3 const&) [10]
+                0.02    0.00 6585849/6589957     Mat4::operator*(Vec4 const&) const [6]
+[8]      0.9    0.02    0.00 6589957         Vec4::Vec4(float, float, float, float) [8]
 -----------------------------------------------
                                                  <spontaneous>
-[11]     0.1    0.00    0.00                 Entity::rotate(Vec3 const&) [11]
-                0.00    0.00     450/9000        Mat4::operator*(Mat4 const&) const [10]
-                0.00    0.00     900/12602       Mat4::~Mat4() [39]
-                0.00    0.00     225/225         Mat4::CreateYRotationMatrix(float) [44]
-                0.00    0.00     225/225         Mat4::CreateXRotationMatrix(float) [43]
+[9]      0.4    0.01    0.00                 Light::specular_light(Vec3 const&, Vec3 const&, Vec3 const&) const [9]
+-----------------------------------------------
+                0.00    0.00     512/512         Entity::scale(Vec3 const&) [12]
+[10]     0.0    0.00    0.00     512         Mat4::CreateScaleMatrix(Vec3 const&) [10]
+                0.00    0.00    2048/6589957     Vec4::Vec4(float, float, float, float) [8]
+                0.00    0.00    2048/17169406     Vec4::~Vec4() [33]
+-----------------------------------------------
+                0.00    0.00     512/512         Entity::translate(Vec3 const&) [13]
+[11]     0.0    0.00    0.00     512         Mat4::CreateTranslationMatrix(Vec3 const&) [11]
+                0.00    0.00    2048/6589957     Vec4::Vec4(float, float, float, float) [8]
+                0.00    0.00    2048/17169406     Vec4::~Vec4() [33]
 -----------------------------------------------
                                                  <spontaneous>
 [12]     0.0    0.00    0.00                 Entity::scale(Vec3 const&) [12]
-                0.00    0.00     225/9000        Mat4::operator*(Mat4 const&) const [10]
-                0.00    0.00     450/12602       Mat4::~Mat4() [39]
-                0.00    0.00     225/225         Mat4::CreateScaleMatrix(Vec3 const&) [42]
+                0.00    0.00     512/512         Mat4::CreateScaleMatrix(Vec3 const&) [10]
+                0.00    0.00    1024/667650      Mat4::~Mat4() [36]
+                0.00    0.00     512/1024        Mat4::operator*(Mat4 const&) const [37]
 -----------------------------------------------
                                                  <spontaneous>
 [13]     0.0    0.00    0.00                 Entity::translate(Vec3 const&) [13]
-                0.00    0.00     225/9000        Mat4::operator*(Mat4 const&) const [10]
-                0.00    0.00     450/12602       Mat4::~Mat4() [39]
-                0.00    0.00     225/225         Mat4::CreateTranslationMatrix(Vec3 const&) [45]
+                0.00    0.00     512/512         Mat4::CreateTranslationMatrix(Vec3 const&) [11]
+                0.00    0.00    1024/667650      Mat4::~Mat4() [36]
+                0.00    0.00     512/1024        Mat4::operator*(Mat4 const&) const [37]
+-----------------------------------------------
+                0.00    0.00       1/1           Entity::Entity(Mesh*) [17]
+[14]     0.0    0.00    0.00       1         Mat4::identity() [14]
+                0.00    0.00       4/6589957     Vec4::Vec4(float, float, float, float) [8]
+                0.00    0.00       4/17169406     Vec4::~Vec4() [33]
 -----------------------------------------------
                                                  <spontaneous>
-[14]     0.0    0.00    0.00                 Mesh::CreateCube() [14]
-                0.00    0.00      30/17417491     Vec3::~Vec3() [9]
-                0.00    0.00      14/17376942     Vec3::Vec3(float, float, float) [7]
-                0.00    0.00       4/4           void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [17]
-                0.00    0.00       8/24310       Vec3::Vec3() [35]
-                0.00    0.00       8/8           Vec3::get_normalize() const [48]
-                0.00    0.00       7/7           void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [49]
+[15]     0.0    0.00    0.00                 Mat4::perspective(float, float, float, float) [15]
+                0.00    0.00       4/6589957     Vec4::Vec4(float, float, float, float) [8]
+                0.00    0.00       4/17169406     Vec4::~Vec4() [33]
 -----------------------------------------------
                                                  <spontaneous>
-[15]     0.0    0.00    0.00                 Scene::~Scene() [15]
-                0.00    0.00       1/1           Mesh::~Mesh() [16]
-                0.00    0.00       1/1           Light::~Light() [18]
-                0.00    0.00       1/17417491     Vec3::~Vec3() [9]
-                0.00    0.00       1/12602       Mat4::~Mat4() [39]
-                0.00    0.00       1/1           Entity::~Entity() [57]
+[16]     0.0    0.00    0.00                 Mat4::viewportMatrix(int, int, int, int) [16]
+                0.00    0.00       4/6589957     Vec4::Vec4(float, float, float, float) [8]
+                0.00    0.00       4/17169406     Vec4::~Vec4() [33]
 -----------------------------------------------
-                0.00    0.00       1/1           Scene::~Scene() [15]
-[16]     0.0    0.00    0.00       1         Mesh::~Mesh() [16]
-                0.00    0.00      16/17417491     Vec3::~Vec3() [9]
+                                                 <spontaneous>
+[17]     0.0    0.00    0.00                 Entity::Entity(Mesh*) [17]
+                0.00    0.00       1/1           Mat4::identity() [14]
 -----------------------------------------------
-                0.00    0.00       4/4           Mesh::CreateCube() [14]
-[17]     0.0    0.00    0.00       4         void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [17]
-                0.00    0.00      14/17417491     Vec3::~Vec3() [9]
+                0.00    0.00       1/1           get_proc [20]
+[18]     0.0    0.00    0.00       1         find_coreGL [18]
 -----------------------------------------------
-                0.00    0.00       1/1           Scene::~Scene() [15]
-[18]     0.0    0.00    0.00       1         Light::~Light() [18]
-                0.00    0.00       2/17417491     Vec3::~Vec3() [9]
+                0.00    0.00       1/1           get_proc [20]
+[19]     0.0    0.00    0.00       1         get_exts [19]
 -----------------------------------------------
-                0.00    0.00       1/1           get_proc [21]
-[19]     0.0    0.00    0.00       1         find_coreGL [19]
+                                 404             get_proc [20]
+                0.00    0.00       1/1           gladLoadGL [26]
+[20]     0.0    0.00    0.00       1+404     get_proc [20]
+                0.00    0.00       1/1           find_coreGL [18]
+                0.00    0.00       1/1           get_exts [19]
+                                 404             get_proc [20]
 -----------------------------------------------
-                0.00    0.00       1/1           get_proc [21]
-[20]     0.0    0.00    0.00       1         get_exts [20]
+                0.00    0.00       4/17169406     Mat4::identity() [14]
+                0.00    0.00       4/17169406     Mat4::viewportMatrix(int, int, int, int) [16]
+                0.00    0.00       4/17169406     Mat4::perspective(float, float, float, float) [15]
+                0.00    0.00    2048/17169406     Mat4::CreateTranslationMatrix(Vec3 const&) [11]
+                0.00    0.00    2048/17169406     Mat4::CreateScaleMatrix(Vec3 const&) [10]
+                0.00    0.00 17165298/17169406     Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[33]     0.0    0.00    0.00 17169406         Vec4::~Vec4() [33]
 -----------------------------------------------
-                                 404             get_proc [21]
-                0.00    0.00       1/1           gladLoadGL [27]
-[21]     0.0    0.00    0.00       1+404     get_proc [21]
-                0.00    0.00       1/1           find_coreGL [19]
-                0.00    0.00       1/1           get_exts [20]
-                                 404             get_proc [21]
+                0.00    0.00 4589049/4589049     Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[34]     0.0    0.00    0.00 4589049         Vec4::Vec4(Vec3 const&, float) [34]
 -----------------------------------------------
-                0.00    0.00       4/44112       Mat4::identity() [55]
-                0.00    0.00       4/44112       Mat4::viewportMatrix(int, int, int, int) [68]
-                0.00    0.00       4/44112       Mat4::perspective(float, float, float, float) [67]
-                0.00    0.00     900/44112       Mat4::CreateTranslationMatrix(Vec3 const&) [45]
-                0.00    0.00     900/44112       Mat4::CreateScaleMatrix(Vec3 const&) [42]
-                0.00    0.00     900/44112       Mat4::CreateXRotationMatrix(float) [43]
-                0.00    0.00     900/44112       Mat4::CreateYRotationMatrix(float) [44]
-                0.00    0.00   40500/44112       Rasterizer::render_scene(Scene*) [1]
-[34]     0.0    0.00    0.00   44112         Vec4::~Vec4() [34]
+                0.00    0.00 1996800/1996800     Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [2]
+[35]     0.0    0.00    0.00 1996800         Vec4::homogenize() [35]
 -----------------------------------------------
-                0.00    0.00       2/24310       Light::Light() [56]
-                0.00    0.00       8/24310       Mesh::CreateCube() [14]
-                0.00    0.00   24300/24310       Rasterizer::render_scene(Scene*) [1]
-[35]     0.0    0.00    0.00   24310         Vec3::Vec3() [35]
+                0.00    0.00       1/667650      Rasterizer::~Rasterizer() [57]
+                0.00    0.00       1/667650      Scene::~Scene() [82]
+                0.00    0.00    1024/667650      Entity::scale(Vec3 const&) [12]
+                0.00    0.00    1024/667650      Entity::translate(Vec3 const&) [13]
+                0.00    0.00  665600/667650      Rasterizer::render_scene(Scene*) [1]
+[36]     0.0    0.00    0.00  667650         Mat4::~Mat4() [36]
 -----------------------------------------------
-                0.00    0.00       4/19812       Mat4::identity() [55]
-                0.00    0.00       4/19812       Mat4::viewportMatrix(int, int, int, int) [68]
-                0.00    0.00       4/19812       Mat4::perspective(float, float, float, float) [67]
-                0.00    0.00     900/19812       Mat4::CreateTranslationMatrix(Vec3 const&) [45]
-                0.00    0.00     900/19812       Mat4::CreateScaleMatrix(Vec3 const&) [42]
-                0.00    0.00     900/19812       Mat4::CreateXRotationMatrix(float) [43]
-                0.00    0.00     900/19812       Mat4::CreateYRotationMatrix(float) [44]
-                0.00    0.00   16200/19812       Mat4::operator*(Vec4 const&) const [38]
-[36]     0.0    0.00    0.00   19812         Vec4::Vec4(float, float, float, float) [36]
+                0.00    0.00     512/1024        Entity::scale(Vec3 const&) [12]
+                0.00    0.00     512/1024        Entity::translate(Vec3 const&) [13]
+[37]     0.0    0.00    0.00    1024         Mat4::operator*(Mat4 const&) const [37]
 -----------------------------------------------
-                0.00    0.00   16200/16200       Rasterizer::render_scene(Scene*) [1]
-[37]     0.0    0.00    0.00   16200         Vec4::Vec4(Vec3 const&, float) [37]
+                0.00    0.00     512/512         Rasterizer::render_scene(Scene*) [1]
+[38]     0.0    0.00    0.00     512         Entity::resetTransformation() [38]
 -----------------------------------------------
-                0.00    0.00   16200/16200       Rasterizer::render_scene(Scene*) [1]
-[38]     0.0    0.00    0.00   16200         Mat4::operator*(Vec4 const&) const [38]
-                0.00    0.00   16200/19812       Vec4::Vec4(float, float, float, float) [36]
+                0.00    0.00     512/512         Rasterizer::render_scene(Scene*) [1]
+[39]     0.0    0.00    0.00     512         Entity::getDrawMode() const [39]
 -----------------------------------------------
-                0.00    0.00       1/12602       Rasterizer::~Rasterizer() [65]
-                0.00    0.00       1/12602       Scene::~Scene() [15]
-                0.00    0.00     450/12602       Entity::scale(Vec3 const&) [12]
-                0.00    0.00     450/12602       Entity::translate(Vec3 const&) [13]
-                0.00    0.00     900/12602       Entity::rotate(Vec3 const&) [11]
-                0.00    0.00   10800/12602       Rasterizer::render_scene(Scene*) [1]
-[39]     0.0    0.00    0.00   12602         Mat4::~Mat4() [39]
+                0.00    0.00      13/13          Mesh::CreateSphere(int, int) [68]
+[40]     0.0    0.00    0.00      13         void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [40]
 -----------------------------------------------
-                0.00    0.00    8100/8100        Rasterizer::render_scene(Scene*) [1]
-[40]     0.0    0.00    0.00    8100         Vec4::homogenize() [40]
+                0.00    0.00      11/11          Mesh::CreateSphere(int, int) [68]
+[41]     0.0    0.00    0.00      11         void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [41]
 -----------------------------------------------
-                0.00    0.00    8100/8100        Rasterizer::render_scene(Scene*) [1]
-[41]     0.0    0.00    0.00    8100         Vec4::Vec4() [41]
+                0.00    0.00       2/2           Rasterizer::Rasterizer(unsigned int, unsigned int) [56]
+[42]     0.0    0.00    0.00       2         Mat4::Mat4() [42]
 -----------------------------------------------
-                0.00    0.00     225/225         Entity::scale(Vec3 const&) [12]
-[42]     0.0    0.00    0.00     225         Mat4::CreateScaleMatrix(Vec3 const&) [42]
-                0.00    0.00     900/19812       Vec4::Vec4(float, float, float, float) [36]
-                0.00    0.00     900/44112       Vec4::~Vec4() [34]
+                0.00    0.00       1/1           __libc_csu_init [105]
+[43]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [43]
 -----------------------------------------------
-                0.00    0.00     225/225         Entity::rotate(Vec3 const&) [11]
-[43]     0.0    0.00    0.00     225         Mat4::CreateXRotationMatrix(float) [43]
-                0.00    0.00     900/19812       Vec4::Vec4(float, float, float, float) [36]
-                0.00    0.00     900/44112       Vec4::~Vec4() [34]
+                0.00    0.00       1/1           __libc_csu_init [105]
+[44]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN10RasterizerC2Ejj [44]
 -----------------------------------------------
-                0.00    0.00     225/225         Entity::rotate(Vec3 const&) [11]
-[44]     0.0    0.00    0.00     225         Mat4::CreateYRotationMatrix(float) [44]
-                0.00    0.00     900/19812       Vec4::Vec4(float, float, float, float) [36]
-                0.00    0.00     900/44112       Vec4::~Vec4() [34]
+                0.00    0.00       1/1           __libc_csu_init [105]
+[45]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4MeshC2Ev [45]
 -----------------------------------------------
-                0.00    0.00     225/225         Entity::translate(Vec3 const&) [13]
-[45]     0.0    0.00    0.00     225         Mat4::CreateTranslationMatrix(Vec3 const&) [45]
-                0.00    0.00     900/19812       Vec4::Vec4(float, float, float, float) [36]
-                0.00    0.00     900/44112       Vec4::~Vec4() [34]
+                0.00    0.00       1/1           __libc_csu_init [105]
+[46]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5LightC2Ev [46]
 -----------------------------------------------
-                0.00    0.00     225/225         Rasterizer::render_scene(Scene*) [1]
-[46]     0.0    0.00    0.00     225         Entity::resetTransformation() [46]
+                0.00    0.00       1/1           Scene::~Scene() [82]
+[47]     0.0    0.00    0.00       1         Mesh::~Mesh() [47]
 -----------------------------------------------
-                0.00    0.00     225/225         Rasterizer::render_scene(Scene*) [1]
-[47]     0.0    0.00    0.00     225         Entity::getDrawMode() const [47]
+                0.00    0.00       1/1           Scene::Scene() [81]
+[48]     0.0    0.00    0.00       1         Light::Light() [48]
 -----------------------------------------------
-                0.00    0.00       8/8           Mesh::CreateCube() [14]
-[48]     0.0    0.00    0.00       8         Vec3::get_normalize() const [48]
+                0.00    0.00       1/1           Scene::~Scene() [82]
+[49]     0.0    0.00    0.00       1         Light::~Light() [49]
 -----------------------------------------------
-                0.00    0.00       7/7           Mesh::CreateCube() [14]
-[49]     0.0    0.00    0.00       7         void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [49]
------------------------------------------------
-                0.00    0.00       2/2           Rasterizer::Rasterizer(unsigned int, unsigned int) [64]
-[50]     0.0    0.00    0.00       2         Mat4::Mat4() [50]
------------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [122]
-[51]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [51]
------------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [122]
-[52]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN10RasterizerC2Ejj [52]
------------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [122]
-[53]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4MeshC2Ev [53]
------------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [122]
-[54]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5LightC2Ev [54]
------------------------------------------------
-                0.00    0.00       1/1           Entity::Entity(Mesh*) [97]
-[55]     0.0    0.00    0.00       1         Mat4::identity() [55]
-                0.00    0.00       4/19812       Vec4::Vec4(float, float, float, float) [36]
-                0.00    0.00       4/44112       Vec4::~Vec4() [34]
------------------------------------------------
-                0.00    0.00       1/1           Scene::Scene() [95]
-[56]     0.0    0.00    0.00       1         Light::Light() [56]
-                0.00    0.00       2/24310       Vec3::Vec3() [35]
------------------------------------------------
-                0.00    0.00       1/1           Scene::~Scene() [15]
-[57]     0.0    0.00    0.00       1         Entity::~Entity() [57]
+                0.00    0.00       1/1           Scene::~Scene() [82]
+[50]     0.0    0.00    0.00       1         Entity::~Entity() [50]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -399,17 +329,14 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [51] _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [16] Mesh::~Mesh() [38] Mat4::operator*(Vec4 const&) const
-  [52] _GLOBAL__sub_I__ZN10RasterizerC2Ejj [4] Vec3::cross_product_z(Vec3 const&, Vec3 const&) [10] Mat4::operator*(Mat4 const&) const
-  [53] _GLOBAL__sub_I__ZN4MeshC2Ev [7] Vec3::Vec3(float, float, float) [48] Vec3::get_normalize() const
-  [54] _GLOBAL__sub_I__ZN5LightC2Ev [35] Vec3::Vec3()      [8] Vec3::operator*(float) const
-   [1] Rasterizer::render_scene(Scene*) [9] Vec3::~Vec3() [47] Entity::getDrawMode() const
-   [2] Rasterizer::raster_triangle(Vertex (&) [3]) [40] Vec4::homogenize() [17] void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
-   [5] Rasterizer::clear_depth_buffer() [36] Vec4::Vec4(float, float, float, float) [49] void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
-  [42] Mat4::CreateScaleMatrix(Vec3 const&) [37] Vec4::Vec4(Vec3 const&, float) [3] operator*(Color, float)
-  [43] Mat4::CreateXRotationMatrix(float) [41] Vec4::Vec4() [6] operator+(Color, Color)
-  [44] Mat4::CreateYRotationMatrix(float) [34] Vec4::~Vec4() [19] find_coreGL
-  [45] Mat4::CreateTranslationMatrix(Vec3 const&) [56] Light::Light() [20] get_exts
-  [55] Mat4::identity()       [18] Light::~Light()        [21] get_proc
-  [50] Mat4::Mat4()           [46] Entity::resetTransformation()
-  [39] Mat4::~Mat4()          [57] Entity::~Entity()
+  [43] _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii (main.cpp) [42] Mat4::Mat4() [50] Entity::~Entity()
+  [44] _GLOBAL__sub_I__ZN10RasterizerC2Ejj (Rasterizer.cpp) [36] Mat4::~Mat4() [6] Mat4::operator*(Vec4 const&) const
+  [45] _GLOBAL__sub_I__ZN4MeshC2Ev (Mesh.cpp) [47] Mesh::~Mesh() [37] Mat4::operator*(Mat4 const&) const
+  [46] _GLOBAL__sub_I__ZN5LightC2Ev (light.cpp) [35] Vec4::homogenize() [4] Light::apply_light(Vec3 const&, Vec3 const&, Color&, Vec3&, Vec3&) const
+   [1] Rasterizer::render_scene(Scene*) [8] Vec4::Vec4(float, float, float, float) [9] Light::specular_light(Vec3 const&, Vec3 const&, Vec3 const&) const
+   [2] Rasterizer::draw_triangle(Vertex (&) [3], Mat4, Light&) [34] Vec4::Vec4(Vec3 const&, float) [39] Entity::getDrawMode() const
+   [3] Rasterizer::raster_triangle(Vertex (&) [3], Vec4 (&) [3], Vec4 (&) [3], Light&) [7] Vec4::Vec4() [41] void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
+   [5] Rasterizer::clear_depth_buffer() [33] Vec4::~Vec4() [40] void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
+  [10] Mat4::CreateScaleMatrix(Vec3 const&) [48] Light::Light() [18] find_coreGL (glad.c)
+  [11] Mat4::CreateTranslationMatrix(Vec3 const&) [49] Light::~Light() [19] get_exts (glad.c)
+  [14] Mat4::identity()       [38] Entity::resetTransformation() [20] get_proc (glad.c)

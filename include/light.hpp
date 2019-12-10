@@ -21,5 +21,5 @@ public:
 
     float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
     float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;
-    float apply_light(Vertex &vertex, Vec3 &camera_pos, Vec3 &light_pos) const;
+    void apply_light(const Vec3& position,const Vec3& normal, Color& color, Vec3 &camera_pos, Vec3 &light_pos) const;
 };

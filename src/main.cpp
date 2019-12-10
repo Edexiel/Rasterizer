@@ -84,12 +84,12 @@ int main()
 
     Scene scene{};
 
-    scene.entities.push_back(Entity{Mesh::CreateSphere(15, 15)});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
     // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.light = (Light){{0.0f, 0.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 100.f};
+    scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
@@ -128,9 +128,9 @@ int main()
             pos.x -= 0.05f;
         if (glfwGetKey(window, GLFW_KEY_RIGHT))
             pos.x += 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
+        if (glfwGetKey(window,GLFW_KEY_KP_ADD ))
             pos.z += 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_KP_ADD))
+        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
             pos.z -= 0.05f;
 
         
@@ -148,4 +148,5 @@ int main()
     glfwTerminate();
 
     return 0;
+	
 }
