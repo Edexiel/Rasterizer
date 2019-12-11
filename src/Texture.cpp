@@ -1,11 +1,4 @@
 #include "Texture.hpp"
-<<<<<<< HEAD
-
-#include <string.h>
-#include "tools.hpp"
-
-Texture::Texture(uint _width, uint _height) : width{_width}, height{_height}
-=======
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
@@ -18,7 +11,6 @@ Texture::Texture(uint _width, uint _height) : width{_width}, height{_height}
 
 Texture::Texture() : width{0}, height{0}, texture{nullptr} {}
 Texture::Texture(const char *filename)
->>>>>>> 5d5d64de5cb364cf01135f08b8f6c441a603f3a5
 {
     load_PNG(filename);
 }
