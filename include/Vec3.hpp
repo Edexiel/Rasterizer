@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include <immintrin.h>
+#include <iostream>
 
 class Vec3
 {
@@ -24,7 +24,7 @@ public:
     };
 
     Vec3(float, float, float);
-    Vec3()=default;
+    Vec3() = default;
 
     static Vec3 normalize(const Vec3 &v);
 
@@ -53,6 +53,7 @@ inline Vec3 Vec3::normalize(const Vec3 &v)
 
 inline void Vec3::normalize()
 {
+
     float mag = getMagnitude();
 
     if (mag == 0)
@@ -64,8 +65,7 @@ inline void Vec3::normalize()
 }
 
 inline float Vec3::getMagnitude() const
-{
-
+{    
     return sqrtf(x * x + y * y + z * z);
 }
 

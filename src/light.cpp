@@ -1,15 +1,8 @@
 #include "light.hpp"
 #include "Vec3.hpp"
-#include "Vec4.hpp"
-#include "Mat4.hpp"
-#include "Vertex.hpp"
 #include "Color.hpp"
-#include <iostream>
-#include <cmath>
-#include <algorithm>
 #include "tools.hpp"
 
-Light::Light() {}
 Light::Light(Vec3 light, Vec3 camera, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
     : m_ambientIntensity{ambientIntensity},
       m_diffuseIntensity{diffuseIntensity},
@@ -17,10 +10,6 @@ Light::Light(Vec3 light, Vec3 camera, float ambientIntensity, float diffuseInten
       m_shininess{shininess},
       camera_pos{camera},
       light_pos{light} {}
-
-Light::~Light()
-{
-}
 
 float Light::diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const
 {

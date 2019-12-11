@@ -16,8 +16,10 @@ void Entity::translate(const Vec3 &t)
     transfo = transfo * Mat4::CreateTranslationMatrix(t);
 }
 
-/*
- * Angles in radian
+/**
+ * @brief update the entity matric with a rotation
+ * 
+ * @param r rotation in radian
  */
 void Entity::rotate(const Vec3 &r)
 {
@@ -41,12 +43,3 @@ void Entity::resetTransformation()
     transfo.a[15] = 1.f;
 }
 
-void Entity::setDrawMode(DRAW_MODE d_m)
-{
-    draw_mode = d_m;
-}
-
-DRAW_MODE Entity::getDrawMode() const
-{
-    return draw_mode;
-}

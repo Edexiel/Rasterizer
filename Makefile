@@ -1,7 +1,7 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
 # -no-pie -pg
-CXXFLAGS= -Og -g -no-pie -pg -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math
+CXXFLAGS= -Og -g -no-pie -pg -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native  -ffast-math
 CFLAGS=$(CXXFLAGS)
 CXXFLAGS+= -std=c++17 
 CC=gcc
@@ -10,7 +10,7 @@ CXX=g++
 
 # ifeq ($(CC),x86_64-w64-mingw32-gcc)
 # CPPFLAGS=-DCALLBACK=__stdcall
-# LDFLAGS=-Llibs/mingw
+# LDFLAGS=-Llibs/mingw -msse2 -msse3 
 # LDLIBS=-lglfw -lgdi32 -lglu32 -
 # else
 LDFLAGS=-pg -no-pie

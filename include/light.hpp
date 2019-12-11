@@ -2,6 +2,8 @@
 #include "Vec3.hpp"
 #include "Vertex.hpp"
 #include "Mat4.hpp"
+#include "tools.hpp"
+
 
 class Light
 {
@@ -15,9 +17,8 @@ public:
     Vec3 camera_pos;
     Vec3 light_pos;
 
-    Light();
+    Light()=default;
     Light(Vec3 light_pos, Vec3 camera_pos, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
-    ~Light();
 
     float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
     float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;

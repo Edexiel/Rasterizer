@@ -4,10 +4,6 @@
 #include <iostream>
 #include <cmath>
 
-Mesh::Mesh() {}
-
-Mesh::~Mesh() {}
-
 Mesh *Mesh::CreateCube()
 {
     Vec3 top{0, 1, 0};
