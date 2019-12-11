@@ -2,8 +2,16 @@
 #define __COLOR_HPP__
 
 struct Color
-{
-    unsigned char r, g, b;
+{  
+    union
+    {
+        struct 
+        {
+            unsigned char r, g, b;     
+        };
+        unsigned char e[3];
+    };
+    
 };
 
 inline Color operator*(Color c, float w)

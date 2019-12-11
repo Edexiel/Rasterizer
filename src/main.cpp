@@ -10,13 +10,14 @@
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
 #include "tools.hpp"
+#include <cmath>
+#include "Camera.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
-
 int main()
 {
     uint screenWidth = 800;
@@ -88,6 +89,7 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateCube()});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[1].setDrawMode(TRIANGLE);
 
     scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
@@ -95,7 +97,8 @@ int main()
 
     Vec3 pos{0.f, 0.f, -1.f};
     Vec3 rot{0.f, 0.f, 0.f};
-
+    Camera camera{0.005f, screenWidth, screenHeight};
+    glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -117,30 +120,13 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-
-        // scene.entities[0].rotate(0, 0.01f, 0);
-
-        if (glfwGetKey(window, GLFW_KEY_UP))
-            pos.y += 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_DOWN))
-            pos.y -= 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_LEFT))
-            pos.x -= 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_RIGHT))
-            pos.x += 0.05f;
-        if (glfwGetKey(window,GLFW_KEY_KP_ADD ))
-            pos.z += 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT))
-            pos.z -= 0.05f;
-
-        
         scene.entities[0].translate(pos);
         scene.entities[0].rotate(rot);
         scene.entities[0].scale({0.4f, 0.4f, 0.4f});
-        
-        // rot.y += 0.05f;
 
+        renderer.camera = camera.move_camera(window);
         renderer.render_scene(&scene);
+
         renderer.draw_scene();
 
         glfwSwapBuffers(window);
@@ -148,5 +134,4 @@ int main()
     glfwTerminate();
 
     return 0;
-	
 }

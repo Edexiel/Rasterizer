@@ -31,6 +31,7 @@ public:
 
     Mat4 projection;
     Mat4 viewport;
+    Mat4 camera;
 
     void draw_scene();
     void render_scene(Scene *pScene);

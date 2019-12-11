@@ -10,6 +10,7 @@
 #include "Vec3.hpp"
 #include "Vec4.hpp"
 #include "light.hpp"
+#include "Texture.hpp"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
 {
@@ -50,6 +51,7 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
+                // Vec2 UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
                 draw_triangle(triangle, e.transfo, pScene->light);
             }
 
@@ -67,7 +69,6 @@ void Rasterizer::render_scene(Scene *pScene)
             // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
         }
-
         default:
             break;
         }

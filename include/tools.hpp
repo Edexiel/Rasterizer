@@ -34,7 +34,6 @@ T clamp(T v, T lo, T hi )
     return (v < lo) ? lo : (hi < v) ? hi : v;
 }
 
-
 // #define intrin_ZERO_float(a,size)
 // {
 //     size_t x = 0;
