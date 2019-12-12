@@ -21,7 +21,7 @@ public:
 
     float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
     float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;
-    void apply_light(const Vec3& position,const Vec3& normal, Color& color, Vec3 &camera_pos, Vec3 &light_pos) const;
+    void apply_light(const Vec3 &position, const Vec3 &normal,Color &color,const Vec3 &camera_pos,const Vec3 &light_pos) const;
 };
 
 inline Light::Light(Vec3 light, Vec3 camera, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
@@ -32,7 +32,7 @@ inline Light::Light(Vec3 light, Vec3 camera, float ambientIntensity, float diffu
       camera_pos{camera},
       light_pos{light} {}
 
-inline void Light::apply_light(const Vec3 &position, const Vec3 &normal, Color &color, Vec3 &camera_pos, Vec3 &light_pos) const
+inline void Light::apply_light(const Vec3 &position, const Vec3 &normal,Color &color,const Vec3 &camera_pos,const Vec3 &light_pos) const
 {
     const Vec3 v_light = Vec3::normalize(light_pos - position);
     const Vec3 v_camera = Vec3::normalize(camera_pos - position);

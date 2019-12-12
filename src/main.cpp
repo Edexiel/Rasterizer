@@ -120,7 +120,7 @@ int main()
 
         im.update();
 
-        // renderer.camera = camera.getCameraMatrix();
+        renderer.view = camera.getCameraMatrix();
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();

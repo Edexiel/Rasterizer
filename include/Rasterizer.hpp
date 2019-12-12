@@ -18,8 +18,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(Vertex *vertices, Mat4 transformation, Light &light);
-    void raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *t_normals, Light &light);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *t_normals, const Light &light);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -31,7 +31,7 @@ public:
 
     Mat4 projection;
     Mat4 viewport;
-    Mat4 camera;
+    Mat4 view;
 
     void draw_scene();
     void render_scene(Scene *pScene);
@@ -46,7 +46,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Light &light)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -59,8 +59,8 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
     Vec4 transNorm[3];
     for (short i = 0; i < 3; i++)
     {
-        transCoord[i] = transformation * (Vec4){vertices[i].position, 1.f};
-        transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
+        transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
+        transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
     }
 
     Vec4 clipCoord[3];
@@ -93,7 +93,7 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
  * @param t_normals     object matric only transformed normals
  * @param light         light source to use
  */
-inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *t_normals, Light &light)
+inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *t_normals, const Light &light)
 {
     // shortcuts
     const Vertex &v1 = vertices[0];
