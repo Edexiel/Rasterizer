@@ -5,28 +5,30 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
+
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
+#include "tools.hpp"
+#include <cmath>
+#include "Camera.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
-
-int main(int argc, char *argv[])
+int main()
 {
     uint screenWidth = 800;
     uint screenHeight = 600;
 
-    float aspect = screenWidth / screenHeight;
+    float aspect = screenWidth / (float)screenHeight;
 
+    float modres = 1.f;
 
-    float modres = 1;
-
-    uint resWidth = screenWidth / modres;
-    uint resHeight = screenHeight / modres;
+    uint resWidth = (uint)(screenWidth / modres);
+    uint resHeight = (uint)(screenHeight / modres);
 
     // Init GLFW
     if (!glfwInit())
@@ -69,39 +71,38 @@ int main(int argc, char *argv[])
     // Time && fps
     double time = 0.f;
     double deltaTime;
-    float sample = 1.f; // moyenne d'une seconde
+    float sample = 1.f; // moyenne sur seconde
     uint frames = 0;
     double time_acc = 0.f;
 
-    // Texture target{resWidth, resHeight,{0xFF,0xFF,0xFF}};
-
     Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1,1,resWidth,resHeight);
-    // renderer.projection = Mat4::orthoMatrix(-aspect,aspect,-1.f,1.f,0.f,100.f);
-    renderer.projection = Mat4::identity();
-
-    //Serious stuff
+    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
+    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
+    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    renderer.projection = Mat4::perspective(90.f, aspect, 0.01f, 10.f);
+    // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
-    // scene.entities.push_back(Entity{Mesh::CreateTriangle(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    // scene.entities.push_back(Entity{Mesh::CreateCube(), Mat4{Vec4{1, 0, 0, 0}, Vec4{0, 1, 0, 0}, Vec4{0, 0, 1, 0}, Vec4{0, 0, 0, 1}}});
-    // scene.entities[0].scale(0.5, 0.5, 1);
-    scene.entities.push_back(Entity{Mesh::CreateSphere(16, 32), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
-    // scene.entities[0].scale(0.5, 0.5, 0.5);
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16), Mat4{Vec4{1,0,0,0}, Vec4{0,1,0,0}, Vec4{0,0,1,0}, Vec4{0,0,0,1} }});
-    scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].translate(0, 0, 0);
+    scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
+    // scene.entities.push_back(Entity{Mesh::CreateCube()});
+    // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
+    scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[1].setDrawMode(TRIANGLE);
 
-   
+    scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
+    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
-
+    Vec3 pos{0.f, 0.f, -1.f};
+    Vec3 rot{0.f, 0.f, 0.f};
+    Camera camera{0.005f, screenWidth, screenHeight};
+    glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-
+        // glfwGetCursorPos(window, &x, &y);
         { // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
@@ -119,8 +120,13 @@ int main(int argc, char *argv[])
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
+        scene.entities[0].translate(pos);
+        scene.entities[0].rotate(rot);
+        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
 
+        renderer.camera = camera.move_camera(window);
         renderer.render_scene(&scene);
+
         renderer.draw_scene();
 
         glfwSwapBuffers(window);

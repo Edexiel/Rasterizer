@@ -18,7 +18,7 @@ public:
     ~Vec2();
 
     float getMagnitude() const;
-    void Normalize();
+    void normalize();
     Vec2 operator+(Vec2 &other);
     Vec2 operator*(float float_other);
 };

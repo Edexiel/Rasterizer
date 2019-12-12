@@ -1,7 +1,7 @@
 #pragma once
 #include "Mesh.hpp"
 #include "Mat4.hpp"
-#include "math.hpp"
+#include "tools.hpp"
 #include "Vec3.hpp"
 
 class Entity
@@ -18,10 +18,23 @@ public:
     Entity(Mesh *mesh, Mat4 transfo);
     ~Entity();
 
-    void scale(float x, float y, float z);
-    void translate(float x, float y, float z);
-    void rotate(float x, float y, float z);
+    void scale(const Vec3& scale);
+    void translate(const Vec3& translation);
+    void rotate(const Vec3& rotation);
 
-    void setDrawMode(DRAW_MODE d_m);
-    DRAW_MODE getDrawMode();
+    void resetTransformation();
+
+    void setDrawMode(const DRAW_MODE d_m);
+    DRAW_MODE getDrawMode() const;
 };
+
+inline void Entity::setDrawMode(DRAW_MODE d_m)
+{
+    draw_mode = d_m;
+}
+
+inline DRAW_MODE Entity::getDrawMode() const
+{
+    return draw_mode;
+}
+
