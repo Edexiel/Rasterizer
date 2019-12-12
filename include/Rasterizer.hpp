@@ -116,10 +116,10 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
 
             const float w2 = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
             const float w3 = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
-            const float w1 = 1.f - w2 - w3;
 
             if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
+                const float w1 = 1.f - w2 - w3;
                 const float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
 
                 if (z <= depth_buffer[x + y * m_width])
@@ -151,23 +151,31 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
 
 inline void Rasterizer::clear_color_buffer()
 {
-    memset(color_buffer, 0xDF, m_width * m_height * sizeof(Color));
-    // for (size_t i = 0; i < m_width * m_height; i++)
-    //     color_buffer[i] = {255, 255, 255};
+#pragma omp parallel for
+    for (size_t i = 0; i < m_height; i++)
+        memset(&color_buffer[m_width * i], 0xDF, m_width * sizeof(Color));
+
+    // const uint size = m_width * m_height;
+    // #pragma omp parallel for simd
+    //     for (size_t i = 0; i < size; i++)
+    //         color_buffer[i] = {255, 255, 255};
 
     // intrin_ZERO_float((float*)color_buffer,m_width * m_height);
 }
 inline void Rasterizer::clear_depth_buffer()
 {
-    // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
-    for (size_t i = 0; i < m_width * m_height; ++i)
+    const uint size = m_width * m_height;
+#pragma omp parallel for simd
+    for (size_t i = 0; i < size; i++)
         depth_buffer[i] = 1.1f;
 }
 
 inline void Rasterizer::draw_scene()
 {
+
     glEnable(GL_TEXTURE_2D);
     upload_texture();
+
     glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
     clear_color_buffer();
 

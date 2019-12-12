@@ -1,27 +1,21 @@
 #pragma once
 
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
-#include <GL/glu.h>
 #include "Vec3.hpp"
 #include "Entity.hpp"
 #include "Mat4.hpp"
+#include "InputManager.hpp"
 
 class Camera
 {
 private:
-    float m_rotSpeed;
-    float m_rotX;
-    float m_rotY;
-    float m_width;
-    float m_height;
-    Vec3  m_move;
+    InputManager* _input;
+    float _rotSpeed;
+    Vec2d _rotation;
+    Vec3  _move;
 
 public:
-    Camera(float speed, unsigned int width, unsigned int height);
-    
+    Camera(InputManager*,float speed);
 
-
-    Mat4 move_camera(GLFWwindow* window);
+    Mat4 getCameraMatrix();
 };
 

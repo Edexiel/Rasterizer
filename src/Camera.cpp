@@ -1,46 +1,42 @@
 #include <iostream>
 #include "Camera.hpp"
+#include "InputManager.hpp"
 #include "cmath"
 
-Camera::Camera(float speed, unsigned int width, unsigned int height) : m_rotSpeed{speed}, m_rotX{0}, m_rotY{0}, m_width{width}, m_height{height}, m_move{Vec3{0.f, 0.f, 2.0f}} {}
+Camera::Camera(InputManager *input, float speed) : _input{input},
+                                                   _rotSpeed{speed},
+                                                   _rotation{Vec2d{0., 0.}},
+                                                   _move{Vec3{0.f, 0.f, 0.0f}} {}
 
-Mat4 Camera::move_camera(GLFWwindow *window)
+Mat4 Camera::getCameraMatrix()
 {
-    double x, y;
-    glfwGetCursorPos(window, &x, &y);
+    Vec2d mouse = _input->getMouseMovement();
 
-    x -= (m_width / 2);
-    y -= (m_height / 2);
-
-    m_rotX += (float)y * m_rotSpeed;
-    m_rotY += (float)x * m_rotSpeed;
+    _rotation.x += (float)mouse.y * _rotSpeed;
+    _rotation.y += (float)mouse.x * _rotSpeed;
 
     float advanceSpeed = 0.f;
-    if (glfwGetKey(window, GLFW_KEY_UP) || glfwGetKey(window, GLFW_KEY_W))
+    if (_input->isDown(GLFW_KEY_UP) || _input->isDown(GLFW_KEY_W))
         advanceSpeed = -0.05f;
-    if (glfwGetKey(window, GLFW_KEY_DOWN) || glfwGetKey(window, GLFW_KEY_S))
+    if (_input->isDown(GLFW_KEY_DOWN) || _input->isDown(GLFW_KEY_S))
         advanceSpeed = 0.05f;
 
-    m_move.x += advanceSpeed * -sinf(m_rotY);
-    m_move.z += advanceSpeed * cosf(m_rotY);
+    _move.x += advanceSpeed * -sinf((float)_rotation.x);
+    _move.z += advanceSpeed * cosf((float)_rotation.y);
 
     float strafeSpeed = 0.f;
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) || glfwGetKey(window, GLFW_KEY_D))
+    if (_input->isDown(GLFW_KEY_RIGHT) || _input->isDown(GLFW_KEY_D))
         strafeSpeed = 0.05f;
-    if (glfwGetKey(window, GLFW_KEY_LEFT) || glfwGetKey(window, GLFW_KEY_A))
+    if (_input->isDown(GLFW_KEY_LEFT) || _input->isDown(GLFW_KEY_A))
         strafeSpeed = -0.05f;
-    if (glfwGetKey(window, GLFW_KEY_SPACE))
-        m_move.y += 0.05f;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT))
-        m_move.y -= 0.05f;
+    if (_input->isDown(GLFW_KEY_SPACE))
+        _move.y += 0.05f;
+    if (_input->isDown(GLFW_KEY_LEFT_SHIFT))
+        _move.y -= 0.05f;
 
-    m_move.x += strafeSpeed * cosf(m_rotY);
-    m_move.z += strafeSpeed * sinf(m_rotY);
+    _move.x += strafeSpeed * cosf((float)_rotation.x);
+    _move.z += strafeSpeed * sinf((float)_rotation.y);
 
-    //create matrix camera
-
-    glfwSetCursorPos(window, m_width / 2, m_height / 2);
-
-    return    Mat4::CreateXRotationMatrix(m_rotX)  * Mat4::CreateYRotationMatrix(m_rotY) * Mat4::CreateTranslationMatrix(m_move);
+    return Mat4::CreateXRotationMatrix((float)_rotation.x) * Mat4::CreateYRotationMatrix((float)_rotation.y) * Mat4::CreateTranslationMatrix(_move);
 }
