@@ -57,7 +57,7 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
 
     Vec4 transCoord[3];
     Vec4 transNorm[3];
-    for (short i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
         transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
         transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
@@ -67,11 +67,15 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (short i = 0; i < 3; i++)
         clipCoord[i] = projection * transCoord[i];
 
-    // clipping
+    if((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w)
+    && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w)
+    && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
+        return;
 
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
+    // opti l'appel de la fonciton homogenize
     Vec3 ndc[3];
-    for (short i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
         ndc[i] = clipCoord[i].homogenize().xyz;
 
     // back face culling
@@ -79,7 +83,7 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
         return;
 
     Vertex screenCoord[3];
-    for (short i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
     raster_triangle(screenCoord, transCoord, transNorm, light);
