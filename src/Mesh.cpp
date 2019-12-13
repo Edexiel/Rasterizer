@@ -20,9 +20,9 @@ Mesh *Mesh::CreateCube()
 
     Mesh *mesh = new Mesh{};
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5},{0xFF, 0xFF, 0xFF}});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
     mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5},{0xFF, 0xFF, 0xFF}});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
     mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
     mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
     mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
@@ -34,89 +34,53 @@ Mesh *Mesh::CreateCube()
         mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
     }
 
-    mesh->indices.push_back(0);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(0);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(1);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(2);mesh->UV.push_back(topRight); //mesh->normals.push_back(bottom);
 
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(3);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(2);mesh->UV.push_back(topRight); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(1);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(bottom);
+    mesh->indices.push_back(3);mesh->UV.push_back(topLeft); //mesh->normals.push_back(bottom);
 
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(right);
-    mesh->indices.push_back(3);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(right);
-    mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(right);
+    mesh->indices.push_back(4);mesh->UV.push_back(topRight); //mesh->normals.push_back(right);
+    mesh->indices.push_back(3);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(right);
+    mesh->indices.push_back(1);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(right);
 
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(right);
-    mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(right);
-    mesh->indices.push_back(5);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(right);
+    mesh->indices.push_back(4);mesh->UV.push_back(topRight); //mesh->normals.push_back(right);
+    mesh->indices.push_back(1);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(right);
+    mesh->indices.push_back(5);mesh->UV.push_back(topLeft); //mesh->normals.push_back(right);
 
-    mesh->indices.push_back(5);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(front);
-    mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(front);
-    mesh->indices.push_back(0);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(front);
+    mesh->indices.push_back(5);mesh->UV.push_back(topRight); //mesh->normals.push_back(front);
+    mesh->indices.push_back(1);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(front);
+    mesh->indices.push_back(0);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(front);
 
-    mesh->indices.push_back(5);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(front);
-    mesh->indices.push_back(0);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(front);
-    mesh->indices.push_back(6);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(front);
+    mesh->indices.push_back(5);mesh->UV.push_back(topRight); //mesh->normals.push_back(front);
+    mesh->indices.push_back(0);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(front);
+    mesh->indices.push_back(6);mesh->UV.push_back(topLeft); //mesh->normals.push_back(front);
 
-    mesh->indices.push_back(6);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(left);
-    mesh->indices.push_back(0);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(left);
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(left);
+    mesh->indices.push_back(6);mesh->UV.push_back(topRight); //mesh->normals.push_back(left);
+    mesh->indices.push_back(0);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(left);
+    mesh->indices.push_back(2);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(left);
 
-    mesh->indices.push_back(6);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(left);
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(left);
-    mesh->indices.push_back(7);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(left);
+    mesh->indices.push_back(6);mesh->UV.push_back(topRight); //mesh->normals.push_back(left);
+    mesh->indices.push_back(2);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(left);
+    mesh->indices.push_back(7);mesh->UV.push_back(topLeft); //mesh->normals.push_back(left);
 
-    mesh->indices.push_back(7);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(back);
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(back);
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(back);
+    mesh->indices.push_back(7);mesh->UV.push_back(topRight); //mesh->normals.push_back(back);
+    mesh->indices.push_back(2);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(back);
+    mesh->indices.push_back(4);mesh->UV.push_back(topLeft); //mesh->normals.push_back(back);
 
-    mesh->indices.push_back(2);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(back);
-    mesh->indices.push_back(3);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(back);
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(back);
+    mesh->indices.push_back(2);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(back);
+    mesh->indices.push_back(3);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(back);
+    mesh->indices.push_back(4);mesh->UV.push_back(topLeft); //mesh->normals.push_back(back);
 
-    mesh->indices.push_back(7);
-    mesh->UV.push_back(topLeft); //mesh->normals.push_back(top);
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(top);
-    mesh->indices.push_back(6);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(top);
+    mesh->indices.push_back(7);mesh->UV.push_back(topLeft); //mesh->normals.push_back(top);
+    mesh->indices.push_back(4);mesh->UV.push_back(topRight); //mesh->normals.push_back(top);
+    mesh->indices.push_back(6);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(top);
 
-    mesh->indices.push_back(6);
-    mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(top);
-    mesh->indices.push_back(4);
-    mesh->UV.push_back(topRight); //mesh->normals.push_back(top);
-    mesh->indices.push_back(5);
-    mesh->UV.push_back(bottomRight); //mesh->normals.push_back(top);
+    mesh->indices.push_back(6);mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(top);
+    mesh->indices.push_back(4);mesh->UV.push_back(topRight); //mesh->normals.push_back(top);
+    mesh->indices.push_back(5);mesh->UV.push_back(bottomRight); //mesh->normals.push_back(top);
 
     return mesh;
 }

@@ -1,16 +1,13 @@
+#include "Rasterizer.hpp"
+
 #include <iostream>
 #include <cmath>
 
-#include "Rasterizer.hpp"
-#include "Scene.hpp"
-#include "Vertex.hpp"
 #include "Mat4.hpp"
-#include "tools.hpp"
 #include "Vec2.hpp"
 #include "Vec3.hpp"
 #include "Vec4.hpp"
-#include "light.hpp"
-#include "Texture.hpp"
+#include "tools.hpp"
 
 Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{height}
 {
@@ -49,12 +46,12 @@ void Rasterizer::render_scene(Scene *pScene)
             if (e.mesh->indices.size() < 3)
                 return;
 
-#pragma omp parallel for
+// #pragma omp parallel for
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
-                // Vec2 UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
-                draw_triangle(triangle, e.transfo, pScene->light);
+                Vec2f UV[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
+                draw_triangle(triangle, e.transfo, pScene->light,UV);
             }
 
             break;

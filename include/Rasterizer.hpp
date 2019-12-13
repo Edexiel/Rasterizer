@@ -1,5 +1,9 @@
 #pragma once
 
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <GL/glu.h>
+
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "light.hpp"
@@ -18,8 +22,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light,const &Vec2 *UV);
-    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light,const &Vec2 *UV);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light,const Vec2f *UV);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light,const Vec2f *UV);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -46,7 +50,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light,const Vec2& *UV)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light,const Vec2f *UV)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -60,7 +64,8 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (int i = 0; i < 3; i++)
     {
         transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
-        transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
+        // transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
+        transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
     }
 
     Vec4 clipCoord[3];
@@ -79,8 +84,8 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
         ndc[i] = clipCoord[i].homogenize().xyz;
 
     // back face culling
-    if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
-        return;
+    // if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
+    //     return;
 
     Vertex screenCoord[3];
     for (int i = 0; i < 3; i++)
@@ -97,7 +102,7 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
  * @param t_normals     object matric only transformed normals
  * @param light         light source to use
  */
-inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices,const Vec4 *t_normals, const Light &light,const Vec2 *UV)
+inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices,const Vec4 *t_normals, const Light &light,const Vec2f *UV)
 {
         // Test texture
     Texture texture{"media/cratetex.png"};

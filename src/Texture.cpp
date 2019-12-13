@@ -1,9 +1,4 @@
 #include "Texture.hpp"
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
-#include <GL/glu.h>
-#include "tools.hpp"
-#include <iostream>
 #include <cstring>
 
 #define STB_IMAGE_IMPLEMENTATION

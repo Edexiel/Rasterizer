@@ -8,15 +8,15 @@
 
 struct input
 {
-    std::map<int, bool> keys;
-    Vec2f mouse_keys;
+    Vec2b mouse_keys;
     Vec2d mouse;
+    std::map<int, bool> keys;
 };
 
 class InputManager
 {
 private:
-    GLFWwindow *m_window;
+    GLFWwindow *_window;
     input current_input;
     input old_input;
 
@@ -32,7 +32,7 @@ public:
     Vec2d getMouseMovement();
 };
 
-inline InputManager::InputManager(GLFWwindow *window) : m_window{window}
+inline InputManager::InputManager(GLFWwindow *window) : _window{window}
 {
     current_input.keys[GLFW_KEY_SPACE] = false;
     current_input.keys[GLFW_KEY_UP] = false;
@@ -44,6 +44,11 @@ inline InputManager::InputManager(GLFWwindow *window) : m_window{window}
     current_input.keys[GLFW_KEY_S] = false;
     current_input.keys[GLFW_KEY_D] = false;
     current_input.keys[GLFW_KEY_LEFT_SHIFT] = false;
+
+    current_input.mouse.x = 0;
+    current_input.mouse.y = 0;
+    old_input.mouse.x = 0;
+    old_input.mouse.y = 0;
 }
 
 inline void InputManager::update()
@@ -52,13 +57,13 @@ inline void InputManager::update()
 
     // Keyboard
     for (const auto &key : current_input.keys)
-        current_input.keys[key.first] = (bool)glfwGetKey(m_window, key.first);
+        current_input.keys[key.first] = (bool)glfwGetKey(_window, key.first);
 
     //Mouse keys
-    current_input.mouse_keys.x = (bool)glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT);
-    current_input.mouse_keys.y = (bool)glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT);
+    current_input.mouse_keys.x = (bool)glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_LEFT);
+    current_input.mouse_keys.y = (bool)glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT);
     //Mouse
-    glfwGetCursorPos(m_window, &current_input.mouse.x, &current_input.mouse.y);
+    glfwGetCursorPos(_window, &current_input.mouse.x, &current_input.mouse.y);
 }
 
 inline bool InputManager::keyUp(int key)

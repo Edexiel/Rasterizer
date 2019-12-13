@@ -25,6 +25,7 @@ public:
 
 #define Vec2f Vec2<float> 
 #define Vec2d Vec2<double> 
+#define Vec2b Vec2<bool> 
 
 template<typename T>
 inline Vec2<T>::Vec2(T _x, T _y) : x{_x}, y{_y} {}
