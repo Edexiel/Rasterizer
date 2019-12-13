@@ -11,8 +11,6 @@ public:
     std::vector<int> indices;
     std::vector<Vec2> UV;
     // std::vector<Vec3> normals;
-    Mesh();
-    ~Mesh();
     static Mesh* CreateTriangle();
     static Mesh* CreateCube();
     static Mesh* CreateSphere(int latitudeCount, int longitudeCount);

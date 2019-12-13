@@ -2,9 +2,9 @@
 
 typedef unsigned int uint;
 
-#define DEG(rad) rad *M_PI / 180
-#define MIN(a, b) a < b ? a : b
-#define MAX(a, b) a > b ? a : b
+// #define DEG(rad) rad *M_PI / 180
+// #define MIN(a, b) a < b ? a : b
+// #define MAX(a, b) a > b ? a : b
 
 template <typename T>
 T max(T a, T b)
@@ -27,30 +27,32 @@ enum DRAW_MODE
     FORM
 };
 
-// #include <immintrin.h>
+template<class T>
+T clamp(T v, T lo, T hi )
+{
+    // assert( !(hi < lo) );
+    return (v < lo) ? lo : (hi < v) ? hi : v;
+}
 
-// void intrin_ZERO_float(float *a, uint size)
+// #define intrin_ZERO_float(a,size)
 // {
 //     size_t x = 0;
-//     const size_t inc = 32 / sizeof(*(a)); /*size of 256 bit register over size of variable*/
-//     for (; x < n - inc; x += inc)
+//     for (; x < size - 8; x += 8)
 //     {
-//         _mm256_storeu_ps((float *)((a) + x), _mm256_setzero_ps());
-//         if (4 == sizeof(*(a)))
+//         _mm256_storeu_ps((a) + x, _mm256_setzero_ps());
+//         switch (size - x)
 //         {
-//             switch (n - x)
-//             {
-//             case 3:
-//                 (a)[x] = 0;
-//                 x++;
-//             case 2:
-//                 _mm_storeu_ps((float *)((a) + x), _mm_setzero_ps());
-//                 break;
-//             case 1:
-//                 (a)[x] = 0;
-//                 break;
-//             case 0:
-//                 break;
-//             };
-//         }
+//         case 3:
+//             (a)[x] = 0;
+//             x++;
+//         case 2:
+//             _mm_storeu_ps((a) + x, _mm_setzero_ps());
+//             break;
+//         case 1:
+//             (a)[x] = 0;
+//             break;
+//         case 0:
+//             break;
+//         };
 //     }
+// }

@@ -12,8 +12,8 @@ Mat4 Camera::move_camera(GLFWwindow *window)
     x -= (m_width / 2);
     y -= (m_height / 2);
 
-    m_rotX += y * m_rotSpeed;
-    m_rotY += x * m_rotSpeed;
+    m_rotX += (float)y * m_rotSpeed;
+    m_rotY += (float)x * m_rotSpeed;
 
     float advanceSpeed = 0.f;
     if (glfwGetKey(window, GLFW_KEY_UP) || glfwGetKey(window, GLFW_KEY_W))

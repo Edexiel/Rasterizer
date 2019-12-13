@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstring>
 #include <cmath>
 
 #include "Rasterizer.hpp"
@@ -32,11 +31,8 @@ Rasterizer::Rasterizer(uint width, uint height) : m_width{width}, m_height{heigh
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Rasterizer::~Rasterizer() {}
-
 void Rasterizer::render_scene(Scene *pScene)
 {
-    // TO DO : set the color in black
     for (Entity &e : pScene->entities)
     {
         switch (e.getDrawMode())
@@ -58,6 +54,7 @@ void Rasterizer::render_scene(Scene *pScene)
                 Vec2 UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
                 draw_triangle(triangle, e.transfo, pScene->light, UVarray);
             }
+
             break;
         }
         case LINE:
@@ -80,155 +77,6 @@ void Rasterizer::render_scene(Scene *pScene)
     }
 }
 
-void Rasterizer::draw_scene()
-{
-    glEnable(GL_TEXTURE_2D);
-    upload_texture();
-    glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
-    clear_color_buffer();
-
-    glBegin(GL_QUADS);
-
-    glTexCoord2f(0, 1);
-    glVertex2f(-1, 1);
-
-    glTexCoord2f(1, 1);
-    glVertex2f(1, 1);
-
-    glTexCoord2f(1, 0);
-    glVertex2f(1, -1);
-
-    glTexCoord2f(0, 0);
-    glVertex2f(-1, -1);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnd();
-}
-
-void Rasterizer::clear_color_buffer()
-{
-    memset(color_buffer, 0xDF, m_width * m_height * sizeof(Color));
-    // for (size_t i = 0; i < m_width * m_height; i++)
-    //     color_buffer[i] = {255, 255, 255};
-}
-void Rasterizer::clear_depth_buffer()
-{
-    // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
-    for (size_t i = 0; i < m_width * m_height; i++)
-        depth_buffer[i] = 1.1f;
-}
-
-void Rasterizer::upload_texture() const
-{
-    glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Rasterizer::raster_triangle(Vertex (&vertices)[3], Vec2* UV)
-{
-
-    //test texture
-    Texture texture{"media/cratetex.png"};
-    // shortcuts
-    Vertex &v1 = vertices[0];
-    Vertex &v2 = vertices[1];
-    Vertex &v3 = vertices[2];
-
-    int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x),0.f);
-    int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y),0.f);
-    int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x),(float)m_width-1);
-    int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y),(float)m_height-1);
-
-    // if (xMin < 0)
-    //     xMin = 0;
-    // if ((uint)xMax >= m_width)
-    //     xMax = m_width-1;
-    // if (yMin < 0)
-    //     yMin = 0;
-    // if ((uint)yMax >= m_height)
-    //     yMax = m_height-1;
-
-    Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
-    Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
-
-    for (int y = yMin; y <= yMax; y++)
-    {
-        for (int x = xMin; x <= xMax; x++)
-        {
-            Vec3 q{x - v1.position.x, y - v1.position.y, 0};
-
-            float w2 = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
-            float w3 = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
-            float w1 = 1.f - w2 - w3;
-
-            if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
-            {
-                float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
-                // if (min(min(w1, w2), w3) < 0.016f)
-                // {
-                //     set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
-                // }
-                // else
-                // {
-                // std::cout << "x: " << x << "y: " << y << "z: " << z << std::endl;
-                // set_pixel_color(x, y, z, {v1.color * w1 + v2.color * w2 + v3.color * w3});
-                set_pixel_color(x, y, z, {texture.accessor(/*UV[0].x **/ w1 * texture.getWidth(), /*UV[0].y **/ w1 * texture.getHeight()) + 
-                                          texture.accessor(/*UV[1].x **/ w2 * texture.getWidth(), /*UV[1].y **/ w2 * texture.getHeight()) + 
-                                          texture.accessor(/*UV[2].x **/ w3 * texture.getWidth(), /*UV[2].y **/ w3 * texture.getHeight())});
-                // }
-            }
-        }
-    }
-}
-
-void Rasterizer::draw_triangle(Vertex (&vertices)[3], Mat4 transformation, Light &light, Vec2* UV)
-{
-    // clipSpace = projection * modelview * vec3 (4D) [-w,w]
-    //      clipping out of bound triangles (0001 0010 0100)
-    // NDC = vec3/vec4.w                         (3D) [-1,1]
-    //      Back face culling
-    // Screen coordinate = viewport * ndc        (2D)
-
-    Vec4 clipCoord[3];
-    for (short i = 0; i < 3; i++)
-    {
-        clipCoord[i] = projection * camera  * transformation * (Vec4){vertices[i].position, 1.f};
-    }
-
-    // clipping
-
-    // Light per Vertex
-    float mult_colors[3];
-
-    for (short i = 0; i < 3; i++)
-    {
-        mult_colors[i] = light.apply_light((transformation * Vec4 {vertices[i].position, 1}).xyz,vertices[i].normal);
-    }
-
-    // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
-    Vec3 ndc[3];
-    for (short i = 0; i < 3; i++)
-    {
-        ndc[i] = clipCoord[i].homogenize().xyz;
-    }
-
-    // back face culling
-    if(Vec3::cross_product_z(ndc[1] - ndc[0],ndc[2] - ndc[0]) < 0.f )
-    {
-        // std::cout<<"culled" <<std::endl;
-        return;
-    }
-
-    Vertex screenCoord[3];
-    for (short i = 0; i < 3; i++)
-    {
-        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color * mult_colors[i], vertices[i].normal};
-    }
-
-    raster_triangle(screenCoord , UV);
-}
-
 void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
 {
     Mat4 mat_finale = viewport * projection * transformation;
@@ -236,7 +84,7 @@ void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
     v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
     v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
 
-    const bool steep = (fabs(v2.position.y - v1.position.y) > fabs(v2.position.x - v1.position.x));
+    const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
     if (steep)
     {
         std::swap(v1.position.x, v1.position.y);
@@ -284,15 +132,4 @@ void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
     v.position = (mat_finale * Vec4{v.position, 1}).xyz;
     // viewport
     set_pixel_color((uint)v.position.x, (uint)v.position.y, 0, v.color);
-}
-
-inline void Rasterizer::set_pixel_color(uint x, uint y, float z, const Color &c)
-{
-    // std::cout << z << std::endl;
-    uint index = x + y * m_width;
-    if (z <= depth_buffer[index])
-    {
-        color_buffer[index] = c;
-        depth_buffer[index] = z;
-    }
 }

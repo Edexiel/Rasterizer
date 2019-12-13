@@ -5,10 +5,12 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <ctime>
+
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
-#include "math.h"
+#include "tools.hpp"
+#include <cmath>
 #include "Camera.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -78,34 +80,25 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
     // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::perspective(90, aspect, 0.01f, 10);
+    renderer.projection = Mat4::perspective(90.f, aspect, 0.01f, 10.f);
     // renderer.projection = Mat4::identity();
 
     Scene scene{};
 
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(20, 20)});
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
     scene.entities.push_back(Entity{Mesh::CreateCube()});
-    
-   
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
     scene.entities[1].setDrawMode(TRIANGLE);
 
-
-    scene.light = {{-1.0f, 1.0f, 0.f}, {0.0f, 0.0f, 1.f}, 0.2f, 0.4f, 0.4f, 100.f};
+    scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
-    // Create camera
-    Camera camera {0.005f, screenWidth, screenHeight};
-
-    //set cursor for the camera before the loop
-    glfwSetCursorPos(window,  screenWidth / 2,  screenHeight / 2);
-
-    //test texture
-    // Texture texture("media/cratetex.png");
-    // texture.load_PNG("media/cratetex.png");
-
+    Vec3 pos{0.f, 0.f, -1.f};
+    Vec3 rot{0.f, 0.f, 0.f};
+    Camera camera{0.005f, screenWidth, screenHeight};
+    glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -127,10 +120,13 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-        
+        scene.entities[0].translate(pos);
+        scene.entities[0].rotate(rot);
+        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
+
         renderer.camera = camera.move_camera(window);
         renderer.render_scene(&scene);
-        
+
         renderer.draw_scene();
 
         glfwSwapBuffers(window);

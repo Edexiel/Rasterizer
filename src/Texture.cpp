@@ -36,7 +36,13 @@ void Texture::load_PNG(const char *filename)
     texture = (Color *)stbi_load(filename, &width, &height, &channels, 3);
 }
 
-Color Texture::accessor(int x, int y)
+Color Texture::accessor(float v, float u)
 {
-    return this->texture[x + y * width];
+    if (v > 1 || u > 1 || v < 0 || u < 0)
+        return this->texture[0];
+        
+    v *= width;
+    u *= height;
+
+    return this->texture[(int)v + (int)u * width];
 }
