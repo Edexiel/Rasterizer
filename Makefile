@@ -1,7 +1,7 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
 # -no-pie -pg
-CXXFLAGS= -O3 -g -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math -fopenmp -msse -msse2 -msse3
+CXXFLAGS= -O3 -g -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math -fopenmp
 CFLAGS=$(CXXFLAGS)
 CXXFLAGS+= -std=c++17 -Iinclude
 CC=gcc

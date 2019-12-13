@@ -77,10 +77,21 @@ int main()
     double time_acc = 0.f;
 
     Rasterizer renderer{resWidth, resHeight};
+<<<<<<< HEAD
+=======
+
+    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
+    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
+    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
+    renderer.projection = Mat4::perspective(90.f, aspect, 0.01f, 10.f);
+    // renderer.projection = Mat4::identity();
+
+>>>>>>> 5d1e1ab83907551dca568904a7efe092d9a7e01a
     Scene scene{};
     InputManager im{window};
     Camera camera{&im, 0.005f};
 
+<<<<<<< HEAD
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
 #if 1 // Perspective or 2D
     renderer.projection = Mat4::perspective(60.f, aspect, 0.01f, 10.f);
@@ -100,6 +111,22 @@ int main()
     Vec3 pos{0.f, 0.f, -1.f};
     Vec3 rot{0.f, 0.f, 0.f};
 
+=======
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
+    scene.entities.push_back(Entity{Mesh::CreateCube()});
+    // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
+    scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[1].setDrawMode(TRIANGLE);
+
+    scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
+
+    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
+
+    Vec3 pos{0.f, 0.f, -1.f};
+    Vec3 rot{0.f, 0.f, 0.f};
+    Camera camera{0.005f, screenWidth, screenHeight};
+    glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
+>>>>>>> 5d1e1ab83907551dca568904a7efe092d9a7e01a
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -124,11 +151,18 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5d1e1ab83907551dca568904a7efe092d9a7e01a
         scene.entities[0].translate(pos);
         scene.entities[0].rotate(rot);
         scene.entities[0].scale({0.4f, 0.4f, 0.4f});
 
+<<<<<<< HEAD
+=======
+        renderer.camera = camera.move_camera(window);
+>>>>>>> 5d1e1ab83907551dca568904a7efe092d9a7e01a
         renderer.render_scene(&scene);
 
         renderer.draw_scene();
