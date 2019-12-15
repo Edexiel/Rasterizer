@@ -22,8 +22,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light,const Vec2f *UV);
-    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light,const Vec2f *UV);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -50,7 +50,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light,const Vec2f *UV)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -72,16 +72,14 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (short i = 0; i < 3; i++)
         clipCoord[i] = projection * transCoord[i];
 
-    if((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w)
-    && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w)
-    && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
+    if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w) && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
         return;
 
     // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
     // opti l'appel de la fonciton homogenize
     Vec3 ndc[3];
     for (int i = 0; i < 3; i++)
-        ndc[i] = clipCoord[i].homogenize().xyz;
+        ndc[i] = Vec4::homogenize(clipCoord[i]);
 
     // back face culling
     // if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
@@ -91,7 +89,7 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (int i = 0; i < 3; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
-    raster_triangle(screenCoord, transCoord, clipCoord,transNorm, light,UV);
+    raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light, UV);
 }
 
 /**
@@ -102,10 +100,10 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
  * @param t_normals     object matric only transformed normals
  * @param light         light source to use
  */
-inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices,const Vec4 *p_vertices,const Vec4 *t_normals, const Light &light,const Vec2f *UV)
+inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV)
 {
-        // Test texture
-    Texture texture{"media/cratetex.png"};
+    // Test texture
+    // Texture texture{"media/cratetex.png"};
     // shortcuts
     const Vertex &v1 = vertices[0];
     const Vertex &v2 = vertices[1];
@@ -152,10 +150,9 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                         set_pixel_color(x, y, z, t_color);
                     }
 #else
-                    // set_pixel_color(x, y, z, t_color);
-                    float h_w1 = 1;
-                    float h_w2 = 1;
-                    float h_w3 = 1;
+                    // float h_w1 = 1;
+                    // float h_w2 = 1;
+                    // float h_w3 = 1;
 
                     // if (p_vertices[0].w != 0 || w1 != 0)
                     //     h_w1 = -1 * w1 / p_vertices[0].w;
@@ -164,10 +161,11 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                     // if (p_vertices[2].w != 0 || w3 != 0)
                     //     h_w3 = -1 * w3 / p_vertices[2].w;
 
-                    float _x = UV[0].x * h_w1 + UV[1].x * h_w2 + UV[2].x * h_w3;
-                    float _y = UV[0].y * h_w1 + UV[1].y * h_w2 + UV[2].y * h_w3;
+                    // float _x = UV[0].x * h_w1 + UV[1].x * h_w2 + UV[2].x * h_w3;
+                    // float _y = UV[0].y * h_w1 + UV[1].y * h_w2 + UV[2].y * h_w3;
 
-                    set_pixel_color(x, y, z, texture.accessor(_x, _y));
+                    // set_pixel_color(x, y, z, texture.accessor(_x, _y));
+                    set_pixel_color(x, y, z, t_color);
 #endif
                 }
             }

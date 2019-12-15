@@ -79,7 +79,7 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
     Scene scene{};
     InputManager im{window};
-    Camera camera{&im, 0.005f};
+    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.7f,1.f};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
 #if 1 // Perspective or 2D
@@ -92,7 +92,7 @@ int main()
     scene.entities.push_back(Entity{Mesh::CreateCube()});
     scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.light = (Light){{1.0f, 1.f, 1.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
+    scene.light = (Light){{1.0f, 1.f, 1.f}, {.0f, .0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
@@ -119,7 +119,7 @@ int main()
         }
 
         im.update();
-
+        camera.update((float)deltaTime);
         renderer.view = camera.getCameraMatrix();
 
         renderer.clear_color_buffer();

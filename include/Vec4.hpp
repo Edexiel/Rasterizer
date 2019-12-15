@@ -24,6 +24,7 @@ public:
     Vec4(const Vec3 &vec3, float _w);
 
     Vec4 &homogenize();
+    static Vec3 homogenize(Vec4&);
     void normalize();
     Vec4 operator+(Vec4 &other);
     Vec4 operator*(float f);
@@ -48,6 +49,14 @@ inline Vec4& Vec4::homogenize()
     z /= w;
 
     return *this;
+}
+
+inline Vec3 Vec4::homogenize(Vec4& v)
+{
+     if (v.w == 0 || v.w == 1)
+        return v.xyz;
+
+    return {v.x /= v.w,v.y /= v.w,v.z /= v.w};
 }
 
 inline Vec4 Vec4::operator+(Vec4 &other)

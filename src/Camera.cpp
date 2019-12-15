@@ -3,40 +3,62 @@
 #include "InputManager.hpp"
 #include "cmath"
 
-Camera::Camera(InputManager *input, float speed) : _input{input},
-                                                   _rotSpeed{speed},
-                                                   _rotation{Vec2d{0., 0.}},
-                                                   _move{Vec3{0.f, 0.f, 0.0f}} {}
+Camera::Camera(InputManager *input, Vec3 position, Vec2f view, float mouse_speed, float movement_speed) : _input{input},
+                                                                                                          _mouse_speed{mouse_speed},
+                                                                                                          _movement_speed{movement_speed},
+                                                                                                          _pitch{view.x},
+                                                                                                          _yaw{view.y},
+                                                                                                          _position{position} {}
 
-Mat4 Camera::getCameraMatrix()
+void Camera::update(float deltaTime)
 {
     Vec2d mouse = _input->getMouseMovement();
 
-    _rotation.x += (float)mouse.y * _rotSpeed;
-    _rotation.y += (float)mouse.x * _rotSpeed;
+    _pitch += (float)(mouse.y * _mouse_speed);
+    if (_pitch > 90.f)
+        _pitch = 90.f;
+    if (_pitch < -90.f)
+        _pitch = -90.f;
 
-    float advanceSpeed = 0.f;
+    _yaw += (float)(mouse.x * _mouse_speed);
+    if (_yaw > 180.f)
+        _yaw = -180.f;
+    if (_yaw < -180.f)
+        _yaw = 180.f;
+
+    _direction.x = sinf(_yaw * (float)M_PI / 180.f) * _movement_speed * deltaTime;
+    _direction.z = -cosf(_yaw * (float)M_PI / 180.f) * _movement_speed * deltaTime;
+
     if (_input->isDown(GLFW_KEY_UP) || _input->isDown(GLFW_KEY_W))
-        advanceSpeed = -0.05f;
-    if (_input->isDown(GLFW_KEY_DOWN) || _input->isDown(GLFW_KEY_S))
-        advanceSpeed = 0.05f;
-
-    _move.x += advanceSpeed * -sinf((float)_rotation.x);
-    _move.z += advanceSpeed * cosf((float)_rotation.y);
-
-    float strafeSpeed = 0.f;
+    {
+        _position = _position - _direction;
+    }
+    else if (_input->isDown(GLFW_KEY_DOWN) || _input->isDown(GLFW_KEY_S))
+    {
+        _position = _position + _direction;
+    }
 
     if (_input->isDown(GLFW_KEY_RIGHT) || _input->isDown(GLFW_KEY_D))
-        strafeSpeed = 0.05f;
-    if (_input->isDown(GLFW_KEY_LEFT) || _input->isDown(GLFW_KEY_A))
-        strafeSpeed = -0.05f;
+    {
+        _position.x += _direction.z;
+        _position.z -= _direction.x;
+    }
+    else if (_input->isDown(GLFW_KEY_LEFT) || _input->isDown(GLFW_KEY_A))
+    {
+        _position.x -= _direction.z;
+        _position.z += _direction.x;
+    }
+
     if (_input->isDown(GLFW_KEY_SPACE))
-        _move.y += 0.05f;
-    if (_input->isDown(GLFW_KEY_LEFT_SHIFT))
-        _move.y -= 0.05f;
-
-    _move.x += strafeSpeed * cosf((float)_rotation.x);
-    _move.z += strafeSpeed * sinf((float)_rotation.y);
-
-    return Mat4::CreateXRotationMatrix((float)_rotation.x) * Mat4::CreateYRotationMatrix((float)_rotation.y) * Mat4::CreateTranslationMatrix(_move);
+    {
+        _position.y += _movement_speed * deltaTime;
+    }
+    else if (_input->isDown(GLFW_KEY_LEFT_SHIFT))
+    {
+        _position.y -= _movement_speed * deltaTime;
+    }
+}
+Mat4 Camera::getCameraMatrix()
+{
+    return Mat4::CreateXRotationMatrix(_pitch * (float)M_PI / 180.f) * Mat4::CreateYRotationMatrix(_yaw * (float)M_PI / 180.f) * Mat4::CreateTranslationMatrix(_position);
 }

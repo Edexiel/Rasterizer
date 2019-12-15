@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Vec2.hpp"
 #include "Vec3.hpp"
 #include "Entity.hpp"
 #include "Mat4.hpp"
@@ -8,14 +8,18 @@
 class Camera
 {
 private:
-    InputManager* _input;
-    float _rotSpeed;
-    Vec2d _rotation;
-    Vec3  _move;
+    InputManager *_input;
+    float _mouse_speed;
+    float _movement_speed;
+    // bool _capture;
+    float _pitch;
+    float _yaw;
+    Vec3 _position;
+    Vec3 _direction;
 
 public:
-    Camera(InputManager*,float speed);
-
+    Camera(InputManager *input, Vec3 position, Vec2f view, float mouse_speed, float movement_speed);
+    
+    void update(float deltaTime);
     Mat4 getCameraMatrix();
 };
-
