@@ -18,7 +18,7 @@ private:
     Vec3 _direction;
 
 public:
-    Camera(InputManager *input, Vec3 position, Vec2f view, float mouse_speed, float movement_speed);
+    Camera(InputManager *input, Vec3 position, float pitch, float yaw, float mouse_speed, float movement_speed);
     
     void update(float deltaTime);
     Mat4 getCameraMatrix();

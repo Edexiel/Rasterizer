@@ -3,12 +3,14 @@
 #include "InputManager.hpp"
 #include "cmath"
 
-Camera::Camera(InputManager *input, Vec3 position, Vec2f view, float mouse_speed, float movement_speed) : _input{input},
-                                                                                                          _mouse_speed{mouse_speed},
-                                                                                                          _movement_speed{movement_speed},
-                                                                                                          _pitch{view.x},
-                                                                                                          _yaw{view.y},
-                                                                                                          _position{position} {}
+Camera::Camera(InputManager *input, Vec3 position, float pitch, float yaw, float mouse_speed, float movement_speed) : _input{input},
+                                                                                                                      _mouse_speed{mouse_speed},
+                                                                                                                      _movement_speed{movement_speed},
+                                                                                                                      _pitch{pitch},
+                                                                                                                      _yaw{yaw},
+                                                                                                                      _position{position}
+{
+}
 
 void Camera::update(float deltaTime)
 {
@@ -58,8 +60,6 @@ void Camera::update(float deltaTime)
         _position.y -= _movement_speed * deltaTime;
     }
 
-    std::cout << "Pitch "<<_pitch << std::endl;
-    std::cout << "Yaw "<<_yaw << std::endl;
 }
 Mat4 Camera::getCameraMatrix()
 {

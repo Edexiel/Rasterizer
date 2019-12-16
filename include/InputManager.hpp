@@ -45,10 +45,8 @@ inline InputManager::InputManager(GLFWwindow *window) : _window{window}
     current_input.keys[GLFW_KEY_D] = false;
     current_input.keys[GLFW_KEY_LEFT_SHIFT] = false;
 
-    current_input.mouse.x = 0;
-    current_input.mouse.y = 0;
-    old_input.mouse.x = 0;
-    old_input.mouse.y = 0;
+    glfwGetCursorPos(_window, &current_input.mouse.x, &current_input.mouse.y);
+    glfwGetCursorPos(_window, &old_input.mouse.x, &old_input.mouse.y);
 }
 
 inline void InputManager::update()
