@@ -10,7 +10,7 @@ class Mesh
 public:
     std::vector<Vertex> vertices;
     std::vector<int> indices;
-    std::vector<Vec2> UV;
+    std::vector<Vec2f> UV;
     // std::vector<Vec3> normals;
 
     Texture texture;

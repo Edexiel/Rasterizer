@@ -1,5 +1,9 @@
 #pragma once
 
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <GL/glu.h>
+
 #include "Texture.hpp"
 #include "Scene.hpp"
 #include "light.hpp"
@@ -18,8 +22,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV, Texture texture);
-    void raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV, Texture texture);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV, Texture texture);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -31,7 +35,7 @@ public:
 
     Mat4 projection;
     Mat4 viewport;
-    Mat4 camera;
+    Mat4 view;
 
     void draw_scene();
     void render_scene(Scene *pScene);
@@ -46,7 +50,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV, Texture texture)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV, Texture texture)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -57,9 +61,10 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
 
     Vec4 transCoord[3];
     Vec4 transNorm[3];
-    for (short i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
-        transCoord[i] = camera * transformation * (Vec4){vertices[i].position, 1.f};
+        transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
+        // transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
         transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
     }
 
@@ -67,19 +72,19 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
     for (short i = 0; i < 3; i++)
         clipCoord[i] = projection * transCoord[i];
 
-    // clipping
-
-    // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
-    Vec3 ndc[3];
-    for (short i = 0; i < 3; i++)
-        ndc[i] = clipCoord[i].homogenize().xyz;
-
-    // back face culling
-    if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
+    if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w) && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
         return;
 
+    Vec3 ndc[3];
+    for (int i = 0; i < 3; i++)
+        ndc[i] = Vec4::homogenize(clipCoord[i]);
+
+    // back face culling
+    // if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
+    //     return;
+
     Vertex screenCoord[3];
-    for (short i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
     raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light, UV, texture);
@@ -93,7 +98,7 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
  * @param t_normals     object matric only transformed normals
  * @param light         light source to use
  */
-inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV, Texture texture)
+inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture)
 {
     // Test texture
     // Texture texture{"media/cratetex.png"};
@@ -119,10 +124,10 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
 
             const float w2 = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
             const float w3 = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
-            const float w1 = 1.f - w2 - w3;
 
             if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
             {
+                const float w1 = 1.f - w2 - w3;
                 const float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
 
                 if (z <= depth_buffer[x + y * m_width])
@@ -169,23 +174,31 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
 
 inline void Rasterizer::clear_color_buffer()
 {
-    memset(color_buffer, 0xDF, m_width * m_height * sizeof(Color));
-    // for (size_t i = 0; i < m_width * m_height; i++)
-    //     color_buffer[i] = {255, 255, 255};
+#pragma omp parallel for
+    for (size_t i = 0; i < m_height; i++)
+        memset(&color_buffer[m_width * i], 0xDF, m_width * sizeof(Color));
+
+    // const uint size = m_width * m_height;
+    // #pragma omp parallel for simd
+    //     for (size_t i = 0; i < size; i++)
+    //         color_buffer[i] = {255, 255, 255};
 
     // intrin_ZERO_float((float*)color_buffer,m_width * m_height);
 }
 inline void Rasterizer::clear_depth_buffer()
 {
-    // memset(color_buffer, 0xFF, m_width * m_height * sizeof(unsigned int));
-    for (size_t i = 0; i < m_width * m_height; ++i)
+    const uint size = m_width * m_height;
+#pragma omp parallel for simd
+    for (size_t i = 0; i < size; i++)
         depth_buffer[i] = 1.1f;
 }
 
 inline void Rasterizer::draw_scene()
 {
+
     glEnable(GL_TEXTURE_2D);
     upload_texture();
+
     glBindTexture(GL_TEXTURE_2D, color_buffer_texture);
     clear_color_buffer();
 
