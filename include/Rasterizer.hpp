@@ -156,8 +156,8 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
                     // if (p_vertices[2].w != 0 || w3 != 0)
                     //     h_w3 = -1 * w3 / p_vertices[2].w;
 
-                    float _x = UV[0].x * h_w1 + UV[1].x * h_w2 + UV[2].x * h_w3;
-                    float _y = UV[0].y * h_w1 + UV[1].y * h_w2 + UV[2].y * h_w3;
+                    float _x = UV[0].x * w1 + UV[1].x * w2 + UV[2].x * w3;
+                    float _y = UV[0].y * w1 + UV[1].y * w2 + UV[2].y * w3;
 
                     set_pixel_color(x, y, z, texture.accessor(_x, _y));
 #endif
