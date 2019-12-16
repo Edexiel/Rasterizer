@@ -13,7 +13,7 @@ public:
     std::vector<Vec2f> UV;
     // std::vector<Vec3> normals;
 
-    Texture texture;
+    Texture texture = nullptr;
     
     static Mesh* CreateTriangle();
     static Mesh* CreateCube();

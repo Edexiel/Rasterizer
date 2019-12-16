@@ -21,6 +21,7 @@ Mesh *Mesh::CreateCube()
     Vec2f bottomRight{1, 1};
 
     Mesh *mesh = new Mesh{};
+    mesh ->texture = nullptr;
 
     mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
     mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});

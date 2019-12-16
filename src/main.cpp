@@ -89,8 +89,8 @@ int main()
     renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
 #endif
 
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
-    scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
+    // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
 
     // Texture texture{"media/cratetex.png"};

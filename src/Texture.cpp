@@ -1,13 +1,13 @@
 #include "Texture.hpp"
 #include <cstring>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 Texture::Texture() : width{0}, height{0}, texture{nullptr} {}
 Texture::Texture(const char *filename)
 {
-    load_PNG(filename);
+    if (filename != nullptr)
+        load_PNG(filename);
 }
 
 
@@ -49,5 +49,8 @@ Color Texture::accessor(float v, float u)
 
 void Texture::free_texture(Texture& T)
 {
-    delete(T.texture);
+    if (T.texture != nullptr)
+    {
+        delete(T.texture);
+    }
 }
