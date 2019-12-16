@@ -52,7 +52,7 @@ void Rasterizer::render_scene(Scene *pScene)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
                 Vec2 UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
-                draw_triangle(triangle, e.transfo, pScene->light, UVarray);
+                draw_triangle(triangle, e.transfo, pScene->light, UVarray, e.mesh->texture);
             }
 
             break;

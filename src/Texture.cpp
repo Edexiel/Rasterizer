@@ -14,11 +14,7 @@ Texture::Texture(const char *filename)
 {
     load_PNG(filename);
 }
-Texture::~Texture()
-{
-    if (texture != nullptr)
-        stbi_image_free(texture);
-}
+
 
 uint Texture::getWidth() const
 {
@@ -45,4 +41,9 @@ Color Texture::accessor(float v, float u)
     u *= height;
 
     return this->texture[(int)v + (int)u * width];
+}
+
+void Texture::free_texture(Texture& T)
+{
+    stbi_image_free(T.texture);
 }

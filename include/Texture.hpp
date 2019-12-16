@@ -16,7 +16,6 @@ private:
 public:
     Texture();
     Texture(const char* filename);
-    ~Texture();
 
     Color* texture;
 
@@ -27,6 +26,7 @@ public:
     uint getWidth() const;
     uint getHeight() const;
     Color accessor(float v, float u);
+    static void free_texture(Texture& texture);
 
     GLuint getTextureName() const;
     void load_PNG(const char* filename);

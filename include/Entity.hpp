@@ -4,6 +4,7 @@
 #include "tools.hpp"
 #include "Vec3.hpp"
 
+
 class Entity
 {
 private:

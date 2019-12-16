@@ -18,8 +18,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV);
-    void raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV);
+    void draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV, Texture texture);
+    void raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV, Texture texture);
 
     void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
     void draw_point(Vertex v1, Mat4 &transfo);
@@ -46,7 +46,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV)
+inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Light &light, Vec2 *UV, Texture texture)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -82,7 +82,7 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
     for (short i = 0; i < 3; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
-    raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light, UV);
+    raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light, UV, texture);
 }
 
 /**
@@ -93,10 +93,10 @@ inline void Rasterizer::draw_triangle(Vertex *vertices, Mat4 transformation, Lig
  * @param t_normals     object matric only transformed normals
  * @param light         light source to use
  */
-inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV)
+inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4 *p_vertices, Vec4 *t_normals, Light &light, Vec2 *UV, Texture texture)
 {
     // Test texture
-    Texture texture{"media/cratetex.png"};
+    // Texture texture{"media/cratetex.png"};
 
     // shortcuts
     const Vertex &v1 = vertices[0];
@@ -145,9 +145,9 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
                     }
 #else
                     // set_pixel_color(x, y, z, t_color);
-                    float h_w1 = 1;
-                    float h_w2 = 1;
-                    float h_w3 = 1;
+                    float h_w1 = w1;
+                    float h_w2 = w2;
+                    float h_w3 = w3;
 
                     // if (p_vertices[0].w != 0 || w1 != 0)
                     //     h_w1 = -1 * w1 / p_vertices[0].w;
@@ -156,8 +156,8 @@ inline void Rasterizer::raster_triangle(Vertex *vertices, Vec4 *t_vertices, Vec4
                     // if (p_vertices[2].w != 0 || w3 != 0)
                     //     h_w3 = -1 * w3 / p_vertices[2].w;
 
-                    float _x = UV[0].x * w1 + UV[1].x * w2 + UV[2].x * w3;
-                    float _y = UV[0].y * w1 + UV[1].y * w2 + UV[2].y * w3;
+                    float _x = UV[0].x * h_w1 + UV[1].x * h_w2 + UV[2].x * h_w3;
+                    float _y = UV[0].y * h_w1 + UV[1].y * h_w2 + UV[2].y * h_w3;
 
                     set_pixel_color(x, y, z, texture.accessor(_x, _y));
 #endif
