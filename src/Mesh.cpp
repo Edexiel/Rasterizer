@@ -4,6 +4,14 @@
 #include <iostream>
 #include <cmath>
 
+
+Mesh *Mesh::meshWithTexture(Mesh* mesh, const char* filename)
+{
+    mesh->texture.load_PNG(filename);
+    return mesh;
+}
+
+
 Mesh *Mesh::CreateCube()
 {
     // Vec3 top{0, 1, 0};

@@ -14,8 +14,8 @@ public:
     // std::vector<Vec3> normals;
 
     Texture texture;
-
-
+    
+    static Mesh* meshWithTexture(Mesh* mesh, const char* filename);
     static Mesh* CreateTriangle();
     static Mesh* CreateCube();
     static Mesh* CreateSphere(int latitudeCount, int longitudeCount);
