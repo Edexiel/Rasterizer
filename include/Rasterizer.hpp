@@ -72,6 +72,7 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (short i = 0; i < 3; i++)
         clipCoord[i] = projection * transCoord[i];
 
+    //clipping
     if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w) && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
         return;
 
@@ -80,8 +81,8 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
         ndc[i] = Vec4::homogenize(clipCoord[i]);
 
     // back face culling
-    // if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
-    //     return;
+    if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
+        return;
 
     Vertex screenCoord[3];
     for (int i = 0; i < 3; i++)
@@ -116,31 +117,40 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
     const Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     const Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
+    Vec3 weight {0,0,0};
+
     for (int y = yMin; y <= yMax; ++y)
     {
         for (int x = xMin; x <= xMax; ++x)
         {
             const Vec3 q{x - v1.position.x, y - v1.position.y, 0};
 
-            const float w2 = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
-            const float w3 = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
+            weight.y = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
+            weight.z = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
 
-            if (w2 >= 0.f && w3 >= 0.f && w2 + w3 <= 1)
+            if (weight.y >= 0.f && weight.z >= 0.f && weight.y + weight.z <= 1)
             {
-                const float w1 = 1.f - w2 - w3;
-                const float z = v1.position.z * w1 + v2.position.z * w2 + v3.position.z * w3;
+                weight.x = 1.f - weight.y - weight.z;
+
+                const float z =  Vec3::dot_product({v1.position.z,v2.position.z,v3.position.z},weight); 
+
+                weight.x /= p_vertices[0].w;
+                weight.y /= p_vertices[1].w;
+                weight.z /= p_vertices[2].w;
+
+                weight = weight * (1/(weight.x+weight.y+weight.z));
 
                 if (z <= depth_buffer[x + y * m_width])
                 {
 
-                    const Vec3 t_pos{t_vertices[0].xyz * w1 + t_vertices[1].xyz * w2 + t_vertices[2].xyz * w3};
-                    const Vec3 t_normal{t_normals[0].xyz * w1 + t_normals[1].xyz * w2 + t_normals[2].xyz * w3};
+                    const Vec3 t_pos{t_vertices[0].xyz * weight.x + t_vertices[1].xyz * weight.y + t_vertices[2].xyz * weight.z};
+                    const Vec3 t_normal{t_normals[0].xyz * weight.x + t_normals[1].xyz * weight.y + t_normals[2].xyz * weight.z};
 
-                    Color t_color{v1.color * w1 + v2.color * w2 + v3.color * w3};
+                    Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
 
                     light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
 #if 0 //Cheap wireframe
-                    if (min(min(w1, w2), w3) < 0.016f)
+                    if (min(min(weight.x, weight.y), weight.z) < 0.016f)
                     {
                         set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
                     }
@@ -149,22 +159,10 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                         set_pixel_color(x, y, z, t_color);
                     }
 #else
-                    // set_pixel_color(x, y, z, t_color);
-                    float h_w1 = w1;
-                    float h_w2 = w2;
-                    float h_w3 = w3;
 
-                    // if (p_vertices[0].w != 0 || w1 != 0)
-                    //     h_w1 = -1 * w1 / p_vertices[0].w;
-                    // if (p_vertices[1].w != 0 || w2 != 0)
-                    //     h_w2 = -1 * w2 / p_vertices[1].w;
-                    // if (p_vertices[2].w != 0 || w3 != 0)
-                    //     h_w3 = -1 * w3 / p_vertices[2].w;
+                    const Vec2f c_uv { UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z,UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
 
-                    float _x = UV[0].x * h_w1 + UV[1].x * h_w2 + UV[2].x * h_w3;
-                    float _y = UV[0].y * h_w1 + UV[1].y * h_w2 + UV[2].y * h_w3;
-
-                    set_pixel_color(x, y, z, texture.accessor(_x, _y));
+                    set_pixel_color(x, y, z, texture.accessor(c_uv.x, c_uv.y));
 #endif
                 }
             }

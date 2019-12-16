@@ -53,7 +53,6 @@ inline Vec3 Vec3::normalize(const Vec3 &v)
 
 inline void Vec3::normalize()
 {
-
     float mag = getMagnitude();
 
     if (mag == 0)
