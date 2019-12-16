@@ -46,12 +46,12 @@ void Rasterizer::render_scene(Scene *pScene)
             if (e.mesh->indices.size() < 3)
                 return;
 
-// #pragma omp parallel for
+#pragma omp parallel for
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
                 Vec2f UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
-                draw_triangle(triangle, e.transfo, pScene->light, UVarray, e.mesh->texture);
+                draw_triangle(triangle, e.transfo, pScene->light,UVarray, e.mesh->texture);
             }
 
             break;
