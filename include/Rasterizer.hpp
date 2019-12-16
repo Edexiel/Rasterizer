@@ -304,14 +304,15 @@ inline void Rasterizer::clear_color_buffer()
 inline void Rasterizer::clear_depth_buffer()
 {
     const uint size = m_width * m_height;
-#pragma omp parallel for simd
+
     for (size_t i = 0; i < size; i++)
-        depth_buffer[i] = 1.1f;
+    {
+        depth_buffer[i] = 10.f;
+    }
 }
 
 inline void Rasterizer::draw_scene()
 {
-
     glEnable(GL_TEXTURE_2D);
     upload_texture();
 

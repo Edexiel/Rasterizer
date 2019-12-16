@@ -92,12 +92,7 @@ int main()
     scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
     // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-
-    // Texture texture{"media/cratetex.png"};
-
     scene.entities[0].setDrawMode(TRIANGLE);
-    // scene.entities[0].mesh->texture = texture;
-    // scene.entities[1].setDrawMode(TRIANGLE);
 
     scene.light = (Light){{1.0f, 1.f, 1.f}, {.0f, .0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
