@@ -79,7 +79,7 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
     Scene scene{};
     InputManager im{window};
-    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.7f,1.f};
+    Camera camera{&im,(Vec3){0.f,0.f,0.f},{0.f,0.f},0.7f,1.f};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
 #if 1 // Perspective or 2D

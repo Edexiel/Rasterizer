@@ -75,8 +75,6 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w) && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
         return;
 
-    // Ne plus utiliser les clip coord a partir de ce point, elles ont ete homogeneisees
-    // opti l'appel de la fonciton homogenize
     Vec3 ndc[3];
     for (int i = 0; i < 3; i++)
         ndc[i] = Vec4::homogenize(clipCoord[i]);
