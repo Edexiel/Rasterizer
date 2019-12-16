@@ -90,7 +90,7 @@ int main()
 #endif
 
     // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
-    scene.entities.push_back(Entity{Mesh::meshWithTexture(Mesh::CreateCube(), "media/cratetex.png")});
+    scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
 
     // Texture texture{"media/cratetex.png"};
@@ -142,6 +142,6 @@ int main()
         glfwSwapBuffers(window);
     }
     glfwTerminate();
-    // Texture::free_texture(texture);
+    Texture::free_texture(scene.entities[0].mesh->texture);
     return 0;
 }

@@ -15,9 +15,9 @@ public:
 
     Texture texture;
     
-    static Mesh* meshWithTexture(Mesh* mesh, const char* filename);
     static Mesh* CreateTriangle();
     static Mesh* CreateCube();
+    static Mesh* CreateCube(char* filename);
     static Mesh* CreateSphere(int latitudeCount, int longitudeCount);
     static Mesh* CreateVectorLight(float x, float y, float z);
     void         CreateNormals();

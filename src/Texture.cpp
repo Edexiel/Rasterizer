@@ -24,7 +24,16 @@ void Texture::load_PNG(const char *filename)
 {
     stbi_set_flip_vertically_on_load(true);
     int channels;
-    texture = (Color *)stbi_load(filename, &width, &height, &channels, 3);
+    Color* _texture = (Color *)stbi_load(filename, &width, &height, &channels, 3);
+
+    texture = new Color[width * height];
+
+    for (size_t i = 0; i < width * height; i++)
+        texture[i] = _texture[i];
+    
+    stbi_image_free(_texture);
+
+
 }
 
 Color Texture::accessor(float v, float u)
@@ -40,5 +49,5 @@ Color Texture::accessor(float v, float u)
 
 void Texture::free_texture(Texture& T)
 {
-    stbi_image_free(T.texture);
+    delete(T.texture);
 }
