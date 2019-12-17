@@ -1,6 +1,8 @@
 #ifndef __COLOR_HPP__
 #define __COLOR_HPP__
 
+#include "Vec3.hpp"
+
 struct Color
 {  
     union
@@ -28,6 +30,16 @@ inline Color operator+(Color c1, Color c2)
     c1.r += c2.r;
     c1.g += c2.g;
     c1.b += c2.b;
+
+    return c1;
+}
+
+inline Color operator*(Color c1, Vec3 c2)
+{
+    c1.r = (unsigned char)((float)c1.r * c2.r);
+    c1.g = (unsigned char)((float)c1.g * c2.g);
+    c1.b = (unsigned char)((float)c1.b * c2.b);
+
     return c1;
 }
 

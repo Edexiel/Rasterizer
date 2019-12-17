@@ -23,14 +23,15 @@ Mesh *Mesh::CreateCube()
     Mesh *mesh = new Mesh{};
     mesh ->texture = nullptr;
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
+    Color color {255, 0, 0};
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, color});
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
@@ -141,15 +142,15 @@ Mesh *Mesh::CreateCube(char* filename)
 
     Mesh *mesh = new Mesh{};
     mesh->texture.load_PNG(filename);
-
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
+    Color color {255, 0, 0};
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, color});
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {

@@ -27,7 +27,9 @@ private:
     void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light);
     void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light);
 
-    void draw_line(Vertex v1, Vertex v2, Mat4 &transfo);
+    void draw_line(const Vertex *vertices, const Mat4 &model);
+    void raster_line(const Vertex* vertex, const Vec4* vec);
+
     void draw_point(Vertex v1, Mat4 &transfo);
     void set_pixel_color(uint x, uint y, float z, const Color &c);
     void upload_texture() const;
@@ -66,7 +68,6 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (int i = 0; i < 3; i++)
     {
         transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
-        // transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
         transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
     }
 
@@ -183,7 +184,6 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     for (int i = 0; i < 3; i++)
     {
         transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
-        // transNorm[i] = view * transformation * (Vec4){vertices[i].normal, 0.f};
         transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
     }
 
@@ -284,6 +284,91 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
 #endif
                 }
             }
+        }
+    }
+}
+
+inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transformation)
+{
+    // transform space: transformation * vec3      (4D)
+    // clipSpace:            transformation * vec3 (4D) [-w,w]
+    //      clipping out of bound triangles (0001 0010 0100)
+    // NDC:  vec3/vec4.w                          (3D) [-1,1]
+    //      Back face culling
+    // Screen coordinate : viewport * ndc        (2D)
+
+    Vec4 transCoord[2];
+    for (int i = 0; i < 2; i++)
+    {
+        transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
+    }
+
+    Vec4 clipCoord[2];
+    for (short i = 0; i < 2; i++)
+        clipCoord[i] = projection * transCoord[i];
+
+    //clipping
+    if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w))
+        return;
+
+    Vec3 ndc[2];
+    for (int i = 0; i < 2; i++)
+        ndc[i] = Vec4::homogenize(clipCoord[i]);
+
+    // back face culling
+    if (Vec3::cross_product_z(ndc[1], ndc[0]) <= 0.f)
+        return;
+
+    Vertex screenCoord[2];
+    for (int i = 0; i < 2; i++)
+        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
+
+    raster_line(screenCoord, transCoord);
+}
+
+inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
+{
+    Vertex v1 = vertex[0];
+    Vertex v2 = vertex[1];
+
+    const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
+    if (steep)
+    {
+        std::swap(v1.position.x, v1.position.y);
+        std::swap(v2.position.x, v2.position.y);
+    }
+
+    if (v1.position.x > v2.position.x)
+    {
+        std::swap(v1.position.x, v2.position.x);
+        std::swap(v1.position.y, v2.position.y);
+    }
+
+    const float dx = v2.position.x - v1.position.x;
+    const float dy = fabsf(v2.position.y - v1.position.y);
+
+    float error = dx / 2.0f;
+    const int ystep = (v1.position.y < v2.position.y) ? 1 : -1;
+    int y = (int)v1.position.y;
+
+    const int maxX = (int)v2.position.x;
+
+    for (int x = (int)v1.position.x; x < maxX; x++)
+    {
+        if (steep)
+        {
+            set_pixel_color(y, x, 0, v1.color);
+        }
+        else
+        {
+            set_pixel_color(x, y, 0, v1.color);
+        }
+
+        error -= dy;
+        if (error < 0)
+        {
+            y += ystep;
+            error += dx;
         }
     }
 }

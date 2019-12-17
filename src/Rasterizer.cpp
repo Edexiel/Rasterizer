@@ -50,15 +50,13 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
-                if(e.mesh->UV.empty() == false || e.mesh->texture.texture != nullptr)
+                if(e.mesh->texture.texture != nullptr)
                 {
                     Vec2f UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
                     draw_triangle(triangle, e.transfo, pScene->light,UVarray, e.mesh->texture);
                 }
                 else
-                {
                     draw_triangle(triangle, e.transfo, pScene->light);
-                }
             }
 
             break;
@@ -70,7 +68,8 @@ void Rasterizer::render_scene(Scene *pScene)
 #pragma omp parallel for
             for (uint i = 0; i < e.mesh->indices.size() - 1; i += 1)
             {
-                draw_line(e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.transfo);
+                Vertex line[2]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]]};
+                draw_line(line, e.transfo);
             }
             // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;
@@ -83,54 +82,7 @@ void Rasterizer::render_scene(Scene *pScene)
     }
 }
 
-void Rasterizer::draw_line(Vertex v1, Vertex v2, Mat4 &transformation)
-{
-    Mat4 mat_finale = viewport * projection * transformation;
 
-    v1.position = (mat_finale * Vec4{v1.position, 1}).xyz;
-    v2.position = (mat_finale * Vec4{v2.position, 1}).xyz;
-
-    const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
-    if (steep)
-    {
-        std::swap(v1.position.x, v1.position.y);
-        std::swap(v2.position.x, v2.position.y);
-    }
-
-    if (v1.position.x > v2.position.x)
-    {
-        std::swap(v1.position.x, v2.position.x);
-        std::swap(v1.position.y, v2.position.y);
-    }
-
-    const float dx = v2.position.x - v1.position.x;
-    const float dy = fabsf(v2.position.y - v1.position.y);
-
-    float error = dx / 2.0f;
-    const int ystep = (v1.position.y < v2.position.y) ? 1 : -1;
-    int y = (int)v1.position.y;
-
-    const int maxX = (int)v2.position.x;
-
-    for (int x = (int)v1.position.x; x < maxX; x++)
-    {
-        if (steep)
-        {
-            set_pixel_color(y, x, 0, v1.color);
-        }
-        else
-        {
-            set_pixel_color(x, y, 0, v1.color);
-        }
-
-        error -= dy;
-        if (error < 0)
-        {
-            y += ystep;
-            error += dx;
-        }
-    }
-}
 
 void Rasterizer::draw_point(Vertex v, Mat4 &transformation)
 {
