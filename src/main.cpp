@@ -98,7 +98,6 @@ int main()
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
-
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -111,7 +110,7 @@ int main()
 
             if (time_acc >= sample)
             {
-                std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
+                std::cout << "FPS: " << 1.0 / (time_acc / (double)frames) << std::endl;
                 frames = 0;
                 time_acc = 0.f;
             }

@@ -24,8 +24,6 @@ private:
 
     void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV, Texture texture);
     void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture);
-    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light);
-    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light);
 
     void draw_line(const Vertex *vertices, const Mat4 &model);
     void raster_line(const Vertex* vertex, const Vec4* vec);
@@ -145,7 +143,8 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
 
                     const Vec3 t_pos{t_vertices[0].xyz * weight.x + t_vertices[1].xyz * weight.y + t_vertices[2].xyz * weight.z};
                     const Vec3 t_normal{t_normals[0].xyz * weight.x + t_normals[1].xyz * weight.y + t_normals[2].xyz * weight.z};
-            
+
+                    Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
 #if 0 //Cheap wireframe
                     if (min(min(weight.x, weight.y), weight.z) < 0.016f)
                     {
@@ -156,137 +155,27 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                         set_pixel_color(x, y, z, t_color);
                     }
 #else
-                    if(texture.texture != nullptr)
+                    if(texture.texture != nullptr || UV != nullptr)
                     {
                         const Vec2f c_uv { UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z,UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
                         Color pixelTexture = texture.accessor(c_uv.x, c_uv.y);
                         light.apply_light(t_pos, t_normal, pixelTexture, light.camera_pos, light.light_pos);
                         set_pixel_color(x, y, z, pixelTexture);
                     }
-#endif
-                }
-            }
-        }
-    }
-}
-
-inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light)
-{
-    // transform space: transformation * vec3      (4D)
-    // clipSpace:            transformation * vec3 (4D) [-w,w]
-    //      clipping out of bound triangles (0001 0010 0100)
-    // NDC:  vec3/vec4.w                          (3D) [-1,1]
-    //      Back face culling
-    // Screen coordinate : viewport * ndc        (2D)
-
-    Vec4 transCoord[3];
-    Vec4 transNorm[3];
-    for (int i = 0; i < 3; i++)
-    {
-        transCoord[i] = view * transformation * (Vec4){vertices[i].position, 1.f};
-        transNorm[i] = transformation * (Vec4){vertices[i].normal, 0.f};
-    }
-
-    Vec4 clipCoord[3];
-    for (short i = 0; i < 3; i++)
-        clipCoord[i] = projection * transCoord[i];
-
-    //clipping
-    if ((clipCoord[0].x < -clipCoord[0].w || clipCoord[0].x > clipCoord[0].w || clipCoord[0].y < -clipCoord[0].w || clipCoord[0].y > clipCoord[0].w || clipCoord[0].z < -clipCoord[0].w || clipCoord[0].z > clipCoord[0].w) && (clipCoord[1].x < -clipCoord[1].w || clipCoord[1].x > clipCoord[1].w || clipCoord[1].y < -clipCoord[1].w || clipCoord[1].y > clipCoord[1].w || clipCoord[1].z < -clipCoord[1].w || clipCoord[1].z > clipCoord[1].w) && (clipCoord[2].x < -clipCoord[2].w || clipCoord[2].x > clipCoord[2].w || clipCoord[2].y < -clipCoord[2].w || clipCoord[2].y > clipCoord[2].w || clipCoord[2].z < -clipCoord[2].w || clipCoord[2].z > clipCoord[2].w))
-        return;
-
-    Vec3 ndc[3];
-    for (int i = 0; i < 3; i++)
-        ndc[i] = Vec4::homogenize(clipCoord[i]);
-
-    // back face culling
-    if (Vec3::cross_product_z(ndc[1] - ndc[0], ndc[2] - ndc[0]) <= 0.f)
-        return;
-
-    Vertex screenCoord[3];
-    for (int i = 0; i < 3; i++)
-        screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
-
-    raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light);
-}
-
-/**
- * @brief Rasterization function of the program
- * 
- * @param vertices      screen-tranformed vertices
- * @param t_vetices     object matrix only tranformed vertices
- * @param t_normals     object matric only transformed normals
- * @param light         light source to use
- */
-inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light)
-{
-    // Test texture
-    // Texture texture{"media/cratetex.png"};
-
-    // shortcuts
-    const Vertex &v1 = vertices[0];
-    const Vertex &v2 = vertices[1];
-    const Vertex &v3 = vertices[2];
-
-    const int xMin = (int)max(min(min(v1.position.x, v2.position.x), v3.position.x), 0.f);
-    const int yMin = (int)max(min(min(v1.position.y, v2.position.y), v3.position.y), 0.f);
-    const int xMax = (int)min(max(max(v1.position.x, v2.position.x), v3.position.x), (float)m_width - 1);
-    const int yMax = (int)min(max(max(v1.position.y, v2.position.y), v3.position.y), (float)m_height - 1);
-
-    const Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
-    const Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
-
-    Vec3 weight {0,0,0};
-
-    for (int y = yMin; y <= yMax; ++y)
-    {
-        for (int x = xMin; x <= xMax; ++x)
-        {
-            const Vec3 q{x - v1.position.x, y - v1.position.y, 0};
-
-            weight.y = Vec3::cross_product_z(q, vec2) / Vec3::cross_product_z(vec1, vec2);
-            weight.z = Vec3::cross_product_z(vec1, q) / Vec3::cross_product_z(vec1, vec2);
-
-            if (weight.y >= 0.f && weight.z >= 0.f && weight.y + weight.z <= 1)
-            {
-                weight.x = 1.f - weight.y - weight.z;
-
-                const float z =  Vec3::dot_product({v1.position.z,v2.position.z,v3.position.z},weight); 
-
-                weight.x /= p_vertices[0].w;
-                weight.y /= p_vertices[1].w;
-                weight.z /= p_vertices[2].w;
-
-                weight = weight * (1/(weight.x+weight.y+weight.z));
-
-                if (z <= depth_buffer[x + y * m_width])
-                {
-
-                    const Vec3 t_pos{t_vertices[0].xyz * weight.x + t_vertices[1].xyz * weight.y + t_vertices[2].xyz * weight.z};
-                    const Vec3 t_normal{t_normals[0].xyz * weight.x + t_normals[1].xyz * weight.y + t_normals[2].xyz * weight.z};
-
-                    Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
-
-                    light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
-
-#if 0 //Cheap wireframe
-                    if (min(min(weight.x, weight.y), weight.z) < 0.016f)
-                    {
-                        set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
-                    }
                     else
                     {
+                        light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
                         set_pixel_color(x, y, z, t_color);
                     }
-#else
-                    set_pixel_color(x, y, z, t_color);
-                    
+                        
 #endif
                 }
             }
         }
     }
 }
+
+
 
 inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transformation)
 {
@@ -316,8 +205,8 @@ inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transforma
         ndc[i] = Vec4::homogenize(clipCoord[i]);
 
     // back face culling
-    if (Vec3::cross_product_z(ndc[1], ndc[0]) <= 0.f)
-        return;
+    // if (Vec3::cross_product_z(ndc[1], ndc[0]) <= 0.f)
+    //     return;
 
     Vertex screenCoord[2];
     for (int i = 0; i < 2; i++)
@@ -330,6 +219,26 @@ inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
 {
     Vertex v1 = vertex[0];
     Vertex v2 = vertex[1];
+
+    if (v1.position.x > m_width)
+        v1.position.x = m_width;
+    else if (v1.position.x < 0)
+        v1.position.x = 0;
+
+    if (v1.position.y > m_height)
+        v1.position.y = m_height;
+    else if (v1.position.y < 0)
+        v1.position.y = 0;
+
+    if (v2.position.x > m_width)
+        v2.position.x = m_width;
+    else if (v2.position.x < 0)
+        v2.position.x = 0;
+
+    if (v2.position.y > m_height)
+        v2.position.y = m_height;
+    else if (v2.position.y < 0)
+        v2.position.y = 0;
 
     const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
     if (steep)
@@ -351,7 +260,8 @@ inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
     const int ystep = (v1.position.y < v2.position.y) ? 1 : -1;
     int y = (int)v1.position.y;
 
-    const int maxX = (int)v2.position.x;
+    int maxX = (int)v2.position.x;
+
 
     for (int x = (int)v1.position.x; x < maxX; x++)
     {

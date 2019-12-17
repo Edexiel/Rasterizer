@@ -13,11 +13,10 @@ public:
     std::vector<Vertex> vertices;
     std::vector<int> indices;
     std::vector<Vec2f> UV;
-
-    static Mesh *CreateTriangle();
-    static Mesh *CreateCube();
-    static Mesh *CreateCube(char *filename);
-    static Mesh *CreateSphere(int latitudeCount, int longitudeCount);
-    static Mesh *CreateVectorLight(float x, float y, float z);
+    
+    static Mesh* CreateTriangle();
+    static Mesh* CreateCube(char* filename);
+    static Mesh* CreateSphere(int latitudeCount, int longitudeCount);
+    static Mesh* CreateVectorLight(float x, float y, float z);
     static Mesh *LoadObj(char *path);
 };
