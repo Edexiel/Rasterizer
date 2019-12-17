@@ -4,7 +4,8 @@
 #include <iostream>
 #include <cmath>
 
-
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
 
 Mesh *Mesh::CreateCube()
 {
@@ -21,16 +22,17 @@ Mesh *Mesh::CreateCube()
     Vec2f bottomRight{1, 1};
 
     Mesh *mesh = new Mesh{};
-    mesh ->texture = nullptr;
+    mesh->texture = nullptr;
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
+    Color color{255, 0, 0};
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, color});
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
@@ -124,7 +126,7 @@ Mesh *Mesh::CreateCube()
     return mesh;
 }
 
-Mesh *Mesh::CreateCube(char* filename)
+Mesh *Mesh::CreateCube(char *filename)
 {
     // Vec3 top{0, 1, 0};
     // Vec3 bottom{0, -1, 0};
@@ -132,7 +134,6 @@ Mesh *Mesh::CreateCube(char* filename)
     // Vec3 right{1, 0, 0};
     // Vec3 front{0, 0, 1};
     // Vec3 back{0, 0, -1};
-
 
     Vec2f topLeft{0, 0};
     Vec2f topRight{1, 0};
@@ -142,14 +143,15 @@ Mesh *Mesh::CreateCube(char* filename)
     Mesh *mesh = new Mesh{};
     mesh->texture.load_PNG(filename);
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});
+    Color color{255, 0, 0};
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, color});
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
@@ -254,6 +256,7 @@ Mesh *Mesh::CreateTriangle()
     mesh->vertices.push_back(v1);
     mesh->vertices.push_back(v2);
     mesh->vertices.push_back(v3);
+
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
         mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
@@ -312,4 +315,47 @@ Mesh *Mesh::CreateVectorLight(float x, float y, float z)
     mesh->indices.push_back(1);
 
     return mesh;
+}
+
+Mesh *Mesh::LoadObj(char *path)
+{
+    Mesh *object = new Mesh{};
+
+    bool hasNormals = false;
+
+    std::string warn;
+    std::string err;
+
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    tinyobj::LoadObj(&attrib, &shapes, NULL, &warn, &err, path, NULL, true);
+
+    if (!err.empty())
+        std::cout << "Error loading obj: " << err.c_str() << std::endl;
+    if (!warn.empty())
+        std::cout << "Warning loading obj: " << warn.c_str() << std::endl;
+
+    hasNormals = !attrib.normals.empty();
+
+    for (const tinyobj::shape_t &shape : shapes)
+    {
+        for (const tinyobj::index_t &index : shape.mesh.indices)
+        {
+            Vertex v;
+            v.position = {
+                attrib.vertices[index.vertex_index * 3 + 0],
+                attrib.vertices[index.vertex_index * 3 + 1],
+                attrib.vertices[index.vertex_index * 3 + 2]};
+
+            if (hasNormals)
+            {
+                v.normal = {
+                    attrib.normals[index.normal_index * 3 + 0],
+                    attrib.normals[index.normal_index * 3 + 1],
+                    attrib.normals[index.normal_index * 3 + 2]};
+            }
+
+            object->vertices.push_back(v);
+        }
+    }
 }

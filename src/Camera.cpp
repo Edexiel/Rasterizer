@@ -59,7 +59,6 @@ void Camera::update(float deltaTime)
     {
         _position.y -= _movement_speed * deltaTime;
     }
-
 }
 Mat4 Camera::getCameraMatrix()
 {

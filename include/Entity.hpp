@@ -22,11 +22,11 @@ private:
 public:
 
     Entity();
-    Entity(Mesh *_mesh);
+    Entity(Mesh *mesh);
     Entity(Mesh *mesh, Mat4 transfo);
 
-    void update(double DeltaTime);
-    void draw();
+    virtual void update(double DeltaTime);
+    virtual void draw();
 
     void setScale(Vec3 &scale);
     void setPosition(Vec3 &position);
@@ -39,8 +39,8 @@ public:
 };
 
 inline Entity::Entity() : _draw_mode{TRIANGLE}, _transform{Mat4::identity()} {}
-inline Entity::Entity(Mesh *_mesh) : _draw_mode{TRIANGLE}, _mesh{_mesh}, _transform{Mat4::identity()} {}
-inline Entity::Entity(Mesh *_mesh, Mat4 __transform) : _draw_mode{TRIANGLE}, _mesh{_mesh}, _transform{_transform} {}
+inline Entity::Entity(Mesh *mesh) : _draw_mode{TRIANGLE}, _mesh{mesh}, _transform{Mat4::identity()} {}
+inline Entity::Entity(Mesh *mesh, Mat4 transform) : _draw_mode{TRIANGLE}, _mesh{mesh}, _transform{transform} {}
 
 inline void Entity::setScale(Vec3 &scale)
 {

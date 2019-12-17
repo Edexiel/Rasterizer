@@ -94,7 +94,7 @@ int main()
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
 
-    scene.light = (Light){{1.0f, 1.f, 1.f}, {.0f, .0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
+    scene.light = (Light){(Vec3){1.0f, 1.f, 1.f}, (Vec3){.0f, .0f, 0.f}, (Vec3){1.f, 1.f, 0.0f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
