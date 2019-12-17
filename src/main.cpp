@@ -80,7 +80,7 @@ int main()
     Rasterizer renderer{resWidth, resHeight};
     Scene scene{};
     InputManager im{window};
-    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.f,0.f,0.7f,1.f};
+    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.f,0.f,0.5f,1.f};
 
     renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
 #if 1 // Perspective or 2D
@@ -89,8 +89,8 @@ int main()
     renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
 #endif
 
-    scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
-    // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
+    // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
+    scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
     scene.entities[0].setDrawMode(TRIANGLE);
 
@@ -98,9 +98,6 @@ int main()
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
-    //temporary stuff
-    Vec3 pos{0.f, 0.f, -1.f};
-    Vec3 rot{0.f, 0.f, 0.f};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -126,9 +123,9 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-        scene.entities[0].translate(pos);
-        scene.entities[0].rotate(rot);
-        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
+        // scene.entities[0].translate(pos);
+        // scene.entities[0].rotate(rot);
+        // scene.entities[0].scale({0.4f, 0.4f, 0.4f});
 
         renderer.render_scene(&scene);
 
@@ -137,6 +134,5 @@ int main()
         glfwSwapBuffers(window);
     }
     glfwTerminate();
-    Texture::free_texture(scene.entities[0].mesh->texture);
     return 0;
 }
