@@ -7,7 +7,6 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-
 Mesh *Mesh::CreateCube(char *filename)
 {
     Vec2f topLeft{0, 0};
@@ -35,31 +34,31 @@ Mesh *Mesh::CreateCube(char *filename)
 
     //down
     mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); 
+    mesh->UV.push_back(bottomLeft);
     mesh->indices.push_back(0);
-    mesh->UV.push_back(bottomRight); 
+    mesh->UV.push_back(bottomRight);
     mesh->indices.push_back(2);
-    mesh->UV.push_back(topRight); 
+    mesh->UV.push_back(topRight);
     mesh->indices.push_back(1);
     mesh->UV.push_back(bottomLeft);
     mesh->indices.push_back(2);
-    mesh->UV.push_back(topRight); 
+    mesh->UV.push_back(topRight);
     mesh->indices.push_back(3);
-    mesh->UV.push_back(topLeft); 
+    mesh->UV.push_back(topLeft);
 
     //right side
     mesh->indices.push_back(3);
-    mesh->UV.push_back(bottomRight); 
+    mesh->UV.push_back(bottomRight);
     mesh->indices.push_back(4);
     mesh->UV.push_back(topRight);
     mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); 
+    mesh->UV.push_back(bottomLeft);
     mesh->indices.push_back(1);
-    mesh->UV.push_back(bottomLeft); 
+    mesh->UV.push_back(bottomLeft);
     mesh->indices.push_back(4);
-    mesh->UV.push_back(topRight); 
+    mesh->UV.push_back(topRight);
     mesh->indices.push_back(5);
-    mesh->UV.push_back(topLeft); 
+    mesh->UV.push_back(topLeft);
 
     //front
     mesh->indices.push_back(1);
@@ -197,12 +196,14 @@ Mesh *Mesh::LoadObj(char *path)
     Mesh *object = new Mesh{};
 
     bool hasNormals = false;
+    bool hasColors = false;
 
     std::string warn;
     std::string err;
 
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
+
     tinyobj::LoadObj(&attrib, &shapes, NULL, &warn, &err, path, NULL, true);
 
     if (!err.empty())
@@ -211,9 +212,32 @@ Mesh *Mesh::LoadObj(char *path)
         std::cout << "Warning loading obj: " << warn.c_str() << std::endl;
 
     hasNormals = !attrib.normals.empty();
+    hasColors = !attrib.colors.empty();
 
+    for (uint i = 0; i < attrib.vertices.size() - 3; i += 3)
+    {
+        Vertex v{};
+        v.position = {(float)attrib.vertices[i],
+                      (float)attrib.vertices[i + 1],
+                      (float)attrib.vertices[i + 2]};
+
+        v.normal = {(float)attrib.normals[i],
+                    (float)attrib.normals[i + 1],
+                    (float)attrib.normals[i + 2]};
+
+        v.color = hasColors ? Color{(unsigned char)attrib.colors[i] * 255,
+                                    (unsigned char)attrib.colors[i + 1] * 255,
+                                    (unsigned char)attrib.colors[i + 2] * 255}
+                            : Color{255, 255, 255};
+
+        object->vertices.push_back(v);
+    }
+
+    
+    
     for (const tinyobj::shape_t &shape : shapes)
     {
+
         for (const tinyobj::index_t &index : shape.mesh.indices)
         {
             Vertex v;
