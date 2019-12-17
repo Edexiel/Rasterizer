@@ -267,11 +267,11 @@ inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
     {
         if (steep)
         {
-            set_pixel_color(y, x, 0, v1.color);
+            set_pixel_color(fabsf(y), fabsf(x), 0, v1.color);
         }
         else
         {
-            set_pixel_color(x, y, 0, v1.color);
+            set_pixel_color(fabsf(x), fabsf(y), 0, v1.color);
         }
 
         error -= dy;

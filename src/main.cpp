@@ -89,10 +89,11 @@ int main()
     renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
 #endif
 
-    // scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
-    scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
+    scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16)});
+    // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
+    // scene.entities.push_back(Entity{Mesh::CreateCube(nullptr)});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].setDrawMode(TRIANGLE);
+    scene.entities[0].setDrawMode(LINE);
 
     scene.light = (Light){(Vec3){1.0f, 1.f, 1.f}, (Vec3){.0f, .0f, 0.f}, (Vec3){1.f, 1.f, 0.0f}, 0.2f, 0.4f, 0.4f, 20.f};
 
