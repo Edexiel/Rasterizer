@@ -50,13 +50,15 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
-                if(e.mesh->texture.texture != nullptr)
+                if (!e.mesh->UV.empty())
                 {
                     Vec2f UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
-                    draw_triangle(triangle, e.transfo, pScene->light,UVarray, e.mesh->texture);
+                    draw_triangle(triangle, e.transfo, pScene->light, UVarray, e.mesh->texture);
                 }
                 else
-                    draw_triangle(triangle, e.transfo, pScene->light);
+                {
+                    draw_triangle(triangle, e.transfo, pScene->light, nullptr, e.mesh->texture);
+                }
             }
 
             break;

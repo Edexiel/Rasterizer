@@ -8,6 +8,7 @@ Texture::Texture(const char *filename)
 {
     if (filename != nullptr)
         load_PNG(filename);
+    texture = nullptr;
 }
 
 
