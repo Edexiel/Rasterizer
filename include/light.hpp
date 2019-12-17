@@ -20,14 +20,14 @@ public:
     Vec3 light_color;
 
     Light()=default;
-    Light(const Vec3& light_pos,const Vec3& camera_pos, Vec3& light_color, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
+    Light(const Vec3 light_pos,const Vec3 camera_pos, Vec3 light_color, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
 
     float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
     float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;
     void apply_light(const Vec3 &position, const Vec3 &normal,Color &color,const Vec3 &_camera_pos,const Vec3 &_light_pos) const;
 };
 
-inline Light::Light(const Vec3& light,const Vec3& camera, Vec3& lightColor, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
+inline Light::Light(const Vec3 light,const Vec3 camera, Vec3 lightColor, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
     : _ambientIntensity{ambientIntensity},
       _diffuseIntensity{diffuseIntensity},
       _specularIntensity{specularIntensity},

@@ -36,9 +36,9 @@ void Rasterizer::render_scene(Scene *pScene)
         {
         case POINT:
         {
-#pragma omp parallel for
+// #pragma omp parallel for
             for (uint i = 0; i < e.mesh->vertices.size(); i++)
-                draw_point(e.mesh->vertices[i], e.transfo);
+                draw_point(e.mesh->vertices[i], e.transform);
             break;
         }
         case TRIANGLE:
@@ -46,18 +46,18 @@ void Rasterizer::render_scene(Scene *pScene)
             if (e.mesh->indices.size() < 3)
                 return;
 
-#pragma omp parallel for
+// #pragma omp parallel for
             for (uint i = 0; i < e.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]], e.mesh->vertices[e.mesh->indices[i + 2]]};
                 if (!e.mesh->UV.empty())
                 {
                     Vec2f UVarray[3]{e.mesh->UV[i], e.mesh->UV[i + 1], e.mesh->UV[i + 2]};
-                    draw_triangle(triangle, e.transfo, pScene->light, UVarray, e.mesh->texture);
+                    draw_triangle(triangle, e.transform, pScene->light, UVarray, e.mesh->texture);
                 }
                 else
                 {
-                    draw_triangle(triangle, e.transfo, pScene->light, nullptr, e.mesh->texture);
+                    draw_triangle(triangle, e.transform, pScene->light, nullptr, e.mesh->texture);
                 }
             }
 
@@ -71,7 +71,7 @@ void Rasterizer::render_scene(Scene *pScene)
             for (uint i = 0; i < e.mesh->indices.size() - 1; i += 1)
             {
                 Vertex line[2]{e.mesh->vertices[e.mesh->indices[i]], e.mesh->vertices[e.mesh->indices[i + 1]]};
-                draw_line(line, e.transfo);
+                draw_line(line, e.transform);
             }
             // draw_line(e.mesh->vertices[e.mesh->indices[e.mesh->indices.size() - 1]], e.mesh->vertices[e.mesh->indices[0]], e.transfo);
             break;

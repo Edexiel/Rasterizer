@@ -8,11 +8,12 @@
 class Mesh
 {
 private:
-    Texture texture = nullptr;
 public:
     std::vector<Vertex> vertices;
     std::vector<int> indices;
     std::vector<Vec2f> UV;
+    
+    Texture texture = nullptr;
     
     static Mesh* CreateTriangle();
     static Mesh* CreateCube(char* filename);

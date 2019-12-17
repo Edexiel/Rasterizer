@@ -26,7 +26,7 @@ private:
     void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture);
 
     void draw_line(const Vertex *vertices, const Mat4 &model);
-    void raster_line(const Vertex* vertex, const Vec4* vec);
+    void raster_line(const Vertex* vertex);
 
     void draw_point(Vertex v1, Mat4 &transfo);
     void set_pixel_color(uint x, uint y, float z, const Color &c);
@@ -212,10 +212,10 @@ inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transforma
     for (int i = 0; i < 2; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
-    raster_line(screenCoord, transCoord);
+    raster_line(screenCoord);
 }
 
-inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
+inline void Rasterizer::raster_line(const Vertex* vertex)
 {
     Vertex v1 = vertex[0];
     Vertex v2 = vertex[1];

@@ -17,6 +17,8 @@
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
+    (void)mods;
+    (void)scancode;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
@@ -71,8 +73,8 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     // Time && fps
-    double time = 0.f;
-    double deltaTime;
+    double time = 0.;
+    double deltaTime = 0.01;
     float sample = 1.f; // moyenne sur seconde
     uint frames = 0;
     double time_acc = 0.f;
@@ -93,9 +95,9 @@ int main()
     // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
     // scene.entities.push_back(Entity{Mesh::CreateCube(nullptr)});
     // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].setDrawMode(LINE);
+    // scene.entities[0].setDrawMode(LINE);
 
-    scene.light = (Light){(Vec3){1.0f, 1.f, 1.f}, (Vec3){.0f, .0f, 0.f}, (Vec3){1.f, 1.f, 0.0f}, 0.2f, 0.4f, 0.4f, 20.f};
+    scene.light = (Light){Vec3{1.0f, 1.f, 1.f}, Vec3{.0f, .0f, 0.f}, Vec3{1.f, 1.f, 1.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
 
@@ -111,7 +113,7 @@ int main()
 
             if (time_acc >= sample)
             {
-                std::cout << "FPS: " << 1.0 / (time_acc / (double)frames) << std::endl;
+                std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
                 frames = 0;
                 time_acc = 0.f;
             }

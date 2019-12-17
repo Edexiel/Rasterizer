@@ -217,13 +217,15 @@ Mesh *Mesh::LoadObj(char *path)
     for (uint i = 0; i < attrib.vertices.size() - 3; i += 3)
     {
         Vertex v{};
+
         v.position = {(float)attrib.vertices[i],
                       (float)attrib.vertices[i + 1],
                       (float)attrib.vertices[i + 2]};
 
-        v.normal = {(float)attrib.normals[i],
-                    (float)attrib.normals[i + 1],
-                    (float)attrib.normals[i + 2]};
+        v.normal = hasNormals ? Vec3{(float)attrib.normals[i],
+                                     (float)attrib.normals[i + 1],
+                                     (float)attrib.normals[i + 2]}
+                              : Vec3{0.f, 0.f, 0.f};
 
         v.color = hasColors ? Color{(unsigned char)attrib.colors[i] * 255,
                                     (unsigned char)attrib.colors[i + 1] * 255,
@@ -233,28 +235,14 @@ Mesh *Mesh::LoadObj(char *path)
         object->vertices.push_back(v);
     }
 
-    
-    
-    for (const tinyobj::shape_t &shape : shapes)
+    for (tinyobj::shape_t &shape : shapes)
     {
-
-        for (const tinyobj::index_t &index : shape.mesh.indices)
+        
+        for (tinyobj::index_t &index : shape.mesh.indices)
         {
-            Vertex v;
-            v.position = {
-                attrib.vertices[index.vertex_index * 3 + 0],
-                attrib.vertices[index.vertex_index * 3 + 1],
-                attrib.vertices[index.vertex_index * 3 + 2]};
-
-            if (hasNormals)
-            {
-                v.normal = {
-                    attrib.normals[index.normal_index * 3 + 0],
-                    attrib.normals[index.normal_index * 3 + 1],
-                    attrib.normals[index.normal_index * 3 + 2]};
-            }
-
-            object->vertices.push_back(v);
+            object->indices.push_back(index.vertex_index);
         }
     }
+
+    return object;
 }
