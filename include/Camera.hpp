@@ -22,14 +22,14 @@ public:
     Camera(InputManager *input, Vec3 position, float pitch, float yaw, float mouse_speed, float movement_speed);
     Vec3 getPosition();
     void update(float deltaTime);
-    Mat4 getCameraMatrix();
+    Mat4 getCameraMatrix() const;
 };
 
 inline Vec3 Camera::getPosition()
 {
     return _position;
 }
-inline Mat4 Camera::getCameraMatrix()
+inline Mat4 Camera::getCameraMatrix() const
 {
     return Mat4::CreateXRotationMatrix(_pitch * (float)M_PI / 180.f) * Mat4::CreateYRotationMatrix(_yaw * (float)M_PI / 180.f) * Mat4::CreateTranslationMatrix(_position);
 }

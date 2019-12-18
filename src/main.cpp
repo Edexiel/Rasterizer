@@ -10,7 +10,6 @@
 #include <cmath>
 #include "InputManager.hpp"
 
-
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     (void)mods;
@@ -101,7 +100,7 @@ int main()
         // scene.entities[0].translate(pos);
         // scene.entities[0].rotate(rot);
         // scene.entities[0].scale({0.4f, 0.4f, 0.4f});
-
+        scene.update((float)deltaTime);
         renderer.render_scene(&scene);
         renderer.draw_scene();
 

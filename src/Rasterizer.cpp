@@ -64,7 +64,7 @@ void Rasterizer::render_scene(Scene *scene)
             if (entity.mesh->indices.size() < 3)
                 return;
 
-            // #pragma omp parallel for
+#pragma omp parallel for
             for (uint i = 0; i < entity.mesh->indices.size() - 2; i += 3)
             {
                 Vertex triangle[3]{entity.mesh->vertices[entity.mesh->indices[i]],

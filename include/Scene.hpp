@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <vector>
 #include "Entity.hpp"
@@ -9,24 +9,24 @@ class Scene
 {
     Light _light;
     Camera _camera;
-    InputManager* _im;
+    InputManager *_im;
+
 public:
     std::vector<Entity> entities;
-    Scene(InputManager* im);
+    Scene(InputManager *im);
     ~Scene();
 
-    Mat4 getView();
-    Light getLight();
+    Mat4 getView() const;
+    Light &getLight();
 
     void update(float deltaTime);
 };
 
-inline Mat4 Scene::getView()
+inline Mat4 Scene::getView() const
 {
     return _camera.getCameraMatrix();
 }
-inline Light Scene::getLight()
+inline Light &Scene::getLight()
 {
     return _light;
 }
-
