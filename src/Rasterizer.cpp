@@ -71,17 +71,17 @@ void Rasterizer::render_scene(Scene *scene)
                                    entity.mesh->vertices[entity.mesh->indices[i + 1]],
                                    entity.mesh->vertices[entity.mesh->indices[i + 2]]};
 
-                if (!entity.mesh->UV.empty())
+                if (entity.mesh->UV.empty() || entity.mesh->texture.isEmpty())
+                {
+                    draw_triangle(triangle, entity.transform, scene->getLight());
+                }
+                else
                 {
                     Vec2f uv[3]{entity.mesh->UV[i],
                                 entity.mesh->UV[i + 1],
                                 entity.mesh->UV[i + 2]};
 
-                    draw_triangle(triangle, entity.transform, scene->getLight(), uv, entity.mesh->texture);
-                }
-                else
-                {
-                    draw_triangle(triangle, entity.transform, scene->getLight(), nullptr, entity.mesh->texture);
+                    draw_triangle(triangle, entity.transform, scene->getLight(), uv, &entity.mesh->texture);
                 }
             }
 

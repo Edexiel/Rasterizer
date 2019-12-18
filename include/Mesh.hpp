@@ -13,7 +13,7 @@ public:
     std::vector<int> indices;
     std::vector<Vec2f> UV;
     
-    Texture texture = nullptr;
+    Texture texture;
     
     static Mesh* CreateTriangle();
     static Mesh* CreateCube(char* filename);

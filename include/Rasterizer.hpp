@@ -22,11 +22,11 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV, Texture texture);
-    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV = nullptr,const Texture* texture = nullptr);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV=nullptr, const Texture *texture=nullptr);
 
     void draw_line(const Vertex *vertices, const Mat4 &model);
-    void raster_line(const Vertex* vertex);
+    void raster_line(const Vertex *vertex);
 
     void draw_point(Vertex v1, Mat4 &transfo);
     void set_pixel_color(uint x, uint y, float z, const Color &c);
@@ -52,7 +52,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV, Texture texture)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV,const Texture* texture)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -95,12 +95,15 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
 /**
  * @brief Rasterization function of the program
  * 
- * @param vertices      screen-tranformed vertices
- * @param t_vetices     object matrix only tranformed vertices
- * @param t_normals     object matric only transformed normals
- * @param light         light source to use
+ * @param vertices      pointer- screen-tranformed vertices
+ * @param t_vetices     pointer- object matrix only tranformed vertices
+ * @param p_vertices    pointer- non homogeneous vertices
+ * @param t_normals     pointer- object matric only transformed normals
+ * @param light         Reference- light source to use
+ * @param UV            Pointer- UV of texture if any (can be nullptr)
+ * @param Texture       Pointer- texture if any (can be nullptr)
  */
-inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture)
+inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, const Texture *texture)
 {
     // shortcuts
     const Vertex &v1 = vertices[0];
@@ -115,7 +118,7 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
     const Vec3 vec1{v2.position.x - v1.position.x, v2.position.y - v1.position.y, 0};
     const Vec3 vec2{v3.position.x - v1.position.x, v3.position.y - v1.position.y, 0};
 
-    Vec3 weight {0,0,0};
+    Vec3 weight{0, 0, 0};
 
     for (int y = yMin; y <= yMax; ++y)
     {
@@ -130,52 +133,44 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
             {
                 weight.x = 1.f - weight.y - weight.z;
 
-                const float z =  Vec3::dot_product({v1.position.z,v2.position.z,v3.position.z},weight); 
-
-                weight.x /= p_vertices[0].w;
-                weight.y /= p_vertices[1].w;
-                weight.z /= p_vertices[2].w;
-
-                weight = weight * (1/(weight.x+weight.y+weight.z));
+                const float z = Vec3::dot_product({v1.position.z, v2.position.z, v3.position.z}, weight);
 
                 if (z <= depth_buffer[x + y * m_width])
                 {
+                    weight.x /= p_vertices[0].w;
+                    weight.y /= p_vertices[1].w;
+                    weight.z /= p_vertices[2].w;
+
+                    weight = weight * (1 / (weight.x + weight.y + weight.z));
 
                     const Vec3 t_pos{t_vertices[0].xyz * weight.x + t_vertices[1].xyz * weight.y + t_vertices[2].xyz * weight.z};
                     const Vec3 t_normal{t_normals[0].xyz * weight.x + t_normals[1].xyz * weight.y + t_normals[2].xyz * weight.z};
 
-                    Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
 #if 0 //Cheap wireframe
                     if (min(min(weight.x, weight.y), weight.z) < 0.016f)
                     {
                         set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
                     }
-                    else
+#endif
+                    if (texture==nullptr || UV == nullptr)
                     {
-                        set_pixel_color(x, y, z, t_color);
-                    }
-#else
-                    if(texture.texture != nullptr || UV != nullptr)
-                    {
-                        const Vec2f c_uv { UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z,UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
-                        Color pixelTexture = texture.accessor(c_uv.x, c_uv.y);
-                        light.apply_light(t_pos, t_normal, pixelTexture, light.camera_pos, light.light_pos);
-                        set_pixel_color(x, y, z, pixelTexture);
-                    }
-                    else
-                    {
+                        Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
+
                         light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
                         set_pixel_color(x, y, z, t_color);
                     }
-                        
-#endif
+                    else
+                    {
+                        const Vec2f c_uv{UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z, UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
+                        Color t_color = texture->accessor(c_uv.x, c_uv.y);
+                        light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
+                        set_pixel_color(x, y, z, t_color);
+                    }
                 }
             }
         }
     }
 }
-
-
 
 inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transformation)
 {
@@ -215,7 +210,7 @@ inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transforma
     raster_line(screenCoord);
 }
 
-inline void Rasterizer::raster_line(const Vertex* vertex)
+inline void Rasterizer::raster_line(const Vertex *vertex)
 {
     Vertex v1 = vertex[0];
     Vertex v2 = vertex[1];
@@ -262,7 +257,6 @@ inline void Rasterizer::raster_line(const Vertex* vertex)
 
     int maxX = (int)v2.position.x;
 
-
     for (int x = (int)v1.position.x; x < maxX; x++)
     {
         if (steep)
@@ -285,7 +279,7 @@ inline void Rasterizer::raster_line(const Vertex* vertex)
 
 inline void Rasterizer::clear_color_buffer()
 {
-// #pragma omp parallel for
+    // #pragma omp parallel for
     for (size_t i = 0; i < m_height; i++)
         memset(&color_buffer[m_width * i], 0xDF, m_width * sizeof(Color));
 

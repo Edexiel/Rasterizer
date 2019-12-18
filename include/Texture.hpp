@@ -8,27 +8,48 @@
 class Texture
 {
 private:
-    int width;
-    int height;
-    
-    
+    int _width;
+    int _height;
+    Color *texture;
+
 public:
     Texture();
-    Texture(const char* filename);
+    Texture(const char *filename);
+    ~Texture();
 
-    Color* texture;
+    Color *getTexture() const;
 
-    void SetPixelColor(uint x,uint y,const Color &c);
-    void clearBuffer();
     void uploadTexture() const;
+    bool isEmpty() const;
 
-    uint getWidth() const;
-    uint getHeight() const;
-    Color accessor(float v, float u);
-    static void free_texture(Texture& texture);
+    // uint getWidth() const;
+    // uint getHeight() const;
+    Color accessor(float v, float u) const;
 
     GLuint getTextureName() const;
-    void load_PNG(const char* filename);
+    bool load_PNG(const char *filename);
 };
+inline Color *Texture::getTexture() const
+{
+    return texture;
+}
 
+inline bool Texture::isEmpty() const
+{
+    return texture == nullptr;
+}
 
+inline Color Texture::accessor(float v, float u) const
+{
+    if (isEmpty() || v > 1 || u > 1 || v < 0 || u < 0)
+    {
+        std::cout << "Error: Trying to access invalid texture with parameters : u=>" << u << " v=>" << v << std::endl;
+        return {255, 0, 0};
+    }
+
+    // wtf ?
+    v *= _width;
+    u *= _height;
+
+    return this->texture[(int)v + (int)u * _width];
+}

@@ -17,6 +17,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
 int main()
 {
     uint screenWidth = 800;
@@ -97,10 +98,9 @@ int main()
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-        // scene.entities[0].translate(pos);
-        // scene.entities[0].rotate(rot);
-        // scene.entities[0].scale({0.4f, 0.4f, 0.4f});
+
         scene.update((float)deltaTime);
+
         renderer.render_scene(&scene);
         renderer.draw_scene();
 
