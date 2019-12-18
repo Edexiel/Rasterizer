@@ -8,45 +8,62 @@
 class Light
 {
 private:
+    Camera *_camera;
     float _ambientIntensity;
     float _diffuseIntensity;
     float _specularIntensity;
     float _shininess;
-    
+
+    Vec3 _light_pos;
+    Colorf _light_color;
 
 public:
-    Vec3 camera_pos;
-    Vec3 light_pos;
-    Vec3 light_color;
 
-    Light()=default;
-    Light(const Vec3 light_pos,const Vec3 camera_pos, Vec3 light_color, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
+    Light() = default;
+    Light(const Vec3 light_pos, Camera *camera,Colorf light_color, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess);
 
     float diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const;
     float specular_light(const Vec3 &normal, const Vec3 &light_direction, const Vec3 &camera_direction) const;
-    void apply_light(const Vec3 &position, const Vec3 &normal,Color &color,const Vec3 &_camera_pos,const Vec3 &_light_pos) const;
+    void apply_light(const Vec3 &position, const Vec3 &normal, Color &color) const;
 };
-
-inline Light::Light(const Vec3 light,const Vec3 camera, Vec3 lightColor, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
-    : _ambientIntensity{ambientIntensity},
+/**
+ * @brief Construct a new Light:: Light object
+ * 
+ * @param light 
+ * @param camera 
+ * @param lightColor Pourquoi cette couleur en float et pas les autres ? Me demandez pas
+ * @param ambientIntensity 
+ * @param diffuseIntensity 
+ * @param specularIntensity 
+ * @param shininess 
+ */
+inline Light::Light(const Vec3 light, Camera *camera,const Colorf lightColor, float ambientIntensity, float diffuseIntensity, float specularIntensity, float shininess)
+    : _camera{camera},
+      _ambientIntensity{ambientIntensity},
       _diffuseIntensity{diffuseIntensity},
       _specularIntensity{specularIntensity},
       _shininess{shininess},
-      camera_pos{camera},
-      light_pos{light},
-      light_color{lightColor} 
-      {}
-
-inline void Light::apply_light(const Vec3 &position, const Vec3 &normal,Color &color,const Vec3 &_camera_pos,const Vec3 &_light_pos) const
+      _light_pos{light},
+      _light_color{lightColor}
+{
+}
+/**
+ * @brief Apply a light to a color given parameters
+ * 
+ * @param position 
+ * @param normal 
+ * @param color 
+ */
+inline void Light::apply_light(const Vec3 &position, const Vec3 &normal, Color &color) const
 {
     const Vec3 v_light = Vec3::normalize(_light_pos - position);
-    const Vec3 v_camera = Vec3::normalize(_camera_pos - position);
+    const Vec3 v_camera = Vec3::normalize(_camera->getPosition() - position);
     const Vec3 v_normal = Vec3::normalize(normal);
 
     const float diffuse = diffuse_light(v_normal, v_light);
     const float specular = specular_light(v_normal, v_light, v_camera);
     color = color * (_ambientIntensity + diffuse + specular);
-    color = color * light_color;
+    color = color * _light_color;
 }
 
 inline float Light::diffuse_light(const Vec3 &normal, const Vec3 &light_direction) const
@@ -67,4 +84,3 @@ inline float Light::specular_light(const Vec3 &normal, const Vec3 &light_directi
     }
     return _specularIntensity * specular_term; // mat_specular
 }
-

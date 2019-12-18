@@ -156,14 +156,14 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                     {
                         Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
 
-                        light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
+                        light.apply_light(t_pos, t_normal, t_color);
                         set_pixel_color(x, y, z, t_color);
                     }
                     else
                     {
                         const Vec2f c_uv{UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z, UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
                         Color t_color = texture->accessor(c_uv.x, c_uv.y);
-                        light.apply_light(t_pos, t_normal, t_color, light.camera_pos, light.light_pos);
+                        light.apply_light(t_pos, t_normal, t_color);
                         set_pixel_color(x, y, z, t_color);
                     }
                 }

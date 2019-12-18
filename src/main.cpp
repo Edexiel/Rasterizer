@@ -43,7 +43,7 @@ int main()
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create window
-    GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "Rasterizer", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "", NULL, NULL);
     if (!window)
     {
         fprintf(stderr, "glfwCreateWindow failed.\n");
@@ -67,11 +67,13 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     // Time && fps
-    double time = 0.;
-    double deltaTime = 0.01;
-    float sample = 1.f; // moyenne sur seconde
-    uint frames = 0;
-    double time_acc = 0.f;
+    double time{0.};
+    double deltaTime{0.01};
+    float sample{1.f}; // moyenne de fps sur sample seconde(s)
+    uint frames{0};
+    double time_acc{0.};
+    std::string window_title = "Rasterizer";
+    std::string fps;
 
     InputManager im{window};
     Rasterizer renderer{resWidth, resHeight};
@@ -90,9 +92,11 @@ int main()
 
             if (time_acc >= sample)
             {
-                std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
+                // std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
+                fps = std::to_string(1 / (time_acc / frames));
+                glfwSetWindowTitle(window, (window_title+"      FPS: "+fps).c_str());
                 frames = 0;
-                time_acc = 0.f;
+                time_acc = 0.;
             }
         }
 

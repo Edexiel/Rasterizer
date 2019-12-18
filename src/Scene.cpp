@@ -6,8 +6,8 @@ Scene::Scene(InputManager *im) : _im{im}
 {
 
     // LIGHT
-    _light = Light{Vec3{1.0f, 1.f, 1.f}, Vec3{.0f, .0f, 0.f}, Vec3{1.f, 1.f, 1.f}, 0.2f, 0.4f, 0.4f, 20.f};
     _camera = Camera{im, (Vec3){0.f, 0.f, 0.f}, 0.f, 0.f, 0.5f, 1.f};
+    _light = Light{Vec3{1.0f, 1.f, 1.f}, &_camera, Colorf{1.f, 1.f, 1.f}, 0.2f, 0.4f, 0.4f, 20.f};
 
     // SCENE ENTITIES
 
@@ -23,9 +23,9 @@ Scene::Scene(InputManager *im) : _im{im}
 
 Scene::~Scene()
 {
-    for (Entity &e : entities)
+    for (Entity &entity : entities)
     {
-        delete e.mesh;
+        delete entity.mesh;
     }
 }
 
@@ -36,7 +36,7 @@ void Scene::update(float deltaTime)
 
     for (Entity& entity : entities)
     {
-        entity.update(deltaTime);
+        // entity.update(deltaTime);
         entity.draw();
     }
     

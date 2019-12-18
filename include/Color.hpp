@@ -3,29 +3,33 @@
 
 #include "Vec3.hpp"
 
-struct Color
-{  
-    union
-    {
-        struct 
+template <typename T>
+struct t_Color
+{
+    union {
+        struct
         {
-            unsigned char r, g, b;     
+            T r, g, b;
         };
-        unsigned char e[3];
+        T e[3];
     };
-    
 };
 
-inline Color operator*(Color c, float w)
+#define Color t_Color<unsigned char>
+#define Colorf t_Color<float>
+
+template <typename T>
+inline t_Color<T> operator*(t_Color<T> c, float w)
 {
-    c.r = (unsigned char)(c.r * w);
-    c.g = (unsigned char)(c.g * w);
-    c.b = (unsigned char)(c.b * w);
+    c.r = (T)(c.r * w);
+    c.g = (T)(c.g * w);
+    c.b = (T)(c.b * w);
 
     return c;
 }
 
-inline Color operator+(Color c1, Color c2)
+template <typename T>
+inline t_Color<T> operator+(t_Color<T> c1, t_Color<T> c2)
 {
     c1.r += c2.r;
     c1.g += c2.g;
@@ -34,11 +38,21 @@ inline Color operator+(Color c1, Color c2)
     return c1;
 }
 
-inline Color operator*(Color c1, Vec3 c2)
+template <typename T>
+inline t_Color<T> operator*(t_Color<T> c1, Vec3 c2)
 {
-    c1.r = (unsigned char)((float)c1.r * c2.r);
-    c1.g = (unsigned char)((float)c1.g * c2.g);
-    c1.b = (unsigned char)((float)c1.b * c2.b);
+    c1.r = (T)(c1.r * c2.r);
+    c1.g = (T)(c1.g * c2.g);
+    c1.b = (T)(c1.b * c2.b);
+
+    return c1;
+}
+
+inline t_Color<unsigned char> operator*(t_Color<unsigned char> c1, t_Color<float> c2)
+{
+    c1.r = (unsigned char)(c1.r * c2.r);
+    c1.g = (unsigned char)(c1.g * c2.g);
+    c1.b = (unsigned char)(c1.b * c2.b);
 
     return c1;
 }
