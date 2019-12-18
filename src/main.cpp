@@ -1,29 +1,27 @@
-#include <iostream>
-#include <cstdio>
-#include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
+#include <iostream>
 #include <ctime>
 
-#include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
 #include "tools.hpp"
 #include <cmath>
-#include "Camera.hpp"
+#include "InputManager.hpp"
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
+    (void)mods;
+    (void)scancode;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
 int main()
 {
     uint screenWidth = 800;
     uint screenHeight = 600;
-
-    float aspect = screenWidth / (float)screenHeight;
 
     float modres = 1.f;
 
@@ -42,10 +40,10 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-    // glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create window
-    GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "Rasterizer", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(screenWidth, screenHeight, "", NULL, NULL);
     if (!window)
     {
         fprintf(stderr, "glfwCreateWindow failed.\n");
@@ -69,40 +67,22 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     // Time && fps
-    double time = 0.f;
-    double deltaTime;
-    float sample = 1.f; // moyenne sur seconde
-    uint frames = 0;
-    double time_acc = 0.f;
+    double time{0.};
+    double deltaTime{0.01};
+    float sample{1.f}; // moyenne de fps sur sample seconde(s)
+    uint frames{0};
+    double time_acc{0.};
+    std::string window_title = "Rasterizer";
+    std::string fps;
 
+    InputManager im{window};
     Rasterizer renderer{resWidth, resHeight};
 
-    // scene.entities.push_back(Entity{Mesh::CreateTriangle()});
-    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-    // renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-    renderer.projection = Mat4::perspective(90.f, aspect, 0.01f, 10.f);
-    // renderer.projection = Mat4::identity();
+    Scene scene{&im};
 
-    Scene scene{};
-
-    scene.entities.push_back(Entity{Mesh::CreateSphere(25, 25)});
-    // scene.entities.push_back(Entity{Mesh::CreateCube()});
-    // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].setDrawMode(TRIANGLE);
-    scene.entities[1].setDrawMode(TRIANGLE);
-
-    scene.light = (Light){{1.0f, 1.f, 0.f}, {0.0f, 0.0f, 0.f}, 0.2f, 0.4f, 0.4f, 20.f};
-
-    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
-
-    Vec3 pos{0.f, 0.f, -1.f};
-    Vec3 rot{0.f, 0.f, 0.f};
-    Camera camera{0.005f, screenWidth, screenHeight};
-    glfwSetCursorPos(window, screenWidth / 2, screenHeight / 2);
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        // glfwGetCursorPos(window, &x, &y);
         { // DeltaTime
             deltaTime = glfwGetTime() - time;
             time = glfwGetTime();
@@ -112,26 +92,25 @@ int main()
 
             if (time_acc >= sample)
             {
-                std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
+                // std::cout << "FPS: " << 1 / (time_acc / frames) << std::endl;
+                fps = std::to_string(1 / (time_acc / frames));
+                glfwSetWindowTitle(window, (window_title+"      FPS: "+fps).c_str());
                 frames = 0;
-                time_acc = 0.f;
+                time_acc = 0.;
             }
         }
 
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-        scene.entities[0].translate(pos);
-        scene.entities[0].rotate(rot);
-        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
 
-        renderer.camera = camera.move_camera(window);
+        scene.update((float)deltaTime);
+
         renderer.render_scene(&scene);
-
         renderer.draw_scene();
 
         glfwSwapBuffers(window);
     }
-    glfwTerminate();
 
+    glfwTerminate();
     return 0;
 }

@@ -1,7 +1,7 @@
 MAKEFLAGS+=--no-builtin-rules --no-builtin-variables
 
 # -no-pie -pg
-CXXFLAGS= -O3 -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math
+CXXFLAGS= -O3 -Iinclude -Wall -Wextra -Wfloat-conversion -MMD -Wno-unused-function -march=native -mtune=native -ffast-math -fopenmp
 CFLAGS=$(CXXFLAGS)
 CXXFLAGS+= -std=c++17 -Iinclude
 CC=gcc
@@ -15,7 +15,8 @@ CXX=g++
 # LDLIBS=-lglfw -lgdi32 -lglu32 -
 # else
 # LDFLAGS=-Llibs/linux
-LDLIBS= -Llib -lglfw -lGL -lGLU -ldl
+# LDFLAGS= -no-pie -pg
+LDLIBS= -Llib -lglfw -lGL -lGLU -ldl -fopenmp
 # endif
 
 SRCSC = $(wildcard src/*.c)

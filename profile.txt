@@ -2,24 +2,24 @@ Flat profile:
 
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
- time   seconds   seconds    calls  us/call  us/call  name    
- 95.57      0.86     0.86   359755     2.39     2.39  Rasterizer::draw_triangle(Vertex*, Mat4, Light&)
-  3.33      0.89     0.03                             Rasterizer::render_scene(Scene*)
-  1.11      0.90     0.01                             std::thread::_State_impl<std::_Bind_simple<std::_Mem_fn<void (Rasterizer::*)(Vertex*, Mat4, Light&)> (Rasterizer*, Vertex*, Mat4, std::reference_wrapper<Light>)> >::_M_run()
-  0.00      0.90     0.00     1038     0.00     0.00  void std::vector<std::thread, std::allocator<std::thread> >::_M_emplace_back_aux<std::thread>(std::thread&&)
-  0.00      0.90     0.00      346     0.00     0.00  Entity::resetTransformation()
-  0.00      0.90     0.00       13     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
-  0.00      0.90     0.00       11     0.00     0.00  void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN10RasterizerC2Ejj
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5SceneC2Ev
-  0.00      0.90     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN6EntityC2Ev
-  0.00      0.90     0.00        1     0.00     0.00  Entity::~Entity()
-  0.00      0.90     0.00        1     0.00     0.00  find_coreGL
-  0.00      0.90     0.00        1     0.00     0.00  get_exts
-  0.00      0.90     0.00        1     0.00     0.00  get_proc
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+ 83.41      7.59     7.59                             Rasterizer::render_scene(Scene*)
+ 16.59      9.10     1.51                             key_callback(GLFWwindow*, int, int, int, int)
+  0.00      9.10     0.00     2059     0.00     0.00  Entity::resetTransformation()
+  0.00      9.10     0.00       13     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
+  0.00      9.10     0.00       11     0.00     0.00  void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN10RasterizerC2Ejj
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5SceneC2Ev
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN6CameraC2Efjj
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN6EntityC2Ev
+  0.00      9.10     0.00        1     0.00     0.00  _GLOBAL__sub_I_stbi_failure_reason
+  0.00      9.10     0.00        1     0.00     0.00  Entity::~Entity()
+  0.00      9.10     0.00        1     0.00     0.00  find_coreGL
+  0.00      9.10     0.00        1     0.00     0.00  get_exts
+  0.00      9.10     0.00        1     0.00     0.00  get_proc
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -57,66 +57,64 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 2 byte(s) for 1.11% of 0.90 seconds
+granularity: each sample hit covers 2 byte(s) for 0.11% of 9.10 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     96.7    0.01    0.86                 std::thread::_State_impl<std::_Bind_simple<std::_Mem_fn<void (Rasterizer::*)(Vertex*, Mat4, Light&)> (Rasterizer*, Vertex*, Mat4, std::reference_wrapper<Light>)> >::_M_run() [1]
-                0.86    0.00  359755/359755      Rasterizer::draw_triangle(Vertex*, Mat4, Light&) [2]
------------------------------------------------
-                0.86    0.00  359755/359755      std::thread::_State_impl<std::_Bind_simple<std::_Mem_fn<void (Rasterizer::*)(Vertex*, Mat4, Light&)> (Rasterizer*, Vertex*, Mat4, std::reference_wrapper<Light>)> >::_M_run() [1]
-[2]     95.6    0.86    0.00  359755         Rasterizer::draw_triangle(Vertex*, Mat4, Light&) [2]
+[1]     83.4    7.59    0.00                 Rasterizer::render_scene(Scene*) [1]
+                0.00    0.00    2059/2059        Entity::resetTransformation() [58]
 -----------------------------------------------
                                                  <spontaneous>
-[3]      3.3    0.03    0.00                 Rasterizer::render_scene(Scene*) [3]
-                0.00    0.00    1038/1038        void std::vector<std::thread, std::allocator<std::thread> >::_M_emplace_back_aux<std::thread>(std::thread&&) [19]
-                0.00    0.00     346/346         Entity::resetTransformation() [20]
+[2]     16.6    1.51    0.00                 key_callback(GLFWwindow*, int, int, int, int) [2]
 -----------------------------------------------
-                0.00    0.00       1/1           get_proc [6]
-[4]      0.0    0.00    0.00       1         find_coreGL [4]
+                0.00    0.00       1/1           get_proc [5]
+[3]      0.0    0.00    0.00       1         find_coreGL [3]
 -----------------------------------------------
-                0.00    0.00       1/1           get_proc [6]
-[5]      0.0    0.00    0.00       1         get_exts [5]
+                0.00    0.00       1/1           get_proc [5]
+[4]      0.0    0.00    0.00       1         get_exts [4]
 -----------------------------------------------
-                                 404             get_proc [6]
-                0.00    0.00       1/1           gladLoadGL [12]
-[6]      0.0    0.00    0.00       1+404     get_proc [6]
-                0.00    0.00       1/1           find_coreGL [4]
-                0.00    0.00       1/1           get_exts [5]
-                                 404             get_proc [6]
+                                 404             get_proc [5]
+                0.00    0.00       1/1           gladLoadGL [11]
+[5]      0.0    0.00    0.00       1+404     get_proc [5]
+                0.00    0.00       1/1           find_coreGL [3]
+                0.00    0.00       1/1           get_exts [4]
+                                 404             get_proc [5]
 -----------------------------------------------
-                0.00    0.00    1038/1038        Rasterizer::render_scene(Scene*) [3]
-[19]     0.0    0.00    0.00    1038         void std::vector<std::thread, std::allocator<std::thread> >::_M_emplace_back_aux<std::thread>(std::thread&&) [19]
+                0.00    0.00    2059/2059        Rasterizer::render_scene(Scene*) [1]
+[58]     0.0    0.00    0.00    2059         Entity::resetTransformation() [58]
 -----------------------------------------------
-                0.00    0.00     346/346         Rasterizer::render_scene(Scene*) [3]
-[20]     0.0    0.00    0.00     346         Entity::resetTransformation() [20]
+                0.00    0.00      13/13          Mesh::CreateSphere(int, int) [129]
+[59]     0.0    0.00    0.00      13         void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [59]
 -----------------------------------------------
-                0.00    0.00      13/13          Mesh::CreateSphere(int, int) [35]
-[21]     0.0    0.00    0.00      13         void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&) [21]
+                0.00    0.00      11/11          Mesh::CreateSphere(int, int) [129]
+[60]     0.0    0.00    0.00      11         void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [60]
 -----------------------------------------------
-                0.00    0.00      11/11          Mesh::CreateSphere(int, int) [35]
-[22]     0.0    0.00    0.00      11         void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&) [22]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[61]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [61]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[23]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [23]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[62]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN10RasterizerC2Ejj [62]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[24]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN10RasterizerC2Ejj [24]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[63]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv [63]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[25]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv [25]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[64]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff [64]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[26]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff [26]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[65]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5SceneC2Ev [65]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[27]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5SceneC2Ev [27]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[66]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN6CameraC2Efjj [66]
 -----------------------------------------------
-                0.00    0.00       1/1           __libc_csu_init [72]
-[28]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN6EntityC2Ev [28]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[67]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN6EntityC2Ev [67]
 -----------------------------------------------
-                0.00    0.00       1/1           Scene::~Scene() [46]
-[29]     0.0    0.00    0.00       1         Entity::~Entity() [29]
+                0.00    0.00       1/1           __libc_csu_init [165]
+[68]     0.0    0.00    0.00       1         _GLOBAL__sub_I_stbi_failure_reason [68]
+-----------------------------------------------
+                0.00    0.00       1/1           Scene::~Scene() [140]
+[69]     0.0    0.00    0.00       1         Entity::~Entity() [69]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -209,9 +207,9 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [23] _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [3] Rasterizer::render_scene(Scene*) [19] void std::vector<std::thread, std::allocator<std::thread> >::_M_emplace_back_aux<std::thread>(std::thread&&)
-  [24] _GLOBAL__sub_I__ZN10RasterizerC2Ejj [2] Rasterizer::draw_triangle(Vertex*, Mat4, Light&) [21] void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
-  [25] _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv [20] Entity::resetTransformation() [4] find_coreGL
-  [26] _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff [29] Entity::~Entity() [5] get_exts
-  [27] _GLOBAL__sub_I__ZN5SceneC2Ev [1] std::thread::_State_impl<std::_Bind_simple<std::_Mem_fn<void (Rasterizer::*)(Vertex*, Mat4, Light&)> (Rasterizer*, Vertex*, Mat4, std::reference_wrapper<Light>)> >::_M_run() [6] get_proc
-  [28] _GLOBAL__sub_I__ZN6EntityC2Ev [22] void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
+  [61] _GLOBAL__sub_I__Z12key_callbackP10GLFWwindowiiii [67] _GLOBAL__sub_I__ZN6EntityC2Ev [60] void std::vector<Vertex, std::allocator<Vertex> >::_M_emplace_back_aux<Vertex>(Vertex&&)
+  [62] _GLOBAL__sub_I__ZN10RasterizerC2Ejj [68] _GLOBAL__sub_I_stbi_failure_reason [59] void std::vector<int, std::allocator<int> >::_M_emplace_back_aux<int>(int&&)
+  [63] _GLOBAL__sub_I__ZN4Mesh10CreateCubeEv [2] key_callback(GLFWwindow*, int, int, int, int) [3] find_coreGL
+  [64] _GLOBAL__sub_I__ZN5LightC2E4Vec3S0_ffff [1] Rasterizer::render_scene(Scene*) [4] get_exts
+  [65] _GLOBAL__sub_I__ZN5SceneC2Ev [58] Entity::resetTransformation() [5] get_proc
+  [66] _GLOBAL__sub_I__ZN6CameraC2Efjj [69] Entity::~Entity()

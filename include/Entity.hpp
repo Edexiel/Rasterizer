@@ -1,40 +1,123 @@
 #pragma once
 #include "Mesh.hpp"
 #include "Mat4.hpp"
-#include "tools.hpp"
 #include "Vec3.hpp"
+#include "tools.hpp"
+#include <cstring>
 
 class Entity
 {
 private:
-    DRAW_MODE draw_mode;
+    DRAW_MODE _draw_mode;
+
+    Vec3 _position;
+    Vec3 _rotation;
+    Vec3 _scale;
+
+    void scale();
+    void translate();
+    void rotate();
 
 public:
     Mesh *mesh;
-    Mat4 transfo;
+    Mat4 transform;
 
     Entity();
-    Entity(Mesh *_mesh);
-    Entity(Mesh *mesh, Mat4 transfo);
-    ~Entity();
+    Entity(Mesh *mesh);
+    // Entity(Mesh *mesh, Mat4 transfo);
 
-    void scale(const Vec3& scale);
-    void translate(const Vec3& translation);
-    void rotate(const Vec3& rotation);
+    virtual void update(double DeltaTime);
+    virtual void draw();
+
+    void setScale(Vec3 scale);
+    void setPosition(Vec3 position);
+    void setRotation(Vec3 rotation);
 
     void resetTransformation();
 
-    void setDrawMode(const DRAW_MODE d_m);
+    void setDrawMode(const DRAW_MODE draw_mode);
     DRAW_MODE getDrawMode() const;
 };
 
-inline void Entity::setDrawMode(DRAW_MODE d_m)
+inline Entity::Entity() : _draw_mode{TRIANGLE},
+                          _position{0.f, 0.f, 0.f},
+                          _rotation{0.f, 0.f, 0.f},
+                          _scale{1.f, 1.f, 1.f},
+                          transform{Mat4::identity()} {}
+                          
+inline Entity::Entity(Mesh *m) : _draw_mode{TRIANGLE},
+                                 _position{0.f, 0.f, 0.f},
+                                 _rotation{0.f, 0.f, 0.f},
+                                 _scale{1.f, 1.f, 1.f},
+                                 mesh{m},
+                                 transform{Mat4::identity()} {}
+// inline Entity::Entity(Mesh *m, Mat4 t) : _draw_mode{TRIANGLE}, mesh{m}, transform{t} {}
+
+inline void Entity::setScale(Vec3 scale)
 {
-    draw_mode = d_m;
+    _scale = scale;
+}
+
+inline void Entity::setPosition(Vec3 position)
+{
+    _position = position;
+}
+
+inline void Entity::setRotation(Vec3 rotation)
+{
+    _rotation = rotation;
+}
+
+/**
+ * @brief Update the matrix with a rotation
+ * 
+ */
+inline void Entity::scale()
+{
+    transform = transform * Mat4::CreateScaleMatrix(_scale);
+}
+
+/**
+ * @brief Update the matrix with a translation
+ * 
+ */
+inline void Entity::translate()
+{
+    transform = transform * Mat4::CreateTranslationMatrix(_position);
+}
+
+/**
+ * @brief update the entity matrix with a rotation
+ * 
+ */
+inline void Entity::rotate()
+{
+    if (_rotation.z != 0.f)
+        transform = transform * Mat4::CreateZRotationMatrix(_rotation.z);
+
+    if (_rotation.x != 0.f)
+        transform = transform * Mat4::CreateXRotationMatrix(_rotation.x);
+
+    if (_rotation.y != 0.f)
+        transform = transform * Mat4::CreateYRotationMatrix(_rotation.y);
+}
+
+inline void Entity::resetTransformation()
+{
+    // transform = Mat4::identity();
+    memset(&transform, 0, 16 * sizeof(float));
+    transform.a[0] = 1.f;
+    transform.a[5] = 1.f;
+    transform.a[10] = 1.f;
+    transform.a[15] = 1.f;
+}
+
+inline void Entity::setDrawMode(DRAW_MODE draw_mode)
+{
+    _draw_mode = draw_mode;
 }
 
 inline DRAW_MODE Entity::getDrawMode() const
 {
-    return draw_mode;
+    return _draw_mode;
 }
-

@@ -4,84 +4,120 @@
 #include <iostream>
 #include <cmath>
 
-Mesh *Mesh::CreateCube()
-{
-    // Vec3 top{0, 1, 0};
-    // Vec3 bottom{0, -1, 0};
-    // Vec3 left{-1, 0, 0};
-    // Vec3 right{1, 0, 0};
-    // Vec3 front{0, 0, 1};
-    // Vec3 back{0, 0, -1};
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
 
-    Vec2 topLeft{0,0};
-    Vec2 topRight{1,0};
-    Vec2 bottomLeft{0,1};
-    Vec2 bottomRight{1,1};
+Mesh *Mesh::CreateCube(char *filename,Color color)
+{
+    Vec2f topLeft{0, 0};
+    Vec2f topRight{1, 0};
+    Vec2f bottomLeft{0, 1};
+    Vec2f bottomRight{1, 1};
 
     Mesh *mesh = new Mesh{};
 
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});  //0
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, {0xFF, 0xFF, 0xFF}});   //1
-    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}}); //2
-    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, {0xFF, 0xFF, 0xFF}});  //3
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});   //4
-    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});    //5
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, {0xFF, 0xFF, 0xFF}});   //6
-    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, {0xFF, 0xFF, 0xFF}});  //7
+    if(filename!=nullptr)
+    {
+        mesh->texture.load_PNG(filename);
+    }
+
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, -0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, -0.5}, color});
+    mesh->vertices.push_back(Vertex{{0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, 0.5}, color});
+    mesh->vertices.push_back(Vertex{{-0.5, 0.5, -0.5}, color});
 
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
         mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
     }
 
-    mesh->indices.push_back(0); mesh->UV.push_back(bottomRight); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(1); mesh->UV.push_back(bottomLeft); //mesh->normals.push_back(bottom);
-    mesh->indices.push_back(2); mesh->UV.push_back(topRight); //mesh->normals.push_back(bottom);
+    //down
+    mesh->indices.push_back(1);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(0);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(1);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(3);
+    mesh->UV.push_back(topLeft);
 
-    mesh->indices.push_back(2); mesh->UV.push_back(topRight);//mesh->normals.push_back(bottom);
-    mesh->indices.push_back(1); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(bottom);
-    mesh->indices.push_back(3); mesh->UV.push_back(topLeft);//mesh->normals.push_back(bottom);
+    //right side
+    mesh->indices.push_back(3);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(1);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(1);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(5);
+    mesh->UV.push_back(topLeft);
 
-    mesh->indices.push_back(4); mesh->UV.push_back(topRight);//mesh->normals.push_back(right);
-    mesh->indices.push_back(3); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(right);
-    mesh->indices.push_back(1); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(right);
+    //front
+    mesh->indices.push_back(1);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(5);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(0);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(0);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(5);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(6);
+    mesh->UV.push_back(topLeft);
 
-    mesh->indices.push_back(4); mesh->UV.push_back(topRight);//mesh->normals.push_back(right);
-    mesh->indices.push_back(1); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(right);
-    mesh->indices.push_back(5); mesh->UV.push_back(topLeft);//mesh->normals.push_back(right);
+    //left side
+    mesh->indices.push_back(0);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(6);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(6);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(7);
+    mesh->UV.push_back(topLeft);
 
-    mesh->indices.push_back(5); mesh->UV.push_back(topRight);//mesh->normals.push_back(front);
-    mesh->indices.push_back(1); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(front);
-    mesh->indices.push_back(0); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(front);
+    //back
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(7);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topLeft);
+    mesh->indices.push_back(3);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(2);
+    mesh->UV.push_back(bottomRight);
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topLeft);
 
-    mesh->indices.push_back(5); mesh->UV.push_back(topRight);//mesh->normals.push_back(front);
-    mesh->indices.push_back(0); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(front);
-    mesh->indices.push_back(6); mesh->UV.push_back(topLeft);//mesh->normals.push_back(front);
-
-    mesh->indices.push_back(6); mesh->UV.push_back(topRight);//mesh->normals.push_back(left);
-    mesh->indices.push_back(0); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(left);
-    mesh->indices.push_back(2); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(left);
-
-    mesh->indices.push_back(6); mesh->UV.push_back(topRight);//mesh->normals.push_back(left);
-    mesh->indices.push_back(2); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(left);
-    mesh->indices.push_back(7); mesh->UV.push_back(topLeft);//mesh->normals.push_back(left);
-
-    mesh->indices.push_back(7); mesh->UV.push_back(topRight);//mesh->normals.push_back(back);
-    mesh->indices.push_back(2); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(back);
-    mesh->indices.push_back(4); mesh->UV.push_back(topLeft);//mesh->normals.push_back(back);
-
-    mesh->indices.push_back(2); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(back);
-    mesh->indices.push_back(3); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(back);
-    mesh->indices.push_back(4); mesh->UV.push_back(topLeft);//mesh->normals.push_back(back);
-
-    mesh->indices.push_back(7); mesh->UV.push_back(topLeft);//mesh->normals.push_back(top);
-    mesh->indices.push_back(4); mesh->UV.push_back(topRight);//mesh->normals.push_back(top);
-    mesh->indices.push_back(6); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(top);
-
-    mesh->indices.push_back(6); mesh->UV.push_back(bottomLeft);//mesh->normals.push_back(top);
-    mesh->indices.push_back(4); mesh->UV.push_back(topRight);//mesh->normals.push_back(top);
-    mesh->indices.push_back(5); mesh->UV.push_back(bottomRight);//mesh->normals.push_back(top);
-
+    //top
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(7);
+    mesh->UV.push_back(topLeft);
+    mesh->indices.push_back(6);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(4);
+    mesh->UV.push_back(topRight);
+    mesh->indices.push_back(6);
+    mesh->UV.push_back(bottomLeft);
+    mesh->indices.push_back(5);
+    mesh->UV.push_back(bottomRight);
 
     return mesh;
 }
@@ -97,6 +133,7 @@ Mesh *Mesh::CreateTriangle()
     mesh->vertices.push_back(v1);
     mesh->vertices.push_back(v2);
     mesh->vertices.push_back(v3);
+
     for (uint i = 0; i < mesh->vertices.size(); i++)
     {
         mesh->vertices[i].normal = Vec3::normalize(mesh->vertices[i].position);
@@ -109,7 +146,7 @@ Mesh *Mesh::CreateTriangle()
     return mesh;
 }
 
-Mesh *Mesh::CreateSphere(int l, int L)
+Mesh *Mesh::CreateSphere(int l, int L,Color color)
 {
     Mesh *mesh = new Mesh{};
 
@@ -118,10 +155,10 @@ Mesh *Mesh::CreateSphere(int l, int L)
         for (int j = 0; j < L + 1; j++)
         {
             float r = sinf(i * (float)M_PI / (float)l);
-            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, {255, 255, 255}});
+            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, color});
         }
     }
-    mesh->vertices.push_back({{0, -1, 0}, {255, 255, 255}});
+    mesh->vertices.push_back({{0, -1, 0}, color});
 
     unsigned int i_max = mesh->vertices.size() - 1;
 
@@ -155,4 +192,68 @@ Mesh *Mesh::CreateVectorLight(float x, float y, float z)
     mesh->indices.push_back(1);
 
     return mesh;
+}
+
+Mesh *Mesh::LoadObj(char *path)
+{
+    Mesh *object = new Mesh{};
+
+    bool hasNormals = false;
+    bool hasColors = false;
+
+    std::string warn;
+    std::string err;
+
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+
+    tinyobj::LoadObj(&attrib, &shapes, NULL, &warn, &err, path, NULL, true);
+
+    if (!err.empty())
+        std::cout << "Error loading obj: " << err.c_str() << std::endl;
+    if (!warn.empty())
+        std::cout << "Warning loading obj: " << warn.c_str() << std::endl;
+
+    hasNormals = !attrib.normals.empty();
+    hasColors = !attrib.colors.empty();
+
+    for (uint i = 0; i < attrib.vertices.size() - 2; i += 3)
+    {
+        Vertex v{};
+
+        v.position = {(float)attrib.vertices[i],
+                      (float)attrib.vertices[i + 1],
+                      (float)attrib.vertices[i + 2]};
+
+        v.normal = hasNormals ? Vec3{(float)attrib.normals[i],
+                                     (float)attrib.normals[i + 1],
+                                     (float)attrib.normals[i + 2]}
+                              : Vec3{0.f, 0.f, 0.f};
+
+        v.color = hasColors ? Color{(unsigned char)clamp((float)attrib.colors[i] * 255,0.f,255.f),
+                                    (unsigned char)clamp((float)attrib.colors[i + 1] * 255,0.f,255.f),
+                                    (unsigned char)clamp((float)attrib.colors[i + 2] * 255,0.f,255.f)}
+                            : Color{255, 255, 255};
+
+        object->vertices.push_back(v);
+    }
+
+    for (tinyobj::shape_t &shape : shapes)
+    {
+        
+        for (tinyobj::index_t &index : shape.mesh.indices)
+        {
+            object->indices.push_back(index.vertex_index);
+        }
+    }
+
+    if(!hasNormals)
+    {
+        for (uint i = 0; i < object->vertices.size(); i++)
+        {
+            object->vertices[i].normal = Vec3::normalize(object->vertices[i].position);
+        }
+    }
+
+    return object;
 }
