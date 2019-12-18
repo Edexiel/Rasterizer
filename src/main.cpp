@@ -1,17 +1,13 @@
-#include <iostream>
-#include <cstdio>
-#include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
+#include <iostream>
 #include <ctime>
 
-#include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
 #include "tools.hpp"
 #include <cmath>
-#include "Camera.hpp"
 #include "InputManager.hpp"
 
 
@@ -26,8 +22,6 @@ int main()
 {
     uint screenWidth = 800;
     uint screenHeight = 600;
-
-    float aspect = screenWidth / (float)screenHeight;
 
     float modres = 1.f;
 
@@ -79,27 +73,10 @@ int main()
     uint frames = 0;
     double time_acc = 0.f;
 
-    Rasterizer renderer{resWidth, resHeight};
-    Scene scene{};
     InputManager im{window};
-    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.f,0.f,0.5f,1.f};
+    Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-#if 1 // Perspective or 2D
-    renderer.projection = Mat4::perspective(60.f, aspect, 0.01f, 10.f);
-#elif
-    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-#endif
-
-    scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16)});
-    // scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
-    // scene.entities.push_back(Entity{Mesh::CreateCube(nullptr)});
-    // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    // scene.entities[0].setDrawMode(LINE);
-
-    scene.light = (Light){Vec3{1.0f, 1.f, 1.f}, Vec3{.0f, .0f, 0.f}, Vec3{1.f, 1.f, 1.f}, 0.2f, 0.4f, 0.4f, 20.f};
-
-    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
+    Scene scene{&im};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -119,10 +96,6 @@ int main()
             }
         }
 
-        im.update();
-        camera.update((float)deltaTime);
-        renderer.view = camera.getCameraMatrix();
-
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
         // scene.entities[0].translate(pos);
@@ -130,7 +103,6 @@ int main()
         // scene.entities[0].scale({0.4f, 0.4f, 0.4f});
 
         renderer.render_scene(&scene);
-
         renderer.draw_scene();
 
         glfwSwapBuffers(window);

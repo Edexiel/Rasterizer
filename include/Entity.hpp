@@ -24,14 +24,14 @@ public:
 
     Entity();
     Entity(Mesh *mesh);
-    Entity(Mesh *mesh, Mat4 transfo);
+    // Entity(Mesh *mesh, Mat4 transfo);
 
-    // virtual void update(double DeltaTime) = 0;
-    // virtual void draw() = 0;
+    virtual void update(double DeltaTime);
+    virtual void draw();
 
-    void setScale(Vec3 &scale);
-    void setPosition(Vec3 &position);
-    void setRotation(Vec3 &rotation);
+    void setScale(Vec3 scale);
+    void setPosition(Vec3 position);
+    void setRotation(Vec3 rotation);
 
     void resetTransformation();
 
@@ -39,23 +39,33 @@ public:
     DRAW_MODE getDrawMode() const;
 };
 
-inline Entity::Entity() : _draw_mode{TRIANGLE}, transform{Mat4::identity()} {}
-inline Entity::Entity(Mesh *m) : _draw_mode{TRIANGLE}, mesh{m}, transform{Mat4::identity()} {}
-inline Entity::Entity(Mesh *m, Mat4 t) : _draw_mode{TRIANGLE}, mesh{m}, transform{t} {}
+inline Entity::Entity() : _draw_mode{TRIANGLE},
+                          _position{0.f, 0.f, 0.f},
+                          _rotation{0.f, 0.f, 0.f},
+                          _scale{1.f, 1.f, 1.f},
+                          transform{Mat4::identity()} {}
+                          
+inline Entity::Entity(Mesh *m) : _draw_mode{TRIANGLE},
+                                 _position{0.f, 0.f, 0.f},
+                                 _rotation{0.f, 0.f, 0.f},
+                                 _scale{1.f, 1.f, 1.f},
+                                 mesh{m},
+                                 transform{Mat4::identity()} {}
+// inline Entity::Entity(Mesh *m, Mat4 t) : _draw_mode{TRIANGLE}, mesh{m}, transform{t} {}
 
-inline void Entity::setScale(Vec3 &scale)
+inline void Entity::setScale(Vec3 scale)
 {
     _scale = scale;
 }
 
-inline void Entity::setPosition(Vec3 &position)
+inline void Entity::setPosition(Vec3 position)
 {
     _position = position;
 }
 
-inline void Entity::setRotation(Vec3 &rotation)
+inline void Entity::setRotation(Vec3 rotation)
 {
-    _position = rotation; 
+    _rotation = rotation;
 }
 
 /**

@@ -227,9 +227,9 @@ Mesh *Mesh::LoadObj(char *path)
                                      (float)attrib.normals[i + 2]}
                               : Vec3{0.f, 0.f, 0.f};
 
-        v.color = hasColors ? Color{(unsigned char)attrib.colors[i] * 255,
-                                    (unsigned char)attrib.colors[i + 1] * 255,
-                                    (unsigned char)attrib.colors[i + 2] * 255}
+        v.color = hasColors ? Color{(unsigned char)clamp((float)attrib.colors[i] * 255,0.f,255.f),
+                                    (unsigned char)clamp((float)attrib.colors[i + 1] * 255,0.f,255.f),
+                                    (unsigned char)clamp((float)attrib.colors[i + 2] * 255,0.f,255.f)}
                             : Color{255, 255, 255};
 
         object->vertices.push_back(v);

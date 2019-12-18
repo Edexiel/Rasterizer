@@ -285,7 +285,7 @@ inline void Rasterizer::raster_line(const Vertex* vertex)
 
 inline void Rasterizer::clear_color_buffer()
 {
-#pragma omp parallel for
+// #pragma omp parallel for
     for (size_t i = 0; i < m_height; i++)
         memset(&color_buffer[m_width * i], 0xDF, m_width * sizeof(Color));
 
