@@ -11,11 +11,21 @@ Scene::Scene(InputManager *im) : _im{im}
 
     // SCENE ENTITIES
     // Entity sphere{Mesh::CreateSphere(8, 16)};
-    Entity cube{Mesh::CreateCube("media/cratetex.png")};
-    // entities.push_back(Entity{Mesh::CreateCube(nullptr)});
-    cube.setPosition({0.f,0.f,-2.f});
+    // Entity cube{Mesh::CreateCube("media/cratetex.png")};
+    // // entities.push_back(Entity{Mesh::CreateCube(nullptr)});
+    // cube.setPosition({0.f,0.f,-2.f});
 
-    entities.push_back(cube);
+    // entities.push_back(cube);
+
+    Entity sphere{Mesh::CreateSphere(8, 16)};
+    // Entity cubeTexture{Mesh::CreateCube("media/cratetex.png")};
+    // Entity cube{Mesh::CreateCube(nullptr)};
+    sphere.setPosition({0.f,0.f,-2.f});
+
+    entities.push_back(sphere);
+    
+    // entities[0].scale(0.9f, 0.9f, 0.9f);
+    entities[0].setDrawMode(LINE);
 }
 
 Scene::~Scene()

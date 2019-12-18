@@ -219,25 +219,6 @@ inline void Rasterizer::raster_line(const Vertex *vertex)
     Vertex v1 = vertex[0];
     Vertex v2 = vertex[1];
 
-    if (v1.position.x > m_width)
-        v1.position.x = m_width;
-    else if (v1.position.x < 0)
-        v1.position.x = 0;
-
-    if (v1.position.y > m_height)
-        v1.position.y = m_height;
-    else if (v1.position.y < 0)
-        v1.position.y = 0;
-
-    if (v2.position.x > m_width)
-        v2.position.x = m_width;
-    else if (v2.position.x < 0)
-        v2.position.x = 0;
-
-    if (v2.position.y > m_height)
-        v2.position.y = m_height;
-    else if (v2.position.y < 0)
-        v2.position.y = 0;
 
     const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
     if (steep)
@@ -263,14 +244,11 @@ inline void Rasterizer::raster_line(const Vertex *vertex)
 
     for (int x = (int)v1.position.x; x < maxX; x++)
     {
-        if (steep)
-        {
-            set_pixel_color(fabsf(y), fabsf(x), 0, v1.color);
-        }
-        else
-        {
-            set_pixel_color(fabsf(x), fabsf(y), 0, v1.color);
-        }
+        if (steep && y <= (int)m_width && y >= 0 && x <= (int)m_height && x >= 0)
+            set_pixel_color(y, x, 0, v1.color);
+        
+        else if (!steep && x <= (int)m_width && x >= 0 && y <= (int)m_height && y >= 0)
+            set_pixel_color(x, y, 0, v1.color);
 
         error -= dy;
         if (error < 0)

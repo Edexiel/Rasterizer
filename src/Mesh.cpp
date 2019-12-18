@@ -152,10 +152,10 @@ Mesh *Mesh::CreateSphere(int l, int L)
         for (int j = 0; j < L + 1; j++)
         {
             float r = sinf(i * (float)M_PI / (float)l);
-            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, {255, 255, 255}});
+            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, {255, 0, 0}});
         }
     }
-    mesh->vertices.push_back({{0, -1, 0}, {255, 255, 255}});
+    mesh->vertices.push_back({{0, -1, 0}, {255, 0, 0}});
 
     unsigned int i_max = mesh->vertices.size() - 1;
 
