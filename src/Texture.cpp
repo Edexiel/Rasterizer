@@ -48,10 +48,8 @@ Color Texture::accessor(float v, float u)
     return this->texture[(int)v + (int)u * width];
 }
 
-void Texture::free_texture(Texture& T)
+void Texture::free_texture()
 {
-    if (T.texture != nullptr)
-    {
-        delete(T.texture);
-    }
+    if (texture != nullptr)
+        delete(texture);
 }

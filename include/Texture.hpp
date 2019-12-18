@@ -25,7 +25,7 @@ public:
     uint getWidth() const;
     uint getHeight() const;
     Color accessor(float v, float u);
-    static void free_texture(Texture& texture);
+    void free_texture();
 
     GLuint getTextureName() const;
     void load_PNG(const char* filename);
