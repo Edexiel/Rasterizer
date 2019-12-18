@@ -23,8 +23,8 @@ public:
         float e[3];
     };
 
-    Vec3(float, float, float);
     Vec3() = default;
+    Vec3(float, float, float);
 
     static Vec3 normalize(const Vec3 &v);
 

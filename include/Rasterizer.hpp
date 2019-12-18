@@ -22,8 +22,8 @@ private:
 
     GLuint color_buffer_texture;
 
-    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV = nullptr,const Texture* texture = nullptr);
-    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV=nullptr, const Texture *texture=nullptr);
+    void draw_triangle(const Vertex *vertices, const Mat4 &model, const Light &light, const Vec2f *UV = nullptr, const Texture *texture = nullptr);
+    void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV = nullptr, const Texture *texture = nullptr);
 
     void draw_line(const Vertex *vertices, const Mat4 &model);
     void raster_line(const Vertex *vertex);
@@ -52,7 +52,7 @@ public:
  * @param transformation 
  * @param light 
  */
-inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV,const Texture* texture)
+inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transformation, const Light &light, const Vec2f *UV, const Texture *texture)
 {
     // transform space: transformation * vec3      (4D)
     // clipSpace:            transformation * vec3 (4D) [-w,w]
@@ -88,6 +88,10 @@ inline void Rasterizer::draw_triangle(const Vertex *vertices, const Mat4 &transf
     Vertex screenCoord[3];
     for (int i = 0; i < 3; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
+
+    // Light corrected_light = light;
+    // // corrected_light.correct(view);
+    // corrected_light.setPosition((Vec3){0.f,0.f,0.f});
 
     raster_triangle(screenCoord, transCoord, clipCoord, transNorm, light, UV, texture);
 }
@@ -152,20 +156,20 @@ inline void Rasterizer::raster_triangle(const Vertex *vertices, const Vec4 *t_ve
                         set_pixel_color(x, y, z, {(unsigned char)(255), (unsigned char)(255), (unsigned char)(255)});
                     }
 #endif
-                    if (texture==nullptr || UV == nullptr)
-                    {
-                        Color t_color{v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
 
-                        light.apply_light(t_pos, t_normal, t_color);
-                        set_pixel_color(x, y, z, t_color);
+                    Color t_color;
+                    if (texture == nullptr || UV == nullptr)
+                    {
+                        t_color = {v1.color * weight.x + v2.color * weight.y + v3.color * weight.z};
                     }
                     else
                     {
                         const Vec2f c_uv{UV[0].x * weight.x + UV[1].x * weight.y + UV[2].x * weight.z, UV[0].y * weight.x + UV[1].y * weight.y + UV[2].y * weight.z};
-                        Color t_color = texture->accessor(c_uv.x, c_uv.y);
-                        light.apply_light(t_pos, t_normal, t_color);
-                        set_pixel_color(x, y, z, t_color);
+                        t_color = texture->accessor(c_uv.x, c_uv.y);
                     }
+
+                    light.apply_light(t_pos, t_normal, t_color);
+                    set_pixel_color(x, y, z, t_color);
                 }
             }
         }

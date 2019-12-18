@@ -13,7 +13,7 @@ Texture::Texture(const char *filename)
 
 Texture::~Texture()
 {
-    if(texture==nullptr)
+    if (texture == nullptr)
         delete[] texture;
 }
 
@@ -30,7 +30,7 @@ bool Texture::load_PNG(const char *filename)
 {
     stbi_set_flip_vertically_on_load(true);
     int channels;
-    Color *texture = (Color *)stbi_load(filename, &_width, &_height, &channels, 3);
+    texture = (Color *)stbi_load(filename,&_width, &_height, &channels, 3);
 
     // texture = new Color[width * height];
 
@@ -40,6 +40,5 @@ bool Texture::load_PNG(const char *filename)
     // memcpy(texture, _texture, width * height * sizeof(Color));
 
     // stbi_image_free(_texture);
+    return !(texture == nullptr);
 }
-
-

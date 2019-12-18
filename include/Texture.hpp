@@ -43,7 +43,7 @@ inline Color Texture::accessor(float v, float u) const
 {
     if (isEmpty() || v > 1 || u > 1 || v < 0 || u < 0)
     {
-        std::cout << "Error: Trying to access invalid texture with parameters : u=>" << u << " v=>" << v << std::endl;
+        // std::cout << "Error: Trying to access invalid texture with parameters : u=>" << u << " v=>" << v << std::endl;
         return {255, 0, 0};
     }
 
