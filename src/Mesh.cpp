@@ -217,7 +217,7 @@ Mesh *Mesh::LoadObj(char *path)
     hasNormals = !attrib.normals.empty();
     hasColors = !attrib.colors.empty();
 
-    for (uint i = 0; i < attrib.vertices.size() - 3; i += 3)
+    for (uint i = 0; i < attrib.vertices.size() - 2; i += 3)
     {
         Vertex v{};
 
@@ -244,6 +244,14 @@ Mesh *Mesh::LoadObj(char *path)
         for (tinyobj::index_t &index : shape.mesh.indices)
         {
             object->indices.push_back(index.vertex_index);
+        }
+    }
+
+    if(!hasNormals)
+    {
+        for (uint i = 0; i < object->vertices.size(); i++)
+        {
+            object->vertices[i].normal = Vec3::normalize(object->vertices[i].position);
         }
     }
 

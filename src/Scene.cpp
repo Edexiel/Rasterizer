@@ -4,7 +4,6 @@
 
 Scene::Scene(InputManager *im) : _im{im}
 {
-
     // LIGHT
     _camera = Camera{im, (Vec3){0.f, 0.f, 0.f}, 0.f, 0.f, 0.5f, 1.f};
     _light = Light{Vec3{1.0f, 1.f, 1.f}, &_camera, Colorf{1.f, 1.f, 1.f}, 0.2f, 0.4f, 0.4f, 20.f};
@@ -18,11 +17,21 @@ Scene::Scene(InputManager *im) : _im{im}
     // entities.push_back(cube);
 
     Entity sphere{Mesh::CreateSphere(8, 16)};
-    // Entity cubeTexture{Mesh::CreateCube("media/cratetex.png")};
-    // Entity cube{Mesh::CreateCube(nullptr)};
-    sphere.setPosition({0.f,0.f,-2.f});
-    sphere.setDrawMode(TRIANGLE);
+    sphere.setPosition({2.f, 0.f, -1.f});
+    sphere.setScale({0.25f, 0.25f, 0.25f});
+    sphere.setDrawMode(LINE);
 
+
+    Entity teapot{Mesh::LoadObj("media/teapot.obj")};
+    teapot.setPosition({0.f,-2.f,-1.f});
+    teapot.setScale({0.1f,0.1f,0.1f});
+
+    Entity cubeTexture{Mesh::CreateCube("media/cratetex.png")};
+    cubeTexture.setPosition({-1.f,0.f,-1.f});
+    cubeTexture.setScale({0.5f,0.5f,0.5f});
+
+    entities.push_back(teapot);
+    entities.push_back(cubeTexture);
     entities.push_back(sphere);
 }
 

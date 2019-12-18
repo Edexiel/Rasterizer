@@ -54,10 +54,10 @@ void Camera::update(float deltaTime)
 
     if (_input->isDown(GLFW_KEY_SPACE))
     {
-        _position.y += _movement_speed * deltaTime;
+        _position.y -= _movement_speed * deltaTime;
     }
     else if (_input->isDown(GLFW_KEY_LEFT_SHIFT))
     {
-        _position.y -= _movement_speed * deltaTime;
+        _position.y += _movement_speed * deltaTime;
     }
 }
