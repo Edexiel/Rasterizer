@@ -1,22 +1,19 @@
-#include <iostream>
-#include <cstdio>
-#include <vector>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
+#include <iostream>
 #include <ctime>
 
-#include "Texture.hpp"
 #include "Scene.hpp"
 #include "Rasterizer.hpp"
 #include "tools.hpp"
 #include <cmath>
-#include "Camera.hpp"
 #include "InputManager.hpp"
-
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
+    (void)mods;
+    (void)scancode;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
@@ -24,8 +21,6 @@ int main()
 {
     uint screenWidth = 800;
     uint screenHeight = 600;
-
-    float aspect = screenWidth / (float)screenHeight;
 
     float modres = 1.f;
 
@@ -71,39 +66,16 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     // Time && fps
-    double time = 0.f;
-    double deltaTime;
+    double time = 0.;
+    double deltaTime = 0.01;
     float sample = 1.f; // moyenne sur seconde
     uint frames = 0;
     double time_acc = 0.f;
 
-    Rasterizer renderer{resWidth, resHeight};
-    Scene scene{};
     InputManager im{window};
-    Camera camera{&im,(Vec3){0.f,0.f,0.f},0.f,0.f,0.7f,1.f};
+    Rasterizer renderer{resWidth, resHeight};
 
-    renderer.viewport = Mat4::viewportMatrix(1, -1, resWidth, resHeight);
-#if 1 // Perspective or 2D
-    renderer.projection = Mat4::perspective(60.f, aspect, 0.01f, 10.f);
-#elif
-    renderer.projection = Mat4::orthoMatrix(-aspect, aspect, -1.f, 1.f, 0.f, 100.f);
-#endif
-
-    scene.entities.push_back(Entity{Mesh::CreateSphere(8, 16)});
-    scene.entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
-    // scene.entities.push_back(Entity{Mesh::CreateCube(nullptr)});
-    // scene.entities[0].scale(0.9f, 0.9f, 0.9f);
-    scene.entities[0].setDrawMode(TRIANGLE);
-    scene.entities[1].setDrawMode(TRIANGLE);
-
-    scene.light = (Light){{1.0f, 1.f, 1.f}, {.0f, .0f, 0.f}, {1.f, 1.0f, 1.0f}, 0.2f, 0.4f, 0.4f, 20.f};
-
-    // scene.entities.push_back(Entity{Mesh::CreateVectorLight(scene.light.v_light.x, scene.light.v_light.y, scene.light.v_light.z)});
-
-    //temporary stuff
-    Vec3 pos1{-0.5f, 0.f, -1.f};
-    Vec3 pos2{0.f, 0.f, -1.f};
-    Vec3 rot{0.f, 0.f, 0.f};
+    Scene scene{&im};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -123,27 +95,18 @@ int main()
             }
         }
 
-        im.update();
-        camera.update((float)deltaTime);
-        renderer.view = camera.getCameraMatrix();
-
         renderer.clear_color_buffer();
         renderer.clear_depth_buffer();
-        scene.entities[0].translate(pos1);
-        scene.entities[1].translate(pos2);
-
-        rot.y += 0.01;
-        scene.entities[0].rotate(rot);
-        scene.entities[1].rotate(rot);
-        scene.entities[0].scale({0.4f, 0.4f, 0.4f});
-        scene.entities[1].scale({0.6f, 0.6f, 0.6f});
+        // scene.entities[0].translate(pos);
+        // scene.entities[0].rotate(rot);
+        // scene.entities[0].scale({0.4f, 0.4f, 0.4f});
+        scene.update((float)deltaTime);
         renderer.render_scene(&scene);
-
         renderer.draw_scene();
 
         glfwSwapBuffers(window);
     }
-    scene.entities[1].mesh->texture.free_texture();
+    scene.entities[0].mesh->texture.free_texture();
     glfwTerminate();
     return 0;
 }

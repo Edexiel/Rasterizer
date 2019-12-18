@@ -29,7 +29,7 @@ void Texture::load_PNG(const char *filename)
 
     texture = new Color[width * height];
 
-    for (size_t i = 0; i < width * height; i++)
+    for (int i = 0; i < width * height; i++)
         texture[i] = _texture[i];
     
     stbi_image_free(_texture);
@@ -51,5 +51,8 @@ Color Texture::accessor(float v, float u)
 void Texture::free_texture()
 {
     if (texture != nullptr)
+    {
         delete(texture);
+        texture = nullptr;
+    }
 }

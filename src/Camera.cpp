@@ -16,13 +16,13 @@ void Camera::update(float deltaTime)
 {
     Vec2d mouse = _input->getMouseMovement();
 
-    _pitch += (float)(mouse.y * _mouse_speed);
+    _pitch += (float)mouse.y * _mouse_speed;
     if (_pitch > 90.f)
         _pitch = 90.f;
     if (_pitch < -90.f)
         _pitch = -90.f;
 
-    _yaw += (float)(mouse.x * _mouse_speed);
+    _yaw += (float)mouse.x * _mouse_speed;
     if (_yaw > 180.f)
         _yaw = -180.f;
     if (_yaw < -180.f)
@@ -30,6 +30,7 @@ void Camera::update(float deltaTime)
 
     _direction.x = sinf(_yaw * (float)M_PI / 180.f) * _movement_speed * deltaTime;
     _direction.z = -cosf(_yaw * (float)M_PI / 180.f) * _movement_speed * deltaTime;
+    _direction.y = 0;
 
     if (_input->isDown(GLFW_KEY_UP) || _input->isDown(GLFW_KEY_W))
     {
@@ -59,9 +60,4 @@ void Camera::update(float deltaTime)
     {
         _position.y -= _movement_speed * deltaTime;
     }
-
-}
-Mat4 Camera::getCameraMatrix()
-{
-    return Mat4::CreateXRotationMatrix(_pitch * (float)M_PI / 180.f) * Mat4::CreateYRotationMatrix(_yaw * (float)M_PI / 180.f) * Mat4::CreateTranslationMatrix(_position);
 }

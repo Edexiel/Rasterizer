@@ -26,7 +26,7 @@ private:
     void raster_triangle(const Vertex *vertices, const Vec4 *t_vertices, const Vec4 *p_vertices, const Vec4 *t_normals, const Light &light, const Vec2f *UV, Texture texture);
 
     void draw_line(const Vertex *vertices, const Mat4 &model);
-    void raster_line(const Vertex* vertex, const Vec4* vec);
+    void raster_line(const Vertex* vertex);
 
     void draw_point(Vertex v1, Mat4 &transfo);
     void set_pixel_color(uint x, uint y, float z, const Color &c);
@@ -212,33 +212,14 @@ inline void Rasterizer::draw_line(const Vertex *vertices, const Mat4 &transforma
     for (int i = 0; i < 2; i++)
         screenCoord[i] = (Vertex){(viewport * (Vec4){ndc[i], 1.f}).xyz, vertices[i].color, vertices[i].normal};
 
-    raster_line(screenCoord, transCoord);
+    raster_line(screenCoord);
 }
 
-inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
+inline void Rasterizer::raster_line(const Vertex* vertex)
 {
     Vertex v1 = vertex[0];
     Vertex v2 = vertex[1];
 
-    if (v1.position.x > m_width)
-        v1.position.x = m_width;
-    else if (v1.position.x < 0)
-        v1.position.x = 0;
-
-    if (v1.position.y > m_height)
-        v1.position.y = m_height;
-    else if (v1.position.y < 0)
-        v1.position.y = 0;
-
-    if (v2.position.x > m_width)
-        v2.position.x = m_width;
-    else if (v2.position.x < 0)
-        v2.position.x = 0;
-
-    if (v2.position.y > m_height)
-        v2.position.y = m_height;
-    else if (v2.position.y < 0)
-        v2.position.y = 0;
 
     const bool steep = (fabsf(v2.position.y - v1.position.y) > fabsf(v2.position.x - v1.position.x));
     if (steep)
@@ -265,14 +246,11 @@ inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
 
     for (int x = (int)v1.position.x; x < maxX; x++)
     {
-        if (steep)
-        {
-            set_pixel_color((unsigned int)fabs(y), (unsigned int)fabs(x), 0, v1.color);
-        }
-        else
-        {
-            set_pixel_color((unsigned int)fabs(x), (unsigned int)fabs(y), 0, v1.color);
-        }
+        if (steep && y <= m_width && y >= 0 && x <= m_height && x >= 0)
+            set_pixel_color(y, x, 0, v1.color);
+        
+        else if (!steep && x <= m_width && x >= 0 && y <= m_height && y >= 0)
+            set_pixel_color(x, y, 0, v1.color);
 
         error -= dy;
         if (error < 0)
@@ -285,7 +263,7 @@ inline void Rasterizer::raster_line(const Vertex* vertex, const Vec4* vec)
 
 inline void Rasterizer::clear_color_buffer()
 {
-#pragma omp parallel for
+// #pragma omp parallel for
     for (size_t i = 0; i < m_height; i++)
         memset(&color_buffer[m_width * i], 0xDF, m_width * sizeof(Color));
 
