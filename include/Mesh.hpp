@@ -16,8 +16,8 @@ public:
     Texture texture;
     
     static Mesh* CreateTriangle();
-    static Mesh* CreateCube(char* filename);
-    static Mesh* CreateSphere(int latitudeCount, int longitudeCount);
+    static Mesh *CreateCube(char *filename = nullptr, Color = {255, 255, 255});
+    static Mesh* CreateSphere(int latitudeCount, int longitudeCount,Color = {255,255,255});
     static Mesh* CreateVectorLight(float x, float y, float z);
     static Mesh *LoadObj(char *path);
 };

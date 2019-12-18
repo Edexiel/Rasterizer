@@ -93,8 +93,8 @@ inline float Light::specular_light(const Vec3 &normal, const Vec3 &light_directi
  */
 inline void Light::apply_light(const Vec3 &position, const Vec3 &normal, Color &color) const
 {
-    Vec3 light_pos{0, 0, 0};
-    const Vec3 v_light = Vec3::normalize(light_pos - position);
+    // Vec3 light_pos{0, 0, 0};
+    const Vec3 v_light = Vec3::normalize(_light_pos - position);
     const Vec3 v_camera = Vec3::normalize(_camera->getPosition() - position);
     const Vec3 v_normal = Vec3::normalize(normal);
 

@@ -7,7 +7,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-Mesh *Mesh::CreateCube(char *filename)
+Mesh *Mesh::CreateCube(char *filename,Color color)
 {
     Vec2f topLeft{0, 0};
     Vec2f topRight{1, 0};
@@ -15,9 +15,12 @@ Mesh *Mesh::CreateCube(char *filename)
     Vec2f bottomRight{1, 1};
 
     Mesh *mesh = new Mesh{};
-    mesh->texture.load_PNG(filename);
 
-    Color color{255, 0, 0};
+    if(filename!=nullptr)
+    {
+        mesh->texture.load_PNG(filename);
+    }
+
     mesh->vertices.push_back(Vertex{{-0.5, -0.5, 0.5}, color});
     mesh->vertices.push_back(Vertex{{0.5, -0.5, 0.5}, color});
     mesh->vertices.push_back(Vertex{{-0.5, -0.5, -0.5}, color});
@@ -143,7 +146,7 @@ Mesh *Mesh::CreateTriangle()
     return mesh;
 }
 
-Mesh *Mesh::CreateSphere(int l, int L)
+Mesh *Mesh::CreateSphere(int l, int L,Color color)
 {
     Mesh *mesh = new Mesh{};
 
@@ -152,10 +155,10 @@ Mesh *Mesh::CreateSphere(int l, int L)
         for (int j = 0; j < L + 1; j++)
         {
             float r = sinf(i * (float)M_PI / (float)l);
-            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, {255, 0, 0}});
+            mesh->vertices.push_back(Vertex{{cosf(j * ((float)M_PI * 2) / (float)L) * r, cosf(i * (float)M_PI / (float)l), sinf(j * ((float)M_PI * 2) / (float)L) * r}, color});
         }
     }
-    mesh->vertices.push_back({{0, -1, 0}, {255, 0, 0}});
+    mesh->vertices.push_back({{0, -1, 0}, color});
 
     unsigned int i_max = mesh->vertices.size() - 1;
 

@@ -21,11 +21,9 @@ Scene::Scene(InputManager *im) : _im{im}
     // Entity cubeTexture{Mesh::CreateCube("media/cratetex.png")};
     // Entity cube{Mesh::CreateCube(nullptr)};
     sphere.setPosition({0.f,0.f,-2.f});
+    sphere.setDrawMode(TRIANGLE);
 
     entities.push_back(sphere);
-    
-    // entities[0].scale(0.9f, 0.9f, 0.9f);
-    entities[0].setDrawMode(LINE);
 }
 
 Scene::~Scene()
