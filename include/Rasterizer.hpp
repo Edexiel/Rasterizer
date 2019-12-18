@@ -246,10 +246,10 @@ inline void Rasterizer::raster_line(const Vertex* vertex)
 
     for (int x = (int)v1.position.x; x < maxX; x++)
     {
-        if (steep && y <= m_width && y >= 0 && x <= m_height && x >= 0)
+        if (steep && y <= (int)m_width && y >= 0 && x <= (int)m_height && x >= 0)
             set_pixel_color(y, x, 0, v1.color);
         
-        else if (!steep && x <= m_width && x >= 0 && y <= m_height && y >= 0)
+        else if (!steep && x <= (int)m_width && x >= 0 && y <= (int)m_height && y >= 0)
             set_pixel_color(x, y, 0, v1.color);
 
         error -= dy;

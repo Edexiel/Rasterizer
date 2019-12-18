@@ -106,7 +106,9 @@ int main()
 
         glfwSwapBuffers(window);
     }
-    scene.entities[0].mesh->texture.free_texture();
+    for(size_t i = 0; i < scene.entities.size(); i++)
+        scene.entities[i].mesh->texture.free_texture();
+
     glfwTerminate();
     return 0;
 }

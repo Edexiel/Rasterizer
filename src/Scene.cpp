@@ -12,11 +12,12 @@ Scene::Scene(InputManager *im) : _im{im}
     // SCENE ENTITIES
 
     Entity sphere{Mesh::CreateSphere(8, 16)};
+    // Entity cubeTexture{Mesh::CreateCube("media/cratetex.png")};
+    // Entity cube{Mesh::CreateCube(nullptr)};
     sphere.setPosition({0.f,0.f,-2.f});
 
     entities.push_back(sphere);
-    // entities.push_back(Entity{Mesh::CreateCube("media/cratetex.png")});
-    // entities.push_back(Entity{Mesh::CreateCube(nullptr)});
+    
     // entities[0].scale(0.9f, 0.9f, 0.9f);
     entities[0].setDrawMode(LINE);
 }
